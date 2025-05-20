@@ -136,7 +136,9 @@ export default function Register() {
       setSnackbarOpen,
       setLoading
     );
-    console.log(await response.json());
+    console.log(response);
+    const json = await response.json();
+    console.log(json);
 
     if (response && response.ok) {
       navigate("/auth/authenticate")
