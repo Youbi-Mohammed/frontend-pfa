@@ -20,11 +20,12 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {
-  Search,
-  SearchIconWrapper,
-  StyledInputBase,
-} from "../../components/navBar/navBar";
+// import {
+//   Search,
+//   SearchIconWrapper,
+//   StyledInputBase,
+// } from "../../components/navBar/navBar";
+import { Search,SearchIconWrapper,StyledInputBase } from "../../components/navBar/NavBar"; 
 import SearchIcon from "@mui/icons-material/Search";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import { useEffect, useState } from "react";

@@ -35,6 +35,8 @@ const studentStuff = [
   { id: 1, text: "Board", icon: <ViewWeekIcon />, path: "/dashboard/project/board" },
   { id: 3, text: "Team", icon: <PeopleAltIcon />, path: "/dashboard/project/team" },
   { id: 43, text: "Docs", icon: <FolderCopyRoundedIcon />, path: "/dashboard/project/docs" },
+  { id:44, text: "Create new account" ,icon: <SubjectIcon/>,path: "/dashboard/project/accounts"},
+  { id:45, text: "Create Students accounts via csv " ,icon: <SubjectIcon/>,path: "/dashboard/project/studentslist"}
 ];
 const supervisorStuff = [
   // { id: 6, text: "Defenses", icon: <CoPresentIcon />, path: "/defenses" },
@@ -124,7 +126,9 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
             },
           }}
         >
-          {isStudent ? (
+          {/* puissque juste student qui marche pour moi je vais essayer de generer pour un student puis je le transforme a un HoB */}
+          {/* aussi de la metre a la place de requests */}
+          {/* {isStudent ? (
             <List>
               <ListSubheader sx={{
                 backgroundColor  : mode === "light" ? "#f5f6fa" : "#121212",
@@ -145,7 +149,54 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                 </ListItem>
               ))}
             </List>
-          ) : null}
+          ) : null} */}
+          {isStudent && (
+  <>
+    {/* Section PROJECT existante */}
+    <List>
+      <ListSubheader sx={{
+        backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
+      }}>PROJECT</ListSubheader>
+      {studentStuff.filter(item => item.id < 44).map((item, index) => (
+        <ListItem key={index} disablePadding>
+          <ListItemButton
+            sx={{ pl: 4, borderRadius: "4px" }}
+            selected={selectedIndex === item.id}
+            onClick={(event) => {
+              handleListItemClick(event, item.id);
+              navigate(item.path);
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText sx={{ ml: -1.5 }} primary={item.text} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+
+    {/* Nouvelle section ACCOUNTS */}
+    <List>
+      <ListSubheader sx={{
+        backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
+      }}>ACCOUNTS</ListSubheader>
+      {studentStuff.filter(item => item.id >= 44).map((item, index) => (
+        <ListItem key={index} disablePadding>
+          <ListItemButton
+            sx={{ pl: 4, borderRadius: "4px" }}
+            selected={selectedIndex === item.id}
+            onClick={(event) => {
+              handleListItemClick(event, item.id);
+              navigate(item.path);
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText sx={{ ml: -1.5 }} primary={item.text} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  </>
+)}
 
           {isSupervisor ? (
             <>

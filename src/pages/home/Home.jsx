@@ -181,14 +181,15 @@ function Home() {
                   </Box>
                 </Typography>
                 {/* YouTube Video Demo */}
-                <Box
+                {/* <Box
                   sx={{
                     position: "relative",
                     paddingTop: "56.25%", // 16:9 aspect ratio (for YouTube videos)
                     mt: 4,
                   }}
-                >
-                  <CardMedia
+                > */}
+                   {/* a retiré */}
+                  {/* <CardMedia
                     component="iframe"
                     src="https://www.youtube.com/embed/nGOy37YAE7g"
                     title="Demo Video"
@@ -199,8 +200,8 @@ function Home() {
                       width: "100%",
                       height: "100%",
                     }}
-                  />
-                </Box>
+                  /> */}
+                {/* </Box> */}
               </CardContent>
             </Card>
           </Grid>

@@ -32,6 +32,8 @@ import GeneralLayout from "./layouts/GeneralLayout";
 import Docs from "./pages/docs/Docs";
 import ForgotPassword from "./pages/authenticate/ForgotPassword";
 import { CssBaseline } from "@mui/material";
+import StudentRegistrationForm from "./components/dialogs/RegisterViaHoBDialog";
+import CsvUploadDialog from "./components/dialogs/csvUploadDialog";
 
 
 function App() {
@@ -52,17 +54,23 @@ const theme = createTheme({
           <Route path="/auth/reset-password" element={<ForgotPassword />} />
           <Route path="/" element={<GeneralLayout />}>
             <Route index element={<Home />} />
-            <Route
-              path="/dashboard"
-              element={<MainLayout mode={mode} setMode={setMode} />}
-            >
-              <Route path="project" element={<ProjectLayout />}>
-                <Route path="backlog" element={<BackLog />} />
-                <Route path="board" element={<Board />} />
-                <Route path="reports" element={<Reports />} />
-                <Route path="team" element={<Team />} />
-                <Route path="docs" element={<Docs />} />
-              </Route>
+          <Route
+  path="/dashboard"
+  element={<MainLayout mode={mode} setMode={setMode} />}
+>
+  <Route path="project" element={<ProjectLayout />}>
+    <Route path="backlog" element={<BackLog />} />
+    <Route path="board" element={<Board />} />
+    <Route path="reports" element={<Reports />} />
+    <Route path="team" element={<Team />} />
+    <Route path="docs" element={<Docs />} />
+    {/* Suppression du doublon de backlog */}
+    <Route path="accounts" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
+    <Route path="studentslist" element={<CsvUploadDialog/>}/>
+  </Route>
+
+                          {/* // /dashbord/accounts/csvcreate */}
+
               <Route path="my-projects" element={<ProjectsLayout />}>
                 <Route index element={<DashBoard />} />
                 <Route path="backlog" element={<BackLog />} />

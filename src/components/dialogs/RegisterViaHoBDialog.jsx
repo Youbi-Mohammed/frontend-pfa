@@ -1,0 +1,871 @@
+// import React, { useState } from 'react';
+// import { registerViaHoB } from '../../services/registerViaHoBService';
+
+// const StudentRegistrationForm = ({ userToken, onRegistrationComplete }) => {
+//   // État initial du formulaire
+//   const [studentData, setStudentData] = useState({
+//     firstName: '',
+//     lastName: '',
+//     branch: 1, // Vous pouvez mettre une valeur par défaut ou laisser vide
+//     cin: '',
+//     inscriptionNumber: '',
+//     email: '',
+//     role: 'ROLE_STUDENT'
+//   });
+
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [notification, setNotification] = useState({ show: false, message: '', isError: false });
+
+//   // Gestion des changements dans les champs
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setStudentData(prev => ({ ...prev, [name]: value }));
+//   };
+
+//   // Soumission du formulaire
+// //   const handleSubmit = async (e) => {
+// //     e.preventDefault();
+// //     setIsSubmitting(true);
+
+// //     try {
+// //       // Appel du service avec le token utilisateur
+// //       const response = await registerViaHoB(userToken, studentData);
+      
+// //       setNotification({
+// //         show: true,
+// //         message: 'Étudiant enregistré avec succès!',
+// //         isError: false
+// //       });
+
+// //       // Réinitialisation du formulaire après succès
+// //       setStudentData({
+// //         firstName: '',
+// //         lastName: '',
+// //         branch: 1,
+// //         cin: '',
+// //         inscriptionNumber: '',
+// //         email: '',
+// //         role: 'ROLE_STUDENT'
+// //       });
+
+// //       // Callback pour informer le composant parent
+// //       onRegistrationComplete?.(response);
+// //     } catch (error) {
+// //       setNotification({
+// //         show: true,
+// //         message: error.message || "Erreur lors de l'enregistrement",
+// //         isError: true
+// //       });
+// //     } finally {
+// //       setIsSubmitting(false);
+// //     }
+// //   };
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   console.log("Token utilisé:", userToken); // Debug A
+//   console.log("Données du formulaire:", studentData); // Debug B
+
+//   try {
+//     const response = await registerViaHoB(userToken, studentData);
+//     console.log("Réponse du serveur:", response); // Debug C
+    
+//       setNotification({
+//         show: true,
+//         message: 'Étudiant enregistré avec succès!',
+//         isError: false
+//       });
+
+//       // Réinitialisation du formulaire après succès
+//       setStudentData({
+//         firstName: '',
+//         lastName: '',
+//         branch: 1,
+//         cin: '',
+//         inscriptionNumber: '',
+//         email: '',
+//         role: 'ROLE_STUDENT'
+//       });
+
+//       // Callback pour informer le composant parent
+//       onRegistrationComplete?.(response);
+    
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+//   } 
+  
+// ;
+
+//   return (
+//     <div style={styles.container}>
+//       <h2 style={styles.title}>Enregistrement d'un Nouvel Étudiant</h2>
+      
+//       <form onSubmit={handleSubmit} style={styles.form}>
+//         {/* Champ Prénom */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>Prénom *</label>
+//           <input
+//             type="text"
+//             name="firstName"
+//             value={studentData.firstName}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ Nom */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>Nom *</label>
+//           <input
+//             type="text"
+//             name="lastName"
+//             value={studentData.lastName}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ CIN */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>CIN *</label>
+//           <input
+//             type="text"
+//             name="cin"
+//             value={studentData.cin}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ Email */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>Email *</label>
+//           <input
+//             type="email"
+//             name="email"
+//             value={studentData.email}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ Numéro d'inscription */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>Numéro d'inscription *</label>
+//           <input
+//             type="text"
+//             name="inscriptionNumber"
+//             value={studentData.inscriptionNumber}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ Filière
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>Filière *</label>
+//           <select
+//             name="branch"
+//             value={studentData.branch}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           >
+//             <option value={1}>Filière 1</option>
+//             <option value={2}>Filière 2</option>
+//             <option value={3}>Filière 3</option>
+//           </select>
+//         </div> */}
+
+//         {/* Bouton de soumission */}
+//         <button
+//           type="submit"
+//           disabled={isSubmitting}
+//           style={{
+//             ...styles.submitButton,
+//             backgroundColor: isSubmitting ? '#cccccc' : '#1976d2'
+//           }}
+//         >
+//           {isSubmitting ? 'Enregistrement en cours...' : 'Enregistrer l\'étudiant'}
+//         </button>
+//       </form>
+
+//       {/* Notification */}
+//       {notification.show && (
+//         <div style={{
+//           ...styles.notification,
+//           backgroundColor: notification.isError ? '#f44336' : '#4caf50'
+//         }}>
+//           {notification.message}
+//           <button 
+//             onClick={() => setNotification(prev => ({ ...prev, show: false }))}
+//             style={styles.notificationClose}
+//           >
+//             ×
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+
+
+// // Styles
+// const styles = {
+//   container: {
+//     maxWidth: '600px',
+//     margin: '0 auto',
+//     padding: '20px',
+//     backgroundColor: '#ffffff',
+//     borderRadius: '8px',
+//     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+//   },
+//   title: {
+//     textAlign: 'center',
+//     color: '#333333',
+//     marginBottom: '24px'
+//   },
+//   form: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '16px'
+//   },
+//   formGroup: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '8px'
+//   },
+//   label: {
+//     fontWeight: '500',
+//     color: '#555555'
+//   },
+//   input: {
+//     padding: '10px 12px',
+//     border: '1px solid #dddddd',
+//     borderRadius: '4px',
+//     fontSize: '16px'
+//   },
+//   submitButton: {
+//     padding: '12px',
+//     color: 'white',
+//     border: 'none',
+//     borderRadius: '4px',
+//     fontSize: '16px',
+//     cursor: 'pointer',
+//     marginTop: '16px'
+//   },
+//   notification: {
+//     position: 'fixed',
+//     bottom: '20px',
+//     left: '50%',
+//     transform: 'translateX(-50%)',
+//     padding: '12px 24px',
+//     color: 'white',
+//     borderRadius: '4px',
+//     display: 'flex',
+//     alignItems: 'center',
+//     gap: '16px',
+//     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
+//   },
+//   notificationClose: {
+//     background: 'none',
+//     border: 'none',
+//     color: 'white',
+//     cursor: 'pointer',
+//     fontSize: '20px',
+//     marginLeft: '8px'
+//   }
+// };
+
+// export default StudentRegistrationForm;
+
+//StudentRegistrationForm.jsx
+// import React from 'react';
+// import { Typography, Paper, Box } from '@mui/material';
+
+// const StudentRegistrationForm = () => {
+//   return (
+//     <Box sx={{ p: 3 }}>
+//       <Paper elevation={3} sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
+//         <Typography variant="h4" component="h1" gutterBottom>
+//           Test Student Registration
+//         </Typography>
+//         <Typography variant="body1">
+//           Si vous voyez ce message, la route fonctionne correctement !
+//         </Typography>
+//         <Box sx={{ mt: 2, p: 2, bgcolor: 'success.light', borderRadius: 1 }}>
+//           <Typography variant="body2">
+//             Chemin actuel : /dashboard/project/accounts
+//           </Typography>
+//         </Box>
+//       </Paper>
+//     </Box>
+//   );
+// };
+
+// export default StudentRegistrationForm;
+
+/////////////////ca marche v
+import React, { useState, useEffect } from 'react';
+import { registerViaHoB } from '../../services/registerViaHoBService';
+
+const StudentRegistrationForm = ({ onRegistrationComplete }) => {
+  // Récupération du token depuis le localStorage
+  const [userToken, setUserToken] = useState(null);
+  const [loadingToken, setLoadingToken] = useState(true);
+   const [userRole, setUserRole] = useState('');
+
+  // État initial du formulaire
+  const [studentData, setStudentData] = useState({
+    firstName: '',
+    lastName: '',
+    branch: 1,
+    cin: '',
+    inscriptionNumber: '',
+    email: '',
+    role: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState({ 
+    show: false, 
+    message: '', 
+    isError: false 
+  });
+
+  // Au montage du composant, récupère le token
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setUserToken(token);
+      // Ici vous pourriez ajouter une requête pour pré-remplir les champs si nécessaire
+      // fetchUserData(token);
+    } else {
+      setNotification({
+        show: true,
+        message: 'Vous devez être connecté pour accéder à cette fonctionnalité',
+        isError: true
+      });
+    }
+    setLoadingToken(false);
+  }, []);
+
+  // Gestion des changements dans les champs
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setStudentData(prev => ({ ...prev, [name]: value }));
+  };
+
+    const handleRoleChange = (e) => {
+    // Seulement si l'utilisateur est superviseur
+     {
+      setStudentData(prev => ({ ...prev, role: e.target.value }));
+    }
+  };
+  // Soumission du formulaire
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!userToken) {
+      setNotification({
+        show: true,
+        message: 'Token non disponible - Veuillez vous reconnecter',
+        isError: true
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Validation minimale des données
+      if (!studentData.firstName || !studentData.lastName || !studentData.cin) {
+        throw new Error('Les champs obligatoires doivent être remplis');
+      }
+
+      const response = await registerViaHoB(userToken, studentData);
+      
+      setNotification({
+        show: true,
+        message: 'Étudiant enregistré avec succès!',
+        isError: false
+      });
+
+      // Réinitialisation du formulaire après succès
+      setStudentData({
+        firstName: '',
+        lastName: '',
+        branch: 1,
+        cin: '',
+        inscriptionNumber: '',
+        email: '',
+        role: userRole === 'ROLE_SUPERVISOR' ? 'ROLE_STUDENT' : 'ROLE_STUDENT'
+      });
+
+      onRegistrationComplete?.(response);
+    } catch (error) {
+      setNotification({
+        show: true,
+        message: error.message || "Erreur lors de l'enregistrement",
+        isError: true
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (loadingToken) {
+    return <div>Chargement...</div>;
+  }
+
+  if (!userToken) {
+    return (
+      <div style={{ 
+        padding: '20px', 
+        textAlign: 'center',
+        color: 'red'
+      }}>
+        Erreur d'authentification - Token non trouvé
+      </div>
+    );
+  }
+
+  return (
+    <div style={styles.container}>
+      <h2 style={styles.title}>Creation Of New Account</h2>
+      
+      <form onSubmit={handleSubmit} style={styles.form}>
+        {/* Champ Prénom */}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>First name *</label>
+          <input
+            type="text"
+            name="firstName"
+            value={studentData.firstName}
+            onChange={handleInputChange}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        {/* Champ Nom */}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Last name *</label>
+          <input
+            type="text"
+            name="lastName"
+            value={studentData.lastName}
+            onChange={handleInputChange}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        {/* Champ CIN */}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>CIN *</label>
+          <input
+            type="text"
+            name="cin"
+            value={studentData.cin}
+            onChange={handleInputChange}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        {/* Champ Email */}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Email *</label>
+          <input
+            type="email"
+            name="email"
+            value={studentData.email}
+            onChange={handleInputChange}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        {/* Champ Numéro d'inscription */}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Inscription number *</label>
+          <input
+            type="text"
+            name="inscriptionNumber"
+            value={studentData.inscriptionNumber}
+            onChange={handleInputChange}
+            required
+            style={styles.input}
+          />
+        </div>
+
+        {/* champ pour le role */}
+                   <div style={styles.formGroup}>
+             <label style={styles.label}>Account Type *</label>
+             <select
+               name="role"
+               value={studentData.role}
+               onChange={handleRoleChange}
+               required
+               style={styles.input}
+             >
+               <option value="">Select a role</option>
+               <option value="ROLE_STUDENT">Student</option>
+               <option value="ROLE_SUPERVISOR">Supervisor</option>
+             </select>
+           </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          style={{
+            ...styles.submitButton,
+            backgroundColor: isSubmitting ? '#cccccc' : '#1976d2'
+          }}
+        >
+          {isSubmitting ? 'Enregistrement en cours...' : 'Enregistrer l\'étudiant'}
+        </button>
+      </form>
+
+      {notification.show && (
+        <div style={{
+          ...styles.notification,
+          backgroundColor: notification.isError ? '#f44336' : '#4caf50'
+        }}>
+          {notification.message}
+          <button 
+            onClick={() => setNotification(prev => ({ ...prev, show: false }))}
+            style={styles.notificationClose}
+          >
+            ×
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Styles (identique à votre version originale)
+const styles = {
+  container: {
+    maxWidth: '600px',
+    margin: '0 auto',
+    padding: '20px',
+    backgroundColor: '#ffffff',
+    borderRadius: '8px',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+  },
+  title: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: '24px'
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px'
+  },
+  formGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px'
+  },
+  label: {
+    fontWeight: '500',
+    color: '#555555'
+  },
+  input: {
+    padding: '10px 12px',
+    border: '1px solid #dddddd',
+    borderRadius: '4px',
+    fontSize: '16px'
+  },
+  submitButton: {
+    padding: '12px',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    fontSize: '16px',
+    cursor: 'pointer',
+    marginTop: '16px'
+  },
+  notification: {
+    position: 'fixed',
+    bottom: '20px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    padding: '12px 24px',
+    color: 'white',
+    borderRadius: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
+  },
+  notificationClose: {
+    background: 'none',
+    border: 'none',
+    color: 'white',
+    cursor: 'pointer',
+    fontSize: '20px',
+    marginLeft: '8px'
+  }
+};
+
+export default StudentRegistrationForm;
+
+//////////ca marche ^
+// import React, { useState, useEffect } from 'react';
+// import { registerViaHoB } from '../../services/registerViaHoBService';
+
+// const StudentRegistrationForm = ({ onRegistrationComplete }) => {
+//   const [userToken, setUserToken] = useState(null);
+//   const [loadingToken, setLoadingToken] = useState(true);
+//   const [userRole, setUserRole] = useState(''); // Nouvel état pour le rôle
+
+//   const [studentData, setStudentData] = useState({
+//     firstName: '',
+//     lastName: '',
+//     branch: 1,
+//     cin: '',
+//     inscriptionNumber: '',
+//     email: '',
+//     role: '' // Rôle vide initialement
+//   });
+
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [notification, setNotification] = useState({ 
+//     show: false, 
+//     message: '', 
+//     isError: false 
+//   });
+
+//   useEffect(() => {
+//     const token = localStorage.getItem('token');
+//     const role = localStorage.getItem('role'); // Récupère le rôle depuis le localStorage
+    
+//     if (token && role) {
+//       setUserToken(token);
+//       setUserRole(role);
+      
+//       // Définit le rôle par défaut en fonction de l'utilisateur connecté
+//       setStudentData(prev => ({
+//         ...prev,
+//         role: role === 'ROLE_SUPERVISOR' ? 'ROLE_STUDENT' : 'ROLE_STUDENT'
+//       }));
+//     } else {
+//       setNotification({
+//         show: true,
+//         message: 'Vous devez être connecté pour accéder à cette fonctionnalité',
+//         isError: true
+//       });
+//     }
+//     setLoadingToken(false);
+//   }, []);
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setStudentData(prev => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleRoleChange = (e) => {
+//     // Seulement si l'utilisateur est superviseur
+//     if (userRole === 'ROLE_SUPERVISOR') {
+//       setStudentData(prev => ({ ...prev, role: e.target.value }));
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+    
+//     if (!userToken) {
+//       setNotification({
+//         show: true,
+//         message: 'Token non disponible - Veuillez vous reconnecter',
+//         isError: true
+//       });
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       if (!studentData.firstName || !studentData.lastName || !studentData.cin || !studentData.role) {
+//         throw new Error('Tous les champs obligatoires doivent être remplis');
+//       }
+
+//       const response = await registerViaHoB(userToken, studentData);
+      
+//       setNotification({
+//         show: true,
+//         message: 'Compte créé avec succès!',
+//         isError: false
+//       });
+
+//       setStudentData({
+//         firstName: '',
+//         lastName: '',
+//         branch: 1,
+//         cin: '',
+//         inscriptionNumber: '',
+//         email: '',
+//         role: userRole === 'ROLE_SUPERVISOR' ? 'ROLE_STUDENT' : 'ROLE_STUDENT'
+//       });
+
+//       onRegistrationComplete?.(response);
+//     } catch (error) {
+//       setNotification({
+//         show: true,
+//         message: error.message || "Erreur lors de la création du compte",
+//         isError: true
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   if (loadingToken) {
+//     return <div>Chargement...</div>;
+//   }
+
+//   if (!userToken) {
+//     return (
+//       <div style={{ 
+//         padding: '20px', 
+//         textAlign: 'center',
+//         color: 'red'
+//       }}>
+//         Erreur d'authentification - Token non trouvé
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div style={styles.container}>
+//       <h2 style={styles.title}>Creation Of New Account</h2>
+      
+//       <form onSubmit={handleSubmit} style={styles.form}>
+//         {/* Champs existants... */}
+        
+//         {/* Champ Rôle (seulement visible pour les superviseurs) */}
+//         {userRole === 'ROLE_SUPERVISOR' && (
+//           <div style={styles.formGroup}>
+//             <label style={styles.label}>Account Type *</label>
+//             <select
+//               name="role"
+//               value={studentData.role}
+//               onChange={handleRoleChange}
+//               required
+//               style={styles.input}
+//             >
+//               <option value="">Select a role</option>
+//               <option value="ROLE_STUDENT">Student</option>
+//               <option value="ROLE_SUPERVISOR">Supervisor</option>
+//             </select>
+//           </div>
+//         )}
+
+//         <button
+//           type="submit"
+//           disabled={isSubmitting}
+//           style={{
+//             ...styles.submitButton,
+//             backgroundColor: isSubmitting ? '#cccccc' : '#1976d2'
+//           }}
+//         >
+//           {isSubmitting ? 'Processing...' : 'Create Account'}
+//         </button>
+//       </form>
+
+//       {notification.show && (
+//         <div style={{
+//           ...styles.notification,
+//           backgroundColor: notification.isError ? '#f44336' : '#4caf50'
+//         }}>
+//           {notification.message}
+//           <button 
+//             onClick={() => setNotification(prev => ({ ...prev, show: false }))}
+//             style={styles.notificationClose}
+//           >
+//             ×
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// // Styles (identique à votre version originale)
+// const styles = {
+//   container: {
+//     maxWidth: '600px',
+//     margin: '0 auto',
+//     padding: '20px',
+//     backgroundColor: '#ffffff',
+//     borderRadius: '8px',
+//     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+//   },
+//   title: {
+//     textAlign: 'center',
+//     color: '#333333',
+//     marginBottom: '24px'
+//   },
+//   form: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '16px'
+//   },
+//   formGroup: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '8px'
+//   },
+//   label: {
+//     fontWeight: '500',
+//     color: '#555555'
+//   },
+//   input: {
+//     padding: '10px 12px',
+//     border: '1px solid #dddddd',
+//     borderRadius: '4px',
+//     fontSize: '16px'
+//   },
+//   submitButton: {
+//     padding: '12px',
+//     color: 'white',
+//     border: 'none',
+//     borderRadius: '4px',
+//     fontSize: '16px',
+//     cursor: 'pointer',
+//     marginTop: '16px'
+//   },
+//   notification: {
+//     position: 'fixed',
+//     bottom: '20px',
+//     left: '50%',
+//     transform: 'translateX(-50%)',
+//     padding: '12px 24px',
+//     color: 'white',
+//     borderRadius: '4px',
+//     display: 'flex',
+//     alignItems: 'center',
+//     gap: '16px',
+//     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
+//   },
+//   notificationClose: {
+//     background: 'none',
+//     border: 'none',
+//     color: 'white',
+//     cursor: 'pointer',
+//     fontSize: '20px',
+//     marginLeft: '8px'
+//   }
+// };
+
+// export default StudentRegistrationForm;
