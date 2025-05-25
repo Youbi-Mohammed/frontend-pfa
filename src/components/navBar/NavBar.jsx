@@ -29,7 +29,7 @@ import {
 } from "../../services/notificationService";
 import { stringAvatar } from "../../utils/generalUtils";
 import { hasRole } from "../../utils/userUtiles";
-//import CreateProjectDialog from "../dialogs/CreateProjectDialog";
+import CreateProjectDialog from "../dialogs/CreateProjectDialog.jsx";
 import CreateTeamDialog from "../dialogs/CreateTeamDialog.jsx";
 import Notifications from "../notification/Notifications";
 //import { Search, SearchIconWrapper, StyledInputBase } from "./navBar";

@@ -35,25 +35,23 @@ const studentStuff = [
   { id: 1, text: "Board", icon: <ViewWeekIcon />, path: "/dashboard/project/board" },
   { id: 3, text: "Team", icon: <PeopleAltIcon />, path: "/dashboard/project/team" },
   { id: 43, text: "Docs", icon: <FolderCopyRoundedIcon />, path: "/dashboard/project/docs" },
-  { id:44, text: "Create new account" ,icon: <SubjectIcon/>,path: "/dashboard/project/accounts"},
-  { id:45, text: "Create Students accounts via csv " ,icon: <SubjectIcon/>,path: "/dashboard/project/studentslist"}
+  // { id:44, text: "Create new account" ,icon: <SubjectIcon/>,path: "/dashboard/project/accounts"},
+  // { id:45, text: "Create Students accounts via csv " ,icon: <SubjectIcon/>,path: "/dashboard/project/studentslist"}
 ];
 const supervisorStuff = [
   // { id: 6, text: "Defenses", icon: <CoPresentIcon />, path: "/defenses" },
 ];
 const HOBStuff = [
-  { id: 7, text: "Requests", icon: <PersonAddAlt1Icon />, path: "/dashboard/requests" },
-  {
-    id: 10,
-    text: "Assignments",
-    icon: <AssignmentIcon />,
-    path: "/dashboard/assignments",
-  },
+  // { id: 7, text: "Requests", icon: <PersonAddAlt1Icon />, path: "/dashboard/requests" },
+ 
+  { id:10, text: "Create new account" ,icon: <SubjectIcon/>,path: "/dashboard/project/accounts"},
+  { id:11, text: "Create Students accounts via csv " ,icon: <SubjectIcon/>,path: "/dashboard/project/studentslist"},
+  { id: 12, text: "Assignments", icon: <AssignmentIcon />, path: "/dashboard/assignments",}
 ];
 
 const forAll = [
   {
-    id: 11,
+    id: 15,
     text: "Result",
     icon: <AssignmentIcon />,
     path: "/dashboard/assignments/result",
@@ -296,7 +294,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
             </>
           ) : null}
 
-          {isHOB ? (
+          {/* {isHOB ? (
             <>
               <Divider />
               <List>
@@ -317,9 +315,81 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                 ))}
               </List>
             </>
-          ) : null}
+          ) : null} */}
+          {isHOB && (
+  <>
+    {/* Section ACCOUNTS CREATION */}
+    <List>
+      <ListSubheader sx={{
+        backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
+      }}>ACCOUNTS CREATION</ListSubheader>
+      {HOBStuff.filter(item => [10, 11].includes(item.id)).map((item) => (
+        <ListItem key={item.id} disablePadding>
+          <ListItemButton
+            sx={{ pl: 4, borderRadius: "4px" }}
+            selected={selectedIndex === item.id}
+            onClick={(event) => {
+              handleListItemClick(event, item.id);
+              navigate(item.path);
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText sx={{ ml: -1.5 }} primary={item.text} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+
+    {/* Section ASSIGNMENTS */}
+    <List>
+      <ListSubheader sx={{
+        backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
+      }}>ASSIGNMENTS</ListSubheader>
+      {HOBStuff.filter(item => item.id === 12).map((item) => (
+        <ListItem key={item.id} disablePadding>
+          <ListItemButton
+            sx={{ pl: 4, borderRadius: "4px" }}
+            selected={selectedIndex === item.id}
+            onClick={(event) => {
+              handleListItemClick(event, item.id);
+              navigate(item.path);
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText sx={{ ml: -1.5 }} primary={item.text} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  </>
+)}
+
+{/* Section COMMON (forAll) */}
+{/* il faut choisir entre cette partie ou bien la partie a partir de ligne 392 */}
+<Divider />
+<List>
+  <ListSubheader sx={{
+    backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
+  }}>GENERAL</ListSubheader>
+  {forAll.map((item) => (
+    <ListItem key={item.id} disablePadding>
+      <ListItemButton
+        sx={{ pl: 4, borderRadius: "4px" }}
+        selected={selectedIndex === item.id}
+        onClick={(event) => {
+          handleListItemClick(event, item.id);
+          navigate(item.path);
+        }}
+      >
+        <ListItemIcon>{item.icon}</ListItemIcon>
+        <ListItemText sx={{ ml: -1.5 }} primary={item.text} />
+      </ListItemButton>
+    </ListItem>
+  ))}
+</List>
           <Divider />
-          <List>
+          {/* et entre celle la  */}
+          {/* <List>
             {forAll.map((item, index) => (
               <ListItem key={index} disablePadding>
                 <ListItemButton
@@ -335,7 +405,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                 </ListItemButton>
               </ListItem>
             ))}
-          </List>
+          </List> */}
         </Box>
       </StyledDrawer>
     </Box>

@@ -50,7 +50,8 @@ const theme = createTheme({
       <BrowserRouter>
         <Routes>
           <Route path="/auth/authenticate" element={<Authenticate />} />
-          <Route path="/auth/register" element={<Register />} />
+          {/* commenter cette ligne pour ne as avoir un register  */}
+          {/* <Route path="/auth/register" element={<Register />} /> */}
           <Route path="/auth/reset-password" element={<ForgotPassword />} />
           <Route path="/" element={<GeneralLayout />}>
             <Route index element={<Home />} />
@@ -64,12 +65,11 @@ const theme = createTheme({
     <Route path="reports" element={<Reports />} />
     <Route path="team" element={<Team />} />
     <Route path="docs" element={<Docs />} />
-    {/* Suppression du doublon de backlog */}
     <Route path="accounts" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
     <Route path="studentslist" element={<CsvUploadDialog/>}/>
   </Route>
 
-                          {/* // /dashbord/accounts/csvcreate */}
+                      
 
               <Route path="my-projects" element={<ProjectsLayout />}>
                 <Route index element={<DashBoard />} />
