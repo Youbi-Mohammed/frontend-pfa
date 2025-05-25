@@ -43,11 +43,12 @@ function GeneralLayout({ setMode }) {
               <Box style={{ display: "flex",alignItems:"center" }}>
                 {token === null && (
                   <>
-                    <Button color="inherit" sx={{ marginRight: "10px" }} href="/auth/register">
+                    {/* <Button color="inherit" sx={{ marginRight: "10px" }} href="/auth/register">
                       Login
-                    </Button>
-                    <Button color="inherit" variant="outlined" href="/auth/register">
-                      Sign up
+                    </Button> */}
+                    {/* ici on va eliminer le register car on s'occupe du login cest par le HoB  */}
+                    <Button color="inherit" variant="outlined" href="/auth/authenticate">
+                      Login
                     </Button>
                   </>
                 )}
