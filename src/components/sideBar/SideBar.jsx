@@ -172,7 +172,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
       ))}
     </List>
 
-    {/* Nouvelle section ACCOUNTS */}
+    {/* Nouvelle section ACCOUNTS
     <List>
       <ListSubheader sx={{
         backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
@@ -192,7 +192,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
           </ListItemButton>
         </ListItem>
       ))}
-    </List>
+    </List> */}
   </>
 )}
 
