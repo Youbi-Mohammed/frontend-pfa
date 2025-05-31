@@ -51,36 +51,7 @@ export default function Authenticate() {
   function handleClick() {
     setLoading(true);
   }
-////ok
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   handleClick();
-    
-  //   const data = new FormData(event.currentTarget);
-  //   const res = await authenticate(
-  //     data.get("email"),
-  //     data.get("password"),
-  //     setSnackbarOpen,
-  //     setSnackbarMessage,
-  //     setLoading
-  //   );
-    
-  //   if (res.token) {
-  //     localStorage.setItem("token", res.token);
-  //     console.log(res)
-  //     setError(null);
-  //     setLoading(false);
-  //       var a = document.createElement("a");
-  //       a.href = "/";
-  //       document.body.appendChild(a);
-  //       a.click();
-  //       document.body.removeChild(a);
-  //   } else {
-  //     setError(res);
-  //   }
-  //   console.log(res);
-//};
-  ////en haut ok 
+
   
   const handleSubmit = async (event) => {
   event.preventDefault();
@@ -130,7 +101,7 @@ export default function Authenticate() {
           sx={{ m: 1, bgcolor: "secondary.main" }}
         />
         <Typography component="h1" variant="h5">
-          Sign in
+          Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
@@ -181,9 +152,9 @@ export default function Authenticate() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/auth/register" variant="body2">
+              {/* <Link href="/auth/register" variant="body2">
                 D'ont have an account? Sign Up
-              </Link>
+              </Link> */}
             </Grid>
           </Grid>
         </Box>
