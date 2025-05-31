@@ -9,7 +9,7 @@
 //   Stack
 // } from '@mui/material';
 
-// const PasswordChangeForm = ({
+// const ChangeInitialPassword = ({
 //   temporaryToken,
 //   email,
 //   onSuccess,
@@ -119,12 +119,12 @@
 //   );
 // };
 
-// export default PasswordChangeForm;
+// export default ChangeInitialPassword;
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { changeInitialPassword } from "../../services/authService"
 
-export default function PasswordChangeForm() {
+export default function ChangeInitialPassword() {
   const location = useLocation();
   const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState('');
