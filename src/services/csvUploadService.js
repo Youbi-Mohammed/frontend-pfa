@@ -1,5 +1,7 @@
 export async function uploadCsvStudent(token, data) {
-  const response = await fetch("http://localhost:8080/api/csv/upload", {
+ // const response = await fetch("http://localhost:8080/api/csv/upload",old path
+    //create-students-list
+     const response = await fetch("http://localhost:8080/api/auth/create-students-list",{
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
