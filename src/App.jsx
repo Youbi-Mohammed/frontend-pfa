@@ -35,7 +35,6 @@ import { CssBaseline } from "@mui/material";
 import StudentRegistrationForm from "./components/dialogs/RegisterViaHoBDialog";
 import CsvUploadDialog from "./components/dialogs/csvUploadDialog";
 import Login from "./components/islam/Login";
-import ChangeInitialPassword from "./components/islam/ChangeInitialPassword";
 import PasswordChangeForm from "./pages/authenticate/PasswordChangeForm";
 function App() {
   const [mode , setMode] = useState(localStorage.getItem("mode") || "light");
