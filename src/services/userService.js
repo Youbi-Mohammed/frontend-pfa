@@ -1,17 +1,40 @@
+// const getUsers = async (token) => {
+//   const users = await fetch("http://localhost:8080/api/users", {
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     },
+//   })
+//     .then((response) => response.json())
+//     .catch((error) => {
+//       console.error("Error fetching data:", error);
+//       throw error;
+//     });
+//   return users;
+// };
 const getUsers = async (token) => {
-  const users = await fetch("http://localhost:8080/api/users", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-      throw error;
+  try {
+    const response = await fetch("http://localhost:8080/api/users", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
     });
-  return users;
+
+    if (!response.ok) {
+      console.error("Erreur de statut HTTP:", response.status);
+      //throw new Error("Erreur d'accès à l'API");
+    }
+
+   const text = await response.text();
+const data = text ? JSON.parse(text) : {};
+return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
 };
 
 const getUserById = async (userId, token) => {

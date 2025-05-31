@@ -34,8 +34,9 @@ import ForgotPassword from "./pages/authenticate/ForgotPassword";
 import { CssBaseline } from "@mui/material";
 import StudentRegistrationForm from "./components/dialogs/RegisterViaHoBDialog";
 import CsvUploadDialog from "./components/dialogs/csvUploadDialog";
-
-
+import Login from "./components/islam/Login";
+import ChangeInitialPassword from "./components/islam/ChangeInitialPassword";
+import PasswordChangeForm from "./pages/authenticate/PasswordChangeForm";
 function App() {
   const [mode , setMode] = useState(localStorage.getItem("mode") || "light");
 
@@ -54,6 +55,8 @@ const theme = createTheme({
           {/* <Route path="/auth/register" element={<Register />} /> */}
           <Route path="/auth/reset-password" element={<ForgotPassword />} />
           <Route path="/" element={<GeneralLayout />}>
+          <Route path="/login" element={<Login />} />
+        <Route path="/change-password" element={<PasswordChangeForm />} />
             <Route index element={<Home />} />
           <Route
   path="/dashboard"
