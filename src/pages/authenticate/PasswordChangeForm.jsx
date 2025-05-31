@@ -133,35 +133,62 @@ export default function PasswordChangeForm() {
 
   const { temporaryToken, oldPassword } = location.state || {};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
     
-    if (newPassword !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
-      return;
-    }
+  //   if (newPassword !== confirmPassword) {
+  //     setError("Les mots de passe ne correspondent pas");
+  //     return;
+  //   }
 
-    try {
-      await changeInitialPassword(temporaryToken, oldPassword, newPassword);
-      // try {
-      //         const users = await getUsers(data.temporaryToken);
-      //         const user = users.find(user => user.email === email);
-      //         if (user) {
-      //     localStorage.setItem("email", user.email);}
-      //           else{
-      //             localStorage.setItem("email",null);
-      //           }
-      //         }
-      //         catch (error) {
-      //   console.warn("Erreur lors de la récupération des données utilisateur:", error);
-      // }
-      navigate('/auth/authenticate', { state: { message: "Mot de passe changé avec succès" } }
+  //   try {
+  //     await changeInitialPassword(temporaryToken, oldPassword, newPassword);
+  //     // try {
+  //     //         const users = await getUsers(data.temporaryToken);
+  //     //         const user = users.find(user => user.email === email);
+  //     //         if (user) {
+  //     //     localStorage.setItem("email", user.email);}
+  //     //           else{
+  //     //             localStorage.setItem("email",null);
+  //     //           }
+  //     //         }
+  //     //         catch (error) {
+  //     //   console.warn("Erreur lors de la récupération des données utilisateur:", error);
+  //     // }
+  //     navigate('/auth/authenticate', { state: { message: "Mot de passe changé avec succès" } }
 
-      );
-    } catch (error) {
-      setError(error.message);
+  //     );
+  //   } catch (error) {
+  //     setError(error.message);
+  //   }
+  // };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  if (newPassword !== confirmPassword) {
+    setError("Les mots de passe ne correspondent pas");
+    return;
+  }
+
+  try {
+    const result = await changeInitialPassword(temporaryToken, oldPassword, newPassword);
+    
+    // Stocker l'email dans le localStorage
+    if (result.userEmail) {
+      localStorage.setItem("email", result.userEmail);
     }
-  };
+    
+    navigate('/auth/authenticate', { 
+      state: { 
+        message: "Mot de passe changé avec succès",
+        email: result.userEmail // Optionnel: passer aussi dans l'état de navigation
+      } 
+    });
+    
+  } catch (error) {
+    setError(error.message);
+  }
+};
 
   if (!temporaryToken) {
     return (
