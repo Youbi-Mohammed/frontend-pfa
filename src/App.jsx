@@ -34,6 +34,8 @@ import ForgotPassword from "./pages/authenticate/ForgotPassword";
 import { CssBaseline } from "@mui/material";
 import StudentRegistrationForm from "./components/dialogs/RegisterViaHoBDialog";
 import CsvUploadDialog from "./components/dialogs/csvUploadDialog";
+import DiagramPage from "./pages/tools/DiagramPage";
+
 //import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 function App() {
@@ -55,6 +57,7 @@ const theme = createTheme({
           <Route path="/auth/reset-password" element={<ForgotPassword />} />
           <Route path="/" element={<GeneralLayout />}>
         <Route path="/change-password" element={<ChangeInitialPassword />} />
+        <Route path="/dashboard/diagram-generator" element={<DiagramPage />} />
             <Route index element={<Home />} />
           <Route
   path="/dashboard"

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './DiagramPage.css';
 
 function DiagramPage() {
     const [projectExplanation, setProjectExplanation] = useState('');

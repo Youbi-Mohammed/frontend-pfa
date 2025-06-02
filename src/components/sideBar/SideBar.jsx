@@ -62,7 +62,7 @@ const forAll = [
     id: 16, 
     text: "Diagram Generator", 
     icon: <AccountTreeIcon />, 
-    path: "/dashboard/diagram-generator" 
+    path: "/dashboard/tools/diagram-generator" 
   },
 ];
 // eslint-disable-next-line react/prop-types
