@@ -57,12 +57,12 @@ const theme = createTheme({
           <Route path="/auth/reset-password" element={<ForgotPassword />} />
           <Route path="/" element={<GeneralLayout />}>
         <Route path="/change-password" element={<ChangeInitialPassword />} />
-        <Route path="/dashboard/diagram-generator" element={<DiagramPage />} />
             <Route index element={<Home />} />
           <Route
   path="/dashboard"
   element={<MainLayout mode={mode} setMode={setMode} />}
 >
+<Route path="tools/diagram-generator" element={<DiagramPage />} />
   <Route path="project" element={<ProjectLayout />}>
     <Route path="backlog" element={<BackLog />} />
     <Route path="board" element={<Board />} />
