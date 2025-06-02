@@ -268,7 +268,7 @@ const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
 
   const handleSubmit = async () => {
     if (!file) {
-      setNotification({ show: true, message: 'Aucun fichier sélectionné', isError: true });
+      setNotification({ show: true, message: 'No file selected', isError: true });
       return;
     }
 
@@ -279,14 +279,14 @@ const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('Token d\'authentification manquant');
+        throw new Error('Authentication token missing');
       }
 
       const response = await uploadCsvStudent(token, formData);
       
       setNotification({
         show: true,
-        message: response.message || 'Fichier CSV uploadé avec succès',
+        message: response.message || 'CSV file uploaded successfully',
         isError: false
       });
 
@@ -295,10 +295,10 @@ const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
 
       if (onUploadSuccess) onUploadSuccess(response);
     } catch (error) {
-      console.error('Erreur lors de l\'upload:', error);
+      console.error('Error during upload:', error);
       setNotification({
         show: true,
-        message: error.message || 'Erreur lors de l\'upload du fichier',
+        message: error.message || 'Error uploading the file',
         isError: true
       });
       if (onUploadError) onUploadError(error);
@@ -309,7 +309,7 @@ const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Uploader un fichier CSV</h2>
+      <h2 style={styles.title}>Upload a CSV File</h2>
       
       <div style={styles.uploadSection}>
         <input
@@ -323,7 +323,7 @@ const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
           onClick={() => fileInputRef.current.click()}
           style={styles.selectButton}
         >
-          Sélectionner un fichier CSV
+          Select a CSV File
         </button>
         
         {file && (
@@ -348,7 +348,7 @@ const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
           cursor: isUploading ? 'wait' : 'pointer'
         }}
       >
-        {isUploading ? 'Upload en cours...' : 'Uploader le fichier'}
+        {isUploading ? 'Uploading...' : 'Upload File'}
       </button>
 
       {notification.show && (
