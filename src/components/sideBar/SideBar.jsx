@@ -29,7 +29,7 @@ import { DrawerHeader, StyledDrawer } from "./sideBar";
 import { getAllProjects } from "../../services/projectService";
 import { ExpandCircleDown, PeopleOutline } from "@mui/icons-material";
 import FolderCopyRoundedIcon from "@mui/icons-material/FolderCopyRounded";
-
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 const studentStuff = [
   { id: 0, text: "BackLog", icon: <SubjectIcon />, path: "/dashboard/project/backlog" },
   { id: 1, text: "Board", icon: <ViewWeekIcon />, path: "/dashboard/project/board" },
@@ -58,6 +58,12 @@ const forAll = [
   },
   { id: 9, text: "Presentations", icon: <CoPresentIcon />, path: "/dashboard/presentations" },
   { id: 13, text: "Projects", icon: <FolderCopyIcon />, path: "/dashboard/projects" },
+  { 
+    id: 16, 
+    text: "Diagram Generator", 
+    icon: <AccountTreeIcon />, 
+    path: "/dashboard/diagram-generator" 
+  },
 ];
 // eslint-disable-next-line react/prop-types
 export default function SideBar({ mode, open, handleDrawerClose }) {
