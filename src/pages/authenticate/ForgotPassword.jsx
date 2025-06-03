@@ -71,9 +71,55 @@ function ForgotPassword() {
         setLoading(false);
       }else{
         const response = await resetPassword(token,newPassword,setSnackbarOpen,setSnackbarMessage,setLoading);
+      if (response) {
+        // Stocker l'email dans le localStorage
+        localStorage.setItem("email", email);
+        // tdi l Authentification  b3d 2 secondes //bdltha rditha seconde w ns ; lw9T min dahab ; in lam takon di2ban bima tchtahi sofn ,tala3A badro 3layana 
+        setSnackbarOpen(true);
+        setSnackbarMessage("Password reset successfully");
+        setTimeout(() => {
+          navigate('/auth/authenticate');
+        }, 1500);
+      }
       }
     }
   };
+//   const handleNext = async (event) => {
+//   event.preventDefault();
+//   setLoading(true);
+
+//   try {
+//     if (activeStep === 0) {
+//       const success = await forgotPassword(email, setSnackbarOpen, setSnackbarMessage, setLoading);
+//       if (success) setActiveStep(1);
+      
+//     } else if (activeStep === 1) {
+//       const isValid = await validateToken(email, token, setSnackbarOpen, setSnackbarMessage, setLoading);
+//       if (isValid) setActiveStep(2);
+      
+//     } else if (activeStep === 2) {
+//       if (newPassword !== confirmPasswordRef.current.value) {
+//         throw new Error("Passwords do not match");
+//       }
+      
+//       const success = await resetPassword(token, newPassword, setSnackbarOpen, setSnackbarMessage, setLoading);
+//       if (success) {
+//         // Stocker l'email dans le localStorage
+//         localStorage.setItem("resetEmail", email);
+//         // Rediriger après 2 secondes
+//         setTimeout(() => {
+//           navigate('/auth/authenticate');
+//         }, 2000);
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Step error:", error);
+//     setSnackbarMessage(error.message);
+//     setSnackbarOpen(true);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);

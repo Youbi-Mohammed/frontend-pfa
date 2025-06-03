@@ -542,24 +542,59 @@ const validateToken = async (email,token,setSnackBarOpen,setSnackbarMessage,setL
   }
 }
 
-const resetPassword = async (token,password,setSnackBarOpen,setSnackbarMessage,setLoading) => {
-  const response = await fetch(`http://localhost:8080/api/auth/reset-password?token=${token}&password=${password}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// const resetPassword = async (token,password,setSnackBarOpen,setSnackbarMessage,setLoading) => {
+//   const response = await fetch(`http://localhost:8080/api/auth/reset-password?token=${token}&password=${password}`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
 
-  if (response.ok) {
-    setSnackBarOpen(true);
-    setSnackbarMessage("Password reset successfully");
-    setLoading(false);
-  } else {
-    setSnackBarOpen(true);
-    setSnackbarMessage("Error resetting password");
+//   if (response.ok) {
+//     setSnackBarOpen(true);
+//     setSnackbarMessage("Password reset successfully");
+//     setLoading(false);
+//   } else {
+//     setSnackBarOpen(true);
+//     setSnackbarMessage("Error resetting password");
+//     setLoading(false);
+//   }
+// }
+const resetPassword = async (token, newPassword, setSnackbarOpen, setSnackbarMessage, setLoading) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token,
+        password: newPassword // hna khsni ndir password li kayn f request dyal reset password , ntesti 7ta bsmia dyal variable f front 3la lah 
+        // jai vu dans le test de islam que c'est password
+        //mochkil kan ghir hna makanch ysift data f body dyal request
+   
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Échec de la réinitialisation");
+    }
+
+    const data = await response.json();
+    setSnackbarMessage(data.message || "Mot de passe réinitialisé avec succès");
+    setSnackbarOpen(true);
+    return true;
+
+  } catch (error) {
+    console.error("Reset password error:", error);
+    setSnackbarMessage(error.message || "Erreur serveur");
+    setSnackbarOpen(true);
+    return false;
+  } finally {
     setLoading(false);
   }
-}
+};
 //authenticate deja exporter 
 export { authenticate, changeInitialPassword,register, acceptUser, rejectUser, forgotPassword ,resetPassword,validateToken};
 // export {  register, acceptUser, rejectUser, forgotPassword ,resetPassword,validateToken};
