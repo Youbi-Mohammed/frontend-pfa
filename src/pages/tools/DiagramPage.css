@@ -125,3 +125,48 @@ textarea {
   border-bottom: none;
   margin-bottom: 20px;
 }
+
+.diagram-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.download-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.download-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.download-button:hover {
+  background: #0069d9;
+}
+
+.download-button.secondary {
+  background: #6c757d;
+}
+
+.download-button.secondary:hover {
+  background: #5a6268;
+}
+
+
+.download-button::before {
+  content: "⬇";
+  margin-right: 5px;
+}

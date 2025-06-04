@@ -13,8 +13,9 @@ function DiagramPage() {
     const [umlDiagramSvg, setUmlDiagramSvg] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    
 
-    // Handle dynamic entities
+    
     const addEntity = () => {
         setEntities([...entities, { name: '', attributes: '', methods: '' }]);
     };
@@ -25,7 +26,7 @@ function DiagramPage() {
         setEntities(newEntities);
     };
 
-    // Convert structured data to text explanation
+   
     const formatStructuredDataToText = () => {
         let text = `System Name: ${systemName}\n\n`;
         
@@ -47,7 +48,7 @@ function DiagramPage() {
         return text;
     };
 
-    // Form validation
+   
     const validateForm = () => {
         if (!systemName.trim()) {
             return "System name is required";
@@ -64,6 +65,22 @@ function DiagramPage() {
         
         return null;
     };
+    const downloadSvg = () => {
+        if (!umlDiagramSvg) return;
+        
+        const blob = new Blob([umlDiagramSvg], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${systemName.replace(/\s+/g, '_')}_diagram.svg`;
+        document.body.appendChild(a);
+        a.click();
+        
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
 
     const generateDiagram = async () => {
         const validationError = validateForm();
@@ -77,10 +94,10 @@ function DiagramPage() {
         setUmlDiagramSvg('');
 
         try {
-            // Convert structured data to text explanation
+           
             const textExplanation = formatStructuredDataToText();
             
-            // Send to backend
+           
             const response = await fetch(
                 'http://localhost:8080/api/v1/diagrams/generate-from-text', 
                 {
@@ -113,7 +130,6 @@ function DiagramPage() {
         <div className="diagram-container">
             <h1>UML Diagram Generator</h1>
             
-            {/* Section 1: System Overview */}
             <div className="form-section">
                 <h2>1. System Overview</h2>
                 <label>
@@ -128,7 +144,7 @@ function DiagramPage() {
                 </label>
             </div>
 
-            {/* Section 2: Main Entities */}
+          
             <div className="form-section">
                 <h2>2. Main Entities *</h2>
                 <p className="hint">
@@ -181,7 +197,6 @@ function DiagramPage() {
                 </button>
             </div>
 
-            {/* Section 3: Relationships */}
             <div className="form-section">
                 <h2>3. Entity Relationships</h2>
                 <p className="hint">
@@ -196,7 +211,7 @@ function DiagramPage() {
                 />
             </div>
 
-            {/* Section 4: Key Functionalities */}
+      
             <div className="form-section">
                 <h2>4. Key Functionalities *</h2>
                 <p className="hint">
@@ -212,7 +227,7 @@ function DiagramPage() {
                 />
             </div>
 
-            {/* Submit Button */}
+        
             <button
                 onClick={generateDiagram}
                 disabled={loading}
@@ -223,10 +238,17 @@ function DiagramPage() {
 
             {error && <p className="error-message">{error}</p>}
 
-            {/* Result Display */}
             {umlDiagramSvg && (
                 <div className="diagram-result">
-                    <h2>Generated UML Diagram</h2>
+                    <div className="diagram-header">
+                        <h2>Generated UML Diagram</h2>
+                        <button 
+                            onClick={downloadSvg}
+                            className="download-button"
+                        >
+                            Download SVG
+                        </button>
+                    </div>
                     <div dangerouslySetInnerHTML={{ __html: umlDiagramSvg }} />
                 </div>
             )}
