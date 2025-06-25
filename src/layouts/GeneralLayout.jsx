@@ -11,6 +11,7 @@ function GeneralLayout({ setMode }) {
     const token = localStorage.getItem("token");
     const shouldShowFooter = location.pathname === "/";
     const [profileImage, setProfileImage] = useState(null);
+    // const profileImageUrl = localStorage.getItem("profileImageUrl");
     useEffect(() => {
         downLoadProfileImage(userId,token).then((res) => {
             setProfileImage(res);

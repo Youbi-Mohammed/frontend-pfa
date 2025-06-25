@@ -43,6 +43,7 @@ const authenticate = async (email, password, setSnackbarOpen, setSnackbarMessage
           localStorage.setItem("authorities", JSON.stringify(user.authorities));
           localStorage.setItem("name", user.firstName + " "+user.lastName);
           localStorage.setItem("password_changed", user.passwordChanged ? "false" : "true");//je dois changé ca
+          localStroage.setItem("mode","light")//pour gerer le beug du mode dark et light 
 
         }
       } catch (error) {

@@ -1,4 +1,4 @@
-const uploadProfileImage = async (userId, imageFile, token) => {
+const uploadProfileImage = async (userId, imageFile,token) => {
     const formData = new FormData();
     formData.append('image', imageFile);
   

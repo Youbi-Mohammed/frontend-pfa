@@ -38,6 +38,7 @@ import ProfilePopover from "../profilePopover/ProfilePopover";
 import { downLoadProfileImage, getUserById } from "../../services/userService";
 import { forEach } from "lodash";
 
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 // eslint-disable-next-line react/prop-types
 export default function NavBar({ handleDrawerOpen, setMode }) {
@@ -230,6 +231,16 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+
+
+const toggleThemeMode = () => {
+  const newMode = mode === "light" ? "dark" : "light";
+  setMode(newMode);
+  localStorage.setItem("mode", newMode);
+};
+
+
+
   const handleLightModeChosen = () => {
     setMode("light");
     handleMenuClose();
@@ -240,6 +251,14 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
     handleMenuClose();
     localStorage.setItem("mode", "dark");
   };
+
+  const handleModeChosen = () =>{
+    if (mode === "light") {
+      handleDarkModeChosen();
+    } else {
+      handleLightModeChosen();
+    }
+  }
 
 
 
@@ -287,6 +306,8 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
     >
       <MenuItem onClick={handleLightModeChosen}>Light</MenuItem>
       <MenuItem onClick={handleDarkModeChosen}>Dark</MenuItem>
+      <MenuItem onClick={handleModeChosen}>
+        {mode === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"} </MenuItem>
     </Menu>
   );
 
@@ -455,7 +476,16 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
           <Box
             sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
           >
-
+  {/* Bouton Dark/Light Mode */}
+  {/* <IconButton
+    size="large"
+    onClick={handleModeChosen}
+    color="inherit"
+    aria-label="toggle dark/light mode"
+    sx={{ mr: 1 }}
+  >
+    {mode === "dark" ? <ProfilePopover /> : <ProfilePopover />}
+  </IconButton> */}
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
@@ -480,7 +510,7 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
             />
 
 
-            <Box sx={{
+            {/* <Box sx={{
               display:"flex",
               alignItems:"center",
               padding: "0 10px",
@@ -490,8 +520,8 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
             }}>
             <Typography variant="body2">
               {userData.firstName} {userData.lastName}
-            </Typography>
-            <IconButton
+            </Typography> */}
+            {/* <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
@@ -510,8 +540,31 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
               ) : (
                 <AccountCircle />
               )}
-            </IconButton>
-            </Box>
+            </IconButton> */}
+            
+ <IconButton
+    size="large"
+    onClick={handleModeChosen}
+    color="inherit"
+    aria-label="toggle dark/light mode"
+    sx={{ mr: 1 }}
+  >
+    {/* {mode === "dark" ?  <Badge badgeContent={notifications.length} color="error">
+                <NotificationsIcon />
+              </Badge> :  <Badge badgeContent={notifications.length} color="error">
+                <NotificationsIcon />
+              </Badge>} */}
+
+              {mode === "dark" ? (
+                <LightModeIcon />
+              ) : (
+                <DarkModeIcon />
+              )}
+  </IconButton>
+
+
+           
+            {/* </Box> */}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

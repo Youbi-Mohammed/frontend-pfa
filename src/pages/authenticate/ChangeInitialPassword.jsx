@@ -455,7 +455,7 @@ export default function ChangeInitialPassword() {
       setSnackbarOpen(true);
 
       setTimeout(() => {
-        navigate('/auth/authenticate', {
+        navigate('/upload-photo', {
           state: {
             message: 'Password changed successfully',
             email: result.userEmail
