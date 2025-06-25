@@ -38,6 +38,7 @@ import DiagramPage from "./pages/tools/DiagramPage";
 import ProfileImageUploader from "./pages/authenticate/UploadProfileImage";
 //import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
+import Logout from "./pages/authenticate/Logout";
 function App() {
   const [mode , setMode] = useState(localStorage.getItem("mode") || "light");
 
@@ -58,20 +59,23 @@ const theme = createTheme({
           <Route path="/" element={<GeneralLayout />}>
         <Route path="/change-password" element={<ChangeInitialPassword />} />
         <Route path="/upload-photo" element={<ProfileImageUploader />} />
+        <Route path="/logout" element={<Logout />} />
             <Route index element={<Home />} />
           <Route
-  path="/dashboard"
-  element={<MainLayout mode={mode} setMode={setMode} />}
->
+          path="/dashboard"
+          element={<MainLayout mode={mode} setMode={setMode} />}
+          >
 <Route path="tools/diagram-generator" element={<DiagramPage />} />
+    <Route path="new/account" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
+    <Route path="studentslist" element={<CsvUploadDialog/>}/>
   <Route path="project" element={<ProjectLayout />}>
     <Route path="backlog" element={<BackLog />} />
     <Route path="board" element={<Board />} />
     <Route path="reports" element={<Reports />} />
     <Route path="team" element={<Team />} />
     <Route path="docs" element={<Docs />} />
-    <Route path="accounts" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
-    <Route path="studentslist" element={<CsvUploadDialog/>}/>
+    {/* <Route path="accounts" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
+    {/* <Route path="studentslist" element={<CsvUploadDialog/>}/> */}  
   </Route>
 
                       

@@ -520,8 +520,8 @@ const toggleThemeMode = () => {
             }}>
             <Typography variant="body2">
               {userData.firstName} {userData.lastName}
-            </Typography> */}
-            {/* <IconButton
+            </Typography> 
+             <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
@@ -540,7 +540,8 @@ const toggleThemeMode = () => {
               ) : (
                 <AccountCircle />
               )}
-            </IconButton> */}
+            </IconButton>
+            </Box> */}
             
  <IconButton
     size="large"

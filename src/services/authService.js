@@ -254,5 +254,34 @@ const resetPassword = async (token, newPassword, setSnackbarOpen, setSnackbarMes
     setLoading(false);
   }
 };
+// src/services/authService.js
+
+const logout = () => {
+  try {
+    // Supprimez toutes les données d'authentification
+    localStorage.removeItem('token');
+    
+          localStorage.removeItem("email");
+          localStorage.removeItem("userId");
+          localStorage.removeItem("branchId");//il ont deja injecter branche dans localstorage alors cest bien fait 
+          localStorage.removeItem("studiedBranchId");
+          localStorage.removeItem("team");
+          localStorage.removeItem("authorities");
+          localStorage.removeItem("name");
+          localStorage.removeItem("password_changed");//je dois changé ca
+          localStroage.removeItem("mode")//pour gerer le beug du mode dark et light 
+
+   
+    sessionStorage.clear();// t2kiiiiiiiiid
+    
+    // Optionnel : Envoyer une requête au serveur pour invalider le token
+    // await axios.post('/api/auth/logout');
+    
+    return true;
+  } catch (error) {
+    console.error('Logout failed:', error);
+    return false;
+  }
+};
 //authenticate deja exporter 
-export { authenticate, changeInitialPassword,register, acceptUser, rejectUser, forgotPassword ,resetPassword,validateToken};
+export { authenticate, changeInitialPassword,register, acceptUser, rejectUser, forgotPassword ,resetPassword,validateToken,logout};

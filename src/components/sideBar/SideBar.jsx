@@ -446,7 +446,8 @@ import { getAllProjects } from "../../services/projectService";
 import { ExpandCircleDown, PeopleOutline } from "@mui/icons-material";
 import FolderCopyRoundedIcon from "@mui/icons-material/FolderCopyRounded";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
-
+import LogoutIcon from '@mui/icons-material/Logout';
+import Logout from "../../pages/authenticate/Logout";
 const studentStuff = [
   { id: 0, text: "BackLog", icon: <SubjectIcon />, path: "/dashboard/project/backlog" },
   { id: 1, text: "Board", icon: <ViewWeekIcon />, path: "/dashboard/project/board" },
@@ -459,8 +460,8 @@ const supervisorStuff = [
 ];
 
 const HOBStuff = [
-  { id:10, text: "Create new account" ,icon: <SubjectIcon/>,path: "/dashboard/project/accounts"},
-  { id:11, text: "Create Students accounts via csv " ,icon: <SubjectIcon/>,path: "/dashboard/project/studentslist"},
+  { id:10, text: "Create new account" ,icon: <SubjectIcon/>,path: "/dashboard/new/account"},
+  { id:11, text: "Create Students accounts via csv " ,icon: <SubjectIcon/>,path: "/dashboard/studentslist"},
   { id: 12, text: "Assignments", icon: <AssignmentIcon />, path: "/dashboard/assignments",}
 ];
 
@@ -475,6 +476,7 @@ const forAll = [
   { id: 13, text: "Projects", icon: <FolderCopyIcon />, path: "/dashboard/projects" },
   { 
     id: 16, text: "Diagram Generator", icon: <AccountTreeIcon />, path: "/dashboard/tools/diagram-generator" },
+    {id :99 ,text: "Logout", icon: <SettingsIcon />, path: "/logout"}
 ];
 // userId = localStorage.getItem("userId");
 // token = localStorage.getItem("token");
@@ -533,6 +535,20 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
   const handleProjectClick = (projectId) => {
     setExpandedProjectId(projectId === expandedProjectId ? null : projectId);
   };
+//   const [logoutOpen, setLogoutOpen] = useState(false);
+
+// const handleLogoutClick = () => {
+//   setLogoutOpen(true);
+// };
+
+// const handleLogoutConfirm = () => {
+//   // Votre logique de déconnexion
+//   localStorage.removeItem('token');
+//   navigate('/auth/authenticate');
+//   setLogoutOpen(false);
+//   window.location.reload();
+// };
+const [logoutOpen, setLogoutOpen] = useState(false);
   const userid = user?.id || localStorage.getItem("userId");
   //const token = localStorage.getItem("token");
   useEffect(() => {
@@ -804,7 +820,100 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
               </ListItem>
             ))}
           </List>
+                <Divider  />
+      
+      {/* <ListItem key={99} disablePadding>
+        <ListItemButton
+          sx={{ 
+            pl: 4, 
+            borderRadius: "4px",
+            '&:hover': {
+              backgroundColor: mode === "light" ? "#ffebee" : "#d32f2f"
+            }
+          }}
+          selected={selectedIndex === 99}
+          // onClick={() => {
+          //   localStorage.removeItem('token');
+          //   navigate('/login');
+          //   // Rafraîchir la page pour nettoyer l'état
+          //   // window.location.reload();
+           onClick={(event) => {
+                        handleListItemClick(event, item.id);
+                        navigate(item.path);
+                      }}
+      //      onClick={(e) => {
+      // e.stopPropagation();
+      // e.preventDefault();
+    // }}
+         
+        >
+          <ListItemIcon>
+            <LogoutIcon color="error" />
+          </ListItemIcon>
+          <ListItemText 
+            // sx={{ ml: -1.5 }} 
+            primary="Logout" 
+            // primaryTypographyProps={{ color: "error" }}
+          />
+        </ListItemButton>
+      </ListItem> */}
+      {/* ok t7T  */}
+      {/* <ListItem key={99} disablePadding>
+  <ListItemButton
+    sx={{ 
+      pl: 4, 
+      borderRadius: "4px",
+      '&:hover': {
+        backgroundColor: mode === "light" ? "#ffebee" : "#d32f2f"
+      }
+    }}
+    selected={selectedIndex === 99}
+    onClick={(event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if(window.confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+        localStorage.removeItem('token');
+        navigate('/auth/authenticate');
+        window.location.reload();
+      }
+    }}
+  >
+    <ListItemIcon>
+      <LogoutIcon color="error" />
+    </ListItemIcon>
+    <ListItemText 
+      sx={{ ml: -1.5 }} 
+      primary="Logout" 
+      primaryTypographyProps={{ color: "error" }}
+    />
+  </ListItemButton>
+</ListItem> */}
+          {/* ok fou9 */}
+                <ListItem key={99} disablePadding>
+        <ListItemButton
+          sx={{ 
+            pl: 4, 
+            borderRadius: "4px",
+            '&:hover': { backgroundColor: mode === "light" ? "#ffebee" : "#d32f2f" }
+          }}
+          onClick={() => setLogoutOpen(true)}
+        >
+          <ListItemIcon><LogoutIcon color="error" /></ListItemIcon>
+          <ListItemText 
+            sx={{ ml: -1.5 }} 
+            primary="Logout" 
+            primaryTypographyProps={{ color: "error" }}
+          />
+        </ListItemButton>
+      </ListItem>
+
+      <Logout 
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+      />
+    
         </Box>
+       
       </StyledDrawer>
     </Box>
   );
