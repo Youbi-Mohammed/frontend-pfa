@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import {
   Popover,
@@ -12,23 +11,47 @@ import {
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { PhotoCamera, Close, Edit, Download } from "@mui/icons-material";
-import { downLoadProfileImage, getUserById } from "../../services/userService";
+// import { downLoadProfileImage, getUserById } from "../../services/userService";
+import {  getUserById } from "../../services/userService";
+
 import { uploadProfileImage } from "../../services/imageService";
 import { updateUserById } from "../../services/userService";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import EditProfileDialog from "../dialogs/EditProfileDialog";
-const ProfilePopover = ({ anchorEl, open, onClose,userData, profileImage ,setProfileImage}) => {
+const downLoadProfileImage = async (userId, token) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/users/${userId}/downloadProfileImage`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      return null;
+    }
+    const image = await response.blob();
+    const url = window.URL.createObjectURL(image);
+    console.log(url);
+    return url;
+  } catch (error) {
+    console.error("Error downloading image:", error);
+    return null;
+  }
+}
 
+const ProfilePopover = ({ anchorEl, open, onClose, userData, profileImage, setProfileImage }) => {
   const mode = localStorage.getItem("mode");
-    const token = localStorage.getItem("token");
-    const [openEditDialog, setOpenEditDialog] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const handleSnackbarClose = () => {
-      setSnackbarOpen(false);
-    };
+  const token = localStorage.getItem("token");
+  const [isUploading, setIsUploading] = useState(false); // Déclaration manquante
+  const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
-    const [isAvatarHovered, setIsAvatarHovered] = useState(false);
+
   const handleImageChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       try {
@@ -44,6 +67,36 @@ const ProfilePopover = ({ anchorEl, open, onClose,userData, profileImage ,setPro
       }
     }
   };
+  // const handleImageChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setIsUploading(true);
+  //     try {
+  //       await new Promise(resolve => setTimeout(resolve, 1000));
+  //       const reader = new FileReader();
+  //       reader.onload = (event) => {
+  //         setNewImage(event.target.result);
+  //       };
+  //       reader.readAsDataURL(file);
+  //     } finally {
+  //       setIsUploading(false);
+  //     }
+  //   }
+  // };
+   
+     //const token = localStorage.getItem("token");
+     useEffect(() => {
+       const fetchProfileImage = async () => {
+         if (localStorage.getItem("userId")){
+           const imageUrl = await downLoadProfileImage(userid, token);
+           setProfileImage(imageUrl);
+         }
+       };
+   
+       fetchProfileImage();
+     }, [localStorage.getItem("userId"), token]);
+
+
   return (
     <Popover
       open={open}
@@ -91,9 +144,11 @@ const ProfilePopover = ({ anchorEl, open, onClose,userData, profileImage ,setPro
             onMouseEnter={() => setIsAvatarHovered(true)}
             onMouseLeave={() => setIsAvatarHovered(false)}
           >
-            <Avatar alt="Profile" sx={{ width: 65, height: 65 }} 
-            src= {profileImage !== "" && profileImage}
-            />
+            <Avatar 
+            src={profileImage || undefined} 
+            alt={localStorage.getItem("name") || "User"} 
+            sx={{ width: 40, height: 40, mr: 2 }}
+          />
             <label>
               <input
                 accept="image/*"
@@ -127,10 +182,10 @@ const ProfilePopover = ({ anchorEl, open, onClose,userData, profileImage ,setPro
               }}
             >
               <Typography fontSize={17}>
-                {userData.firstName} {userData.lastName}
+                {localStorage.getItem("name")}
               </Typography>
               <Typography color="textSecondary" fontSize={13}>
-                {userData.email}
+                {localStorage.getItem("email")}
               </Typography>
             </div>
           )}
@@ -174,15 +229,15 @@ const ProfilePopover = ({ anchorEl, open, onClose,userData, profileImage ,setPro
                   cursor: "pointer",
                 }}
               >
-                <LogoutIcon
+                {/* <LogoutIcon
                   sx={{
                     color:
                       mode === "dark"
                         ? "rgba(255,255,255,0,85)"
                         : "rgba(0,0,0,0,85)",
                   }}
-                />
-                <Typography color="textSecondary">Logout</Typography>
+                /> */}
+                {/* <Typography color="textSecondary">Logout</Typography> */}
               </div>
             </Box>
           )}
@@ -198,5 +253,6 @@ const ProfilePopover = ({ anchorEl, open, onClose,userData, profileImage ,setPro
     </Popover>
   );
 };
-
+ 
 export default ProfilePopover;
+
