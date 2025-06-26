@@ -590,7 +590,7 @@ const [logoutOpen, setLogoutOpen] = useState(false);
         </DrawerHeader>
      
         
-        {/* User Profile Section */}
+        {/* User Profile Section
         <Box 
           sx={{ 
             display: 'flex', 
@@ -611,7 +611,7 @@ const [logoutOpen, setLogoutOpen] = useState(false);
             {localStorage.getItem("name") || "User Name"}
           </Typography>
         </Box>
-        
+         */}
         <Divider />
         
         <Box
