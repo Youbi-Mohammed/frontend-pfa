@@ -39,6 +39,7 @@ import ProfileImageUploader from "./pages/authenticate/UploadProfileImage";
 //import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 import Logout from "./pages/authenticate/Logout";
+import CDCViewer from "./pages/tools/CDCViewer";
 function App() {
   const [mode , setMode] = useState(localStorage.getItem("mode") || "light");
 
@@ -66,6 +67,9 @@ const theme = createTheme({
           element={<MainLayout mode={mode} setMode={setMode} />}
           >
 <Route path="tools/diagram-generator" element={<DiagramPage />} />
+<Route path="tools/CDC-generator" element={<CDCViewer />} />
+
+
     <Route path="new/account" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
     <Route path="studentslist" element={<CsvUploadDialog/>}/>
   <Route path="project" element={<ProjectLayout />}>

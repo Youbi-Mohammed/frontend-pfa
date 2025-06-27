@@ -476,6 +476,8 @@ const forAll = [
   { id: 13, text: "Projects", icon: <FolderCopyIcon />, path: "/dashboard/projects" },
   { 
     id: 16, text: "Diagram Generator", icon: <AccountTreeIcon />, path: "/dashboard/tools/diagram-generator" },
+       { id: 17, text: "CDC", icon: <AccountTreeIcon />, path: "/dashboard/tools/CDC-generator" },
+
     {id :99 ,text: "Logout", icon: <SettingsIcon />, path: "/logout"}
 ];
 // userId = localStorage.getItem("userId");
