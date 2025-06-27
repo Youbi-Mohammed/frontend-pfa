@@ -38,10 +38,13 @@ import ProfilePopover from "../profilePopover/ProfilePopover";
 import { downLoadProfileImage, getUserById } from "../../services/userService";
 import { forEach } from "lodash";
 
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 // eslint-disable-next-line react/prop-types
 export default function NavBar({ handleDrawerOpen, setMode }) {
   const mode = localStorage.getItem("mode")
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [teamNotifications , setTeamNotifications] = useState([]);
@@ -69,8 +72,7 @@ export default function NavBar({ handleDrawerOpen, setMode }) {
     const handleCloseNotsView = () => {
       setNotificationAnchorEl(null);
     };
-
-  useEffect(() => {
+useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -95,7 +97,7 @@ export default function NavBar({ handleDrawerOpen, setMode }) {
                     ]);
                 }
               });
-        const url = await downLoadProfileImage(user.id, token);
+        const url = await downLoadProfileImage(user?.id, token);
         setProfileImage(url);
 
         setNotifications(notifications);
@@ -123,7 +125,29 @@ export default function NavBar({ handleDrawerOpen, setMode }) {
 
     // Clean up interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [userId,token]);
+  
+      useEffect(() => {
+    const loadProfileImage = async () => {
+      try {
+        if (userId && token) {
+          const imageUrl = await downLoadProfileImage(userId, token);
+          if (imageUrl) {
+            setProfileImage(imageUrl);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load profile image:", error);
+      }
+    };
+
+    loadProfileImage();
+  }, [userId, token]);
+
+  const handleProfileClose = () => {
+    setProfileAnchorEl(null);
+  };
+
 
   const calculateElapsedTime = (diffInMinutes) => {
     if (diffInMinutes < 60) {
@@ -186,12 +210,15 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
   const isHOB = hasRole("ROLE_HEAD_OF_BRANCH");
 
 
+  // const handleProfileClick = (event) => {
+  //   setProfileAnchorEl(event.currentTarget);
+  //   setProfilePopoverOpen(true);
+  //   handleMenuClose(); 
+  // };
   const handleProfileClick = (event) => {
     setProfileAnchorEl(event.currentTarget);
-    setProfilePopoverOpen(true);
-    handleMenuClose(); 
   };
-  
+
   const handleProfilePopoverClose = () => {
     setProfilePopoverOpen(false);
     setProfileAnchorEl(null);
@@ -230,6 +257,16 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+
+
+const toggleThemeMode = () => {
+  const newMode = mode === "light" ? "dark" : "light";
+  setMode(newMode);
+  localStorage.setItem("mode", newMode);
+};
+
+
+
   const handleLightModeChosen = () => {
     setMode("light");
     handleMenuClose();
@@ -240,6 +277,14 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
     handleMenuClose();
     localStorage.setItem("mode", "dark");
   };
+
+  const handleModeChosen = () =>{
+    if (mode === "light") {
+      handleDarkModeChosen();
+    } else {
+      handleLightModeChosen();
+    }
+  }
 
 
 
@@ -287,6 +332,8 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
     >
       <MenuItem onClick={handleLightModeChosen}>Light</MenuItem>
       <MenuItem onClick={handleDarkModeChosen}>Dark</MenuItem>
+      <MenuItem onClick={handleModeChosen}>
+        {mode === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"} </MenuItem>
     </Menu>
   );
 
@@ -347,6 +394,9 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
       </MenuItem>
     </Menu>
   );
+
+
+ 
 
 
   return (
@@ -455,7 +505,16 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
           <Box
             sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
           >
-
+  {/* Bouton Dark/Light Mode */}
+  {/* <IconButton
+    size="large"
+    onClick={handleModeChosen}
+    color="inherit"
+    aria-label="toggle dark/light mode"
+    sx={{ mr: 1 }}
+  >
+    {mode === "dark" ? <ProfilePopover /> : <ProfilePopover />}
+  </IconButton> */}
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
@@ -480,38 +539,151 @@ const handleDeleteNotification = async (notificationId, notificationType) => {
             />
 
 
-            <Box sx={{
-              display:"flex",
-              alignItems:"center",
-              padding: "0 10px",
-              borderRadius: "50px",
-              border: `1px solid ${mode === "light" ? "#333" : "#ccc"}`,
-              height: "40px",
-            }}>
-            <Typography variant="body2">
-              {userData.firstName} {userData.lastName}
-            </Typography>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              {localStorage.getItem("token") ? (
-                // <Avatar {...stringAvatar(localStorage.getItem("name"))} />
-                <Avatar
-                  alt="Profile"
-                  src={profileImage !== "" && profileImage}
-                  sx={{ width: 35, height: 35 }}
-                />
+          
+            {/* Bouton pour ouvrir le profil */}
+      {/* <IconButton
+        size="large"
+        onClick={handleProfileClick}
+        color="inherit"
+        aria-label="show profile"
+      >
+        <Avatar 
+          src={profileImage} 
+          sx={{ width: 32, height: 32 }}
+        />
+        
+      </IconButton>
+
+      {/* Popover du profil */}
+      {/* <ProfilePopover
+        anchorEl={profileAnchorEl}
+        open={Boolean(profileAnchorEl)}
+        // onClose={handleProfileClose}
+        userData={userData}
+        profileImage={profileImage}
+        setProfileImage={setProfileImage}
+      />
+             */}
+             {/* Dans votre Navbar.jsx */}
+{/* <Box sx={{
+  display: 'flex',
+  alignItems: 'center',
+  padding: '0 10px',
+  borderRadius: '50px',
+  // border: `1px solid ${mode === 'light' ? theme.palette.grey[300] : theme.palette.grey[700]}`,
+  height: '40px',
+  marginLeft: '10px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  onClick: handleProfileClick,
+  '&:hover': {
+    // backgroundColor: mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[800],
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+  }
+}} onClick={handleProfileClick}>
+  <Typography variant="body2" sx={{ 
+    marginRight: '8px',
+    fontWeight: 500,
+    // color: mode === 'light' ? theme.palette.text.primary : theme.palette.common.white
+  }}>
+    {localStorage.getItem("name") || 'Utilisateur'}
+  </Typography>
+  <Avatar 
+    src={profileImage} 
+    sx={{ 
+      width: 32, 
+      height: 32,
+      // border: `2px solid ${mode === 'light' ? theme.palette.primary.main : theme.palette.secondary.main}`
+    }}
+  />
+
+</Box>
+
+{/* Popover du profil */}
+{/* <ProfilePopover
+  anchorEl={profileAnchorEl}
+  open={Boolean(profileAnchorEl)}
+  onClose={() => setProfileAnchorEl(null)}
+  userData={userData}
+  profileImage={profileImage}
+  setProfileImage={setProfileImage}
+/>  */}
+                <Box 
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 12px',
+          borderRadius: '24px',
+          border: `1px solid ${mode === 'light' ? '#ddd' : '#444'}`,
+          height: '40px',
+          marginLeft: '16px',
+          cursor: 'pointer',
+          '&:hover': {
+            backgroundColor: mode === 'light' ? '#f5f5f5' : '#1e1e1e',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+          }
+        }}
+        onClick={handleProfileClick}
+      >
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            marginRight: '10px',
+            fontWeight: 500,
+            color: mode === 'light' ? '#333' : '#fff'
+          }}
+        >
+          {localStorage.getItem("name") || "Utilisateur"}
+        </Typography>
+        <Avatar 
+          src={profileImage} 
+          sx={{ 
+            width: 32, 
+            height: 32,
+            // border: `2px solid ${mode === 'light' ? '#1976d2' : '#90caf9'}`
+          }}
+        />
+      </Box>
+
+      {/* Popover du profil */}
+      <ProfilePopover
+        anchorEl={profileAnchorEl}
+        open={Boolean(profileAnchorEl)}
+        onClose={() => setProfileAnchorEl(null)}
+        userData={{
+          firstName: localStorage.getItem("firstName"),
+          lastName: localStorage.getItem("lastName"),
+          email: localStorage.getItem("email"),
+          id: userId
+        }}
+        profileImage={profileImage}
+        setProfileImage={setProfileImage}
+      />
+    
+    
+ <IconButton
+    size="large"
+    onClick={handleModeChosen}
+    color="inherit"
+    aria-label="toggle dark/light mode"
+    sx={{ mr: 1 }}
+  >
+    {/* {mode === "dark" ?  <Badge badgeContent={notifications.length} color="error">
+                <NotificationsIcon />
+              </Badge> :  <Badge badgeContent={notifications.length} color="error">
+                <NotificationsIcon />
+              </Badge>} */}
+
+              {mode === "dark" ? (
+                <LightModeIcon />
               ) : (
-                <AccountCircle />
+                <DarkModeIcon />
               )}
-            </IconButton>
-            </Box>
+  </IconButton>
+
+
+           
+            {/* </Box> */}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

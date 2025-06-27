@@ -110,34 +110,67 @@ const downLoadProfileImage = async (userId, token) => {
     console.error("Error downloading image:", error);
   }
 }
-const updateUserById = async (
-  token,
-  userId,
-  data,
-  setSnackBarOpen,
-  setSnackbarMessage
-) => {
+// const updateUserById = async (
+//   token,
+//   userId,
+//   data,
+//   setSnackBarOpen,
+//   setSnackbarMessage
+// ) => {
+//   try {
+//     const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+//       method: "PUT",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(data),
+//     });
+//     if (!response.ok) {
+//       setSnackBarOpen(true);
+//       setSnackbarMessage("Failed to update user");
+//       throw new Error("Failed to update user");
+//     }
+//     const updatedUser = await response.json();
+//     setSnackBarOpen(true);
+//     setSnackbarMessage("User updated successfully");
+//     return updatedUser;
+//   } catch (error) {
+//     setSnackBarOpen(true);
+//     setSnackbarMessage("Failed to update user");
+//     console.error("Error updating user:", error);
+//     throw error;
+//   }
+// };
+// services/userService.js
+ const updateUserById = async (token, userId, userData) => {
   try {
     const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        password: userData.password || undefined, // Envoie undefined si password vide
+        cin: userData.cin,
+        inscriptionNumber: userData.inscriptionNumber
+      })
     });
+
     if (!response.ok) {
-      setSnackBarOpen(true);
-      setSnackbarMessage("Failed to update user");
-      throw new Error("Failed to update user");
+      throw new Error("Échec de la mise à jour");
     }
-    const updatedUser = await response.json();
-    setSnackBarOpen(true);
-    setSnackbarMessage("User updated successfully");
-    return updatedUser;
+    //ya2ima hna wla f componenet li ykhdm had fonction EditProfileDialog.jsx
+    localStorage.setItem("firstName", userData.firstName);
+    localStorage.setItem("lastName", userData.lastName);  
+    localStorage.setItem("cin", userData.cin);
+    localStorage.setItem("inscriptionNumber", userData.inscriptionNumber);
+    localStorage.setItem("name", `${userData.firstName} ${userData.lastName}`);
+    return await response.json();
   } catch (error) {
-    setSnackBarOpen(true);
-    setSnackbarMessage("Failed to update user");
     console.error("Error updating user:", error);
     throw error;
   }

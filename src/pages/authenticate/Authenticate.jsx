@@ -62,6 +62,7 @@ export default function Authenticate() {
     const result = await authenticate(
       formData.get("email"),
       formData.get("password"),
+     localStorage.setItem("mode","light"), // Assurez-vous que le mode est défini sur "light" lors de la connexion
       setSnackbarOpen,
       setSnackbarMessage,
       setLoading
