@@ -51,24 +51,75 @@ function EditProfileDialog({
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setSnackbarOpen2(true);
-      setSnackbarMessage2("Passwords do not match");
-      return;
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (formData.password !== formData.confirmPassword) {
+  //     setSnackbarOpen2(true);
+  //     setSnackbarMessage2("Passwords do not match");
+  //     return;
       
+  //   }
+
+
+  //   const response = await updateUserById(
+  //     token,
+  //     userData.id,
+  //     formData,
+  //     setSnackbarOpen,
+  //     setSnackbarMessage
+  //   );
+  //   console.log(response);
+  //   handleEditClose();
+  // };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  if (formData.password !== formData.confirmPassword) {
+    setSnackbarMessage2("Les mots de passe ne correspondent pas");
+    setSnackbarOpen2(true);
+    return;
+  }
+
+  try {
+    const { confirmPassword, ...dataToSend } = formData;
+    if (!dataToSend.password) delete dataToSend.password;
+
+    const response = await updateUserById(token, userData.id, dataToSend);
+    
+    if (!response) {
+      throw new Error("Réponse vide du serveur");
     }
-    const response = await updateUserById(
-      token,
-      userData.id,
-      formData,
-      setSnackbarOpen,
-      setSnackbarMessage
-    );
-    console.log(response);
+
+    // Mise à jour des données locales
+    const updatedFields = {
+      firstName: response.firstName || formData.firstName,
+      lastName: response.lastName || formData.lastName,
+      cin: response.cin || formData.cin,
+      ...(isStudent && { 
+        inscriptionNumber: response.inscriptionNumber || formData.inscriptionNumber 
+      })
+    };
+    //ya2ima hna wla f focntion li hia updateuserbyid
+    // Mettre à jour le localStorage
+    // localStorage.setItem("firstName", formData.firstName);
+    // localStorage.setItem("lastName", formData.lastName);  
+    // localStorage.setItem("cin", formData.cin);
+    // localStorage.setItem("inscriptionNumber", formData.inscriptionNumber);
+    // localStorage.setItem("name", `${formData.firstName} ${formData.lastName}`);
+    Object.entries(updatedFields).forEach(([key, value]) => {
+      localStorage.setItem(key, value);
+    });
+
+    setSnackbarMessage("Profil mis à jour avec succès");
+    setSnackbarOpen(true);
     handleEditClose();
-  };
+    
+  } catch (error) {
+    console.error("Erreur mise à jour:", error);
+    setSnackbarMessage2(error.message || "Erreur lors de la mise à jour");
+    setSnackbarOpen2(true);
+  }
+};
   return (
     <Dialog
       open={openEditDialog}
