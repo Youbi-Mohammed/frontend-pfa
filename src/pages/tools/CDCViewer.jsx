@@ -240,9 +240,12 @@ export default function CDCViewer() {
   const generateCDC = async (description) => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8081/api/v1/cdc/generate', {
+      const response = await fetch('http://localhost:8080/api/v1/cdc/generate', {
         method: 'POST',
         headers: { 
+          // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          // had authorisation au cas ou makanach mriglin cors w csrf dyal security f backend  w7ta permition end point                 || requestURI.equals("/api/v1/cdc/generate") ;
+
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
