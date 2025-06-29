@@ -32,7 +32,8 @@ import GeneralLayout from "./layouts/GeneralLayout";
 import Docs from "./pages/docs/Docs";
 import ForgotPassword from "./pages/authenticate/ForgotPassword";
 import { CssBaseline } from "@mui/material";
-import StudentRegistrationForm from "./components/dialogs/RegisterViaHoBDialog";
+// import StudentRegistrationForm from "./components/dialogs/RegisterViaHoBDialog";
+import RegisterViaHoBDialog from "./components/dialogs/RegisterViaHoBDialog";
 import CsvUploadDialog from "./components/dialogs/csvUploadDialog";
 import DiagramPage from "./pages/tools/DiagramPage";
 import ProfileImageUploader from "./pages/authenticate/UploadProfileImage";
@@ -70,7 +71,8 @@ const theme = createTheme({
 <Route path="tools/CDC-generator" element={<CDCViewer />} />
 
 
-    <Route path="new/account" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
+    {/* <Route path="new/account" element={<StudentRegistrationForm />} />  */}
+    <Route path="new/account" element={<RegisterViaHoBDialog />} />
     <Route path="studentslist" element={<CsvUploadDialog/>}/>
   <Route path="project" element={<ProjectLayout />}>
     <Route path="backlog" element={<BackLog />} />

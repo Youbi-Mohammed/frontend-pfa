@@ -311,314 +311,554 @@
 // export default StudentRegistrationForm;
 
 /////////////////ca marche v
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { registerViaHoB } from '../../services/registerViaHoBService';
+import {
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  CircularProgress,
+  Snackbar,
+  IconButton,
+  Box,
+  useTheme
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 
-const StudentRegistrationForm = ({ onRegistrationComplete }) => {
-  // Récupération du token depuis le localStorage
-  const [userToken, setUserToken] = useState(null);
-  const [loadingToken, setLoadingToken] = useState(true);
-   const [userRole, setUserRole] = useState('');
-
-  // État initial du formulaire
-  const [studentData, setStudentData] = useState({
+const RegisterViaHoBDialog = () => {
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     branch: 1,
     cin: '',
     inscriptionNumber: '',
     email: '',
-    role: ''
+    role: 'ROLE_STUDENT'
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [notification, setNotification] = useState({ 
-    show: false, 
-    message: '', 
-    isError: false 
-  });
-
-  // Au montage du composant, récupère le token
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setUserToken(token);
-      // Ici vous pourriez ajouter une requête pour pré-remplir les champs si nécessaire
-      // fetchUserData(token);
-    } else {
-      setNotification({
-        show: true,
-        message: 'Vous devez être connecté pour accéder à cette fonctionnalité',
-        isError: true
-      });
-    }
-    setLoadingToken(false);
-  }, []);
-
-  // Gestion des changements dans les champs
-  const handleInputChange = (e) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  // Fonction pour gérer les changements des champs normaux
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setStudentData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-    const handleRoleChange = (e) => {
-    // Seulement si l'utilisateur est superviseur
-     {
-      setStudentData(prev => ({ ...prev, role: e.target.value }));
-    }
+  // Fonction pour générer automatiquement le CIN et le numéro d'inscription
+  const handleNameChange = (e) => {
+    const { name, value } = e.target;
+    
+    setFormData(prev => {
+      const updatedData = { ...prev, [name]: value };
+      
+      // Générer automatiquement le CIN à partir du prénom
+      if (name === 'firstName' && value) {
+        updatedData.cin =  `CIN-${value.toUpperCase().replace(/\s+/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`;
+      }
+      
+      // Générer automatiquement le numéro d'inscription à partir du nom
+      if (name === 'lastName' && value) {
+        updatedData.inscriptionNumber = `INS-${value.toUpperCase().replace(/\s+/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`;
+      }
+      
+      return updatedData;
+    });
   };
-  // Soumission du formulaire
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!userToken) {
-      setNotification({
-        show: true,
-        message: 'Token non disponible - Veuillez vous reconnecter',
-        isError: true
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
+    setLoading(true);
+    setError(null);
 
     try {
-      // Validation minimale des données
-      if (!studentData.firstName || !studentData.lastName || !studentData.cin) {
-        throw new Error('Les champs obligatoires doivent être remplis');
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('Authentication required');
+
+      if (!formData.firstName || !formData.lastName) {
+        throw new Error('Please fill all required fields');
       }
 
-      const response = await registerViaHoB(userToken, studentData);
+      await registerViaHoB(token, formData);
       
-      setNotification({
-        show: true,
-        message: 'Étudiant enregistré avec succès!',
-        isError: false
-      });
-
-      // Réinitialisation du formulaire après succès
-      setStudentData({
+      setSuccess('Account created successfully!');
+      setFormData({
         firstName: '',
         lastName: '',
         branch: 1,
         cin: '',
         inscriptionNumber: '',
         email: '',
-        role: userRole === 'ROLE_SUPERVISOR' ? 'ROLE_STUDENT' : 'ROLE_STUDENT'
+        role: 'ROLE_STUDENT'
       });
-
-      onRegistrationComplete?.(response);
-    } catch (error) {
-      setNotification({
-        show: true,
-        message: error.message || "Erreur lors de l'enregistrement",
-        isError: true
-      });
+      
+      setTimeout(() => navigate('/dashboard'), 2000);
+    } catch (err) {
+      setError(err.message || 'Account creation failed');
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
-  if (loadingToken) {
-    return <div>Chargement...</div>;
-  }
-
-  if (!userToken) {
-    return (
-      <div style={{ 
-        padding: '20px', 
-        textAlign: 'center',
-        color: 'red'
-      }}>
-        Erreur d'authentification - Token non trouvé
-      </div>
-    );
-  }
-
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Creation Of New Account</h2>
-      
-      <form onSubmit={handleSubmit} style={styles.form}>
-        {/* Champ Prénom */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>First name *</label>
-          <input
-            type="text"
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ mb: 4 }}
+        color={theme.palette.primary.main}>
+          Create New Account
+        </Typography>
+        
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <TextField
+            margin="normal"
+            fullWidth
+            label="First Name *"
             name="firstName"
-            value={studentData.firstName}
-            onChange={handleInputChange}
+            value={formData.firstName}
+            onChange={handleNameChange}  // Utilisation de handleNameChange ici
             required
-            style={styles.input}
           />
-        </div>
-
-        {/* Champ Nom */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Last name *</label>
-          <input
-            type="text"
+          
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Last Name *"
             name="lastName"
-            value={studentData.lastName}
-            onChange={handleInputChange}
+            value={formData.lastName}
+            onChange={handleNameChange}  // Utilisation de handleNameChange ici
             required
-            style={styles.input}
           />
-        </div>
-
-        {/* Champ CIN */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>CIN *</label>
-          <input
-            type="text"
+          
+          {/* <TextField
+            margin="normal"
+            fullWidth
+            label="CIN *"
             name="cin"
-            value={studentData.cin}
-            onChange={handleInputChange}
+            value={formData.cin}
+            onChange={handleChange}
             required
-            style={styles.input}
+            disabled  // Champ désactivé car généré automatiquement
           />
-        </div>
-
-        {/* Champ Email */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Email *</label>
-          <input
-            type="email"
+           */}
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Email *"
             name="email"
-            value={studentData.email}
-            onChange={handleInputChange}
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
             required
-            style={styles.input}
           />
-        </div>
-
-        {/* Champ Numéro d'inscription */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Inscription number *</label>
-          <input
-            type="text"
+          
+          {/* <TextField
+            margin="normal"
+            fullWidth
+            label="Inscription Number *"
             name="inscriptionNumber"
-            value={studentData.inscriptionNumber}
-            onChange={handleInputChange}
+            value={formData.inscriptionNumber}
+            onChange={handleChange}
             required
-            style={styles.input}
-          />
-        </div>
+            disabled  // Champ désactivé car généré automatiquement
+          /> */}
+          
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Account Type *</InputLabel>
+            <Select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              label="Account Type *"
+              required
+            >
+              <MenuItem value="ROLE_STUDENT">Student</MenuItem>
+              <MenuItem value="ROLE_SUPERVISOR">Supervisor</MenuItem>
+            </Select>
+          </FormControl>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={loading}
+              startIcon={loading ? <CircularProgress size={20} /> : null}
+              sx={{ ml: 2 }}
+            >
+              {loading ? 'Creating...' : 'Create Account'}
+            </Button>
+          </Box>
+        </Box>
+      </Paper>
 
-        {/* champ pour le role */}
-                   <div style={styles.formGroup}>
-             <label style={styles.label}>Account Type *</label>
-             <select
-               name="role"
-               value={studentData.role}
-               onChange={handleRoleChange}
-               required
-               style={styles.input}
-             >
-               <option value="">Select a role</option>
-               <option value="ROLE_STUDENT">Student</option>
-               <option value="ROLE_SUPERVISOR">Supervisor</option>
-             </select>
-           </div>
+    
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          style={{
-            ...styles.submitButton,
-            backgroundColor: isSubmitting ? '#cccccc' : '#1976d2'
+        {/* Notification d'erreur */}
+        <Snackbar
+          open={!!error}
+          autoHideDuration={6000}
+          onClose={() => setError(null)}
+          message={error}
+          action={
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={() => setError(null)}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          }
+          sx={{ 
+            '& .MuiSnackbarContent-root': {
+              backgroundColor: theme.palette.error.main
+            }
           }}
-        >
-          {isSubmitting ? 'Enregistrement en cours...' : 'Enregistrer l\'étudiant'}
-        </button>
-      </form>
+        />
 
-      {notification.show && (
-        <div style={{
-          ...styles.notification,
-          backgroundColor: notification.isError ? '#f44336' : '#4caf50'
-        }}>
-          {notification.message}
-          <button 
-            onClick={() => setNotification(prev => ({ ...prev, show: false }))}
-            style={styles.notificationClose}
-          >
-            ×
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
+        {/* Notification de succès */}
+        <Snackbar
+          open={!!success}
+          autoHideDuration={6000}
+          onClose={() => setSuccess(null)}
+          message={success}
+          action={
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={() => setSuccess(null)}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          }
+          sx={{ 
+            '& .MuiSnackbarContent-root': {
+              backgroundColor: theme.palette.success.main
+            }
+          }}
+        />
+      </Container>
+    );
+  };
 
-// Styles (identique à votre version originale)
-const styles = {
-  container: {
-    maxWidth: '600px',
-    margin: '0 auto',
-    padding: '20px',
-    backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
-  },
-  title: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: '24px'
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px'
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px'
-  },
-  label: {
-    fontWeight: '500',
-    color: '#555555'
-  },
-  input: {
-    padding: '10px 12px',
-    border: '1px solid #dddddd',
-    borderRadius: '4px',
-    fontSize: '16px'
-  },
-  submitButton: {
-    padding: '12px',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '16px',
-    cursor: 'pointer',
-    marginTop: '16px'
-  },
-  notification: {
-    position: 'fixed',
-    bottom: '20px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    padding: '12px 24px',
-    color: 'white',
-    borderRadius: '4px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
-  },
-  notificationClose: {
-    background: 'none',
-    border: 'none',
-    color: 'white',
-    cursor: 'pointer',
-    fontSize: '20px',
-    marginLeft: '8px'
-  }
-};
+  export default RegisterViaHoBDialog;
+///314
+// import React, { useState, useEffect } from 'react';
+// import { registerViaHoB } from '../../services/registerViaHoBService';
 
-export default StudentRegistrationForm;
+// const StudentRegistrationForm = ({ onRegistrationComplete }) => {
+//   // Récupération du token depuis le localStorage
+//   const [userToken, setUserToken] = useState(null);
+//   const [loadingToken, setLoadingToken] = useState(true);
+//    const [userRole, setUserRole] = useState('');
+
+//   // État initial du formulaire
+//   const [studentData, setStudentData] = useState({
+//     firstName: '',
+//     lastName: '',
+//     branch: 1,
+//     cin: 'XXX',
+//     inscriptionNumber: 'XXX',
+//     email: '',
+//     role: ''
+//   });
+
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [notification, setNotification] = useState({ 
+//     show: false, 
+//     message: '', 
+//     isError: false 
+//   });
+
+//   // Au montage du composant, récupère le token
+//   useEffect(() => {
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//       setUserToken(token);
+//       // Ici vous pourriez ajouter une requête pour pré-remplir les champs si nécessaire
+//       // fetchUserData(token);
+//     } else {
+//       setNotification({
+//         show: true,
+//         message: 'Vous devez être connecté pour accéder à cette fonctionnalité',
+//         isError: true
+//       });
+//     }
+//     setLoadingToken(false);
+//   }, []);
+
+//   // Gestion des changements dans les champs
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setStudentData(prev => ({ ...prev, [name]: value }));
+//   };
+
+//     const handleRoleChange = (e) => {
+//     // Seulement si l'utilisateur est superviseur
+//      {
+//       setStudentData(prev => ({ ...prev, role: e.target.value }));
+//     }
+//   };
+//   // Soumission du formulaire
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+    
+//     if (!userToken) {
+//       setNotification({
+//         show: true,
+//         message: 'Token non disponible - Veuillez vous reconnecter',
+//         isError: true
+//       });
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       // Validation minimale des données
+//       if (!studentData.firstName || !studentData.lastName || !studentData.cin) {
+//         throw new Error('Les champs obligatoires doivent être remplis');
+//       }
+
+//       const response = await registerViaHoB(userToken, studentData);
+      
+//       setNotification({
+//         show: true,
+//         message: 'Étudiant enregistré avec succès!',
+//         isError: false
+//       });
+
+//       // Réinitialisation du formulaire après succès
+//       setStudentData({
+//         firstName: '',
+//         lastName: '',
+//         branch: 1,
+//         cin: '',
+//         inscriptionNumber: '',
+//         email: '',
+//         role: userRole === 'ROLE_SUPERVISOR' ? 'ROLE_STUDENT' : 'ROLE_STUDENT'
+//       });
+
+//       onRegistrationComplete?.(response);
+//     } catch (error) {
+//       setNotification({
+//         show: true,
+//         message: error.message || "Erreur lors de l'enregistrement",
+//         isError: true
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   if (loadingToken) {
+//     return <div>Chargement...</div>;
+//   }
+
+//   if (!userToken) {
+//     return (
+//       <div style={{ 
+//         padding: '20px', 
+//         textAlign: 'center',
+//         color: 'red'
+//       }}>
+//         Erreur d'authentification - Token non trouvé
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div style={styles.container}>
+//       <h2 style={styles.title}>Creation Of New Account</h2>
+      
+//       <form onSubmit={handleSubmit} style={styles.form}>
+//         {/* Champ Prénom */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>First name *</label>
+//           <input
+//             type="text"
+//             name="firstName"
+//             value={studentData.firstName}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ Nom */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>Last name *</label>
+//           <input
+//             type="text"
+//             name="lastName"
+//             value={studentData.lastName}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ CIN */}
+//         {/* <div style={styles.formGroup}>
+//           <label style={styles.label}>CIN *</label>
+//           <input
+//             type="text"
+//             name="cin"
+//             value={studentData.cin}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div> */}
+
+//         {/* Champ Email */}
+//         <div style={styles.formGroup}>
+//           <label style={styles.label}>Email *</label>
+//           <input
+//             type="email"
+//             name="email"
+//             value={studentData.email}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div>
+
+//         {/* Champ Numéro d'inscription */}
+//         {/* <div style={styles.formGroup}>
+//           <label style={styles.label}>Inscription number *</label>
+//           <input
+//             type="text"
+//             name="inscriptionNumber"
+//             value={studentData.inscriptionNumber}
+//             onChange={handleInputChange}
+//             required
+//             style={styles.input}
+//           />
+//         </div> */}
+
+//         {/* champ pour le role */}
+//                    <div style={styles.formGroup}>
+//              <label style={styles.label}>Account Type *</label>
+//              <select
+//                name="role"
+//                value={studentData.role}
+//                onChange={handleRoleChange}
+//                required
+//                style={styles.input}
+//              >
+//                <option value="">Select a role</option>
+//                <option value="ROLE_STUDENT">Student</option>
+//                <option value="ROLE_SUPERVISOR">Supervisor</option>
+//              </select>
+//            </div>
+
+//         <button
+//           type="submit"
+//           disabled={isSubmitting}
+//           style={{
+//             ...styles.submitButton,
+//             backgroundColor: isSubmitting ? '#cccccc' : '#1976d2'
+//           }}
+//         >
+//           {isSubmitting ? 'Enregistrement en cours...' : 'Enregistrer l\'étudiant'}
+//         </button>
+//       </form>
+
+//       {notification.show && (
+//         <div style={{
+//           ...styles.notification,
+//           backgroundColor: notification.isError ? '#f44336' : '#4caf50'
+//         }}>
+//           {notification.message}
+//           <button 
+//             onClick={() => setNotification(prev => ({ ...prev, show: false }))}
+//             style={styles.notificationClose}
+//           >
+//             ×
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// // Styles (identique à votre version originale)
+// const styles = {
+//   container: {
+//     maxWidth: '600px',
+//     margin: '0 auto',
+//     padding: '20px',
+//     backgroundColor: '#ffffff',
+//     borderRadius: '8px',
+//     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+//   },
+//   title: {
+//     textAlign: 'center',
+//     color: '#333333',
+//     marginBottom: '24px'
+//   },
+//   form: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '16px'
+//   },
+//   formGroup: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '8px'
+//   },
+//   label: {
+//     fontWeight: '500',
+//     color: '#555555'
+//   },
+//   input: {
+//     padding: '10px 12px',
+//     border: '1px solid #dddddd',
+//     borderRadius: '4px',
+//     fontSize: '16px'
+//   },
+//   submitButton: {
+//     padding: '12px',
+//     color: 'white',
+//     border: 'none',
+//     borderRadius: '4px',
+//     fontSize: '16px',
+//     cursor: 'pointer',
+//     marginTop: '16px'
+//   },
+//   notification: {
+//     position: 'fixed',
+//     bottom: '20px',
+//     left: '50%',
+//     transform: 'translateX(-50%)',
+//     padding: '12px 24px',
+//     color: 'white',
+//     borderRadius: '4px',
+//     display: 'flex',
+//     alignItems: 'center',
+//     gap: '16px',
+//     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
+//   },
+//   notificationClose: {
+//     background: 'none',
+//     border: 'none',
+//     color: 'white',
+//     cursor: 'pointer',
+//     fontSize: '20px',
+//     marginLeft: '8px'
+//   }
+// };
+
+// export default StudentRegistrationForm;
+//623
 
 //////////ca marche ^
 // import React, { useState, useEffect } from 'react';

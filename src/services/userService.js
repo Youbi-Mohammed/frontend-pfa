@@ -46,9 +46,14 @@ const getUserById = async (userId, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    // if (!response.ok) {
+    //   throw new Error("Failed to fetch user");
+    // }
     if (!response.ok) {
-      throw new Error("Failed to fetch user");
-    }
+  const errorBody = await response.text();
+  console.error("Failed to fetch user", response.status, errorBody);
+  throw new Error("Failed to fetch user");
+}
     const user = await response.json();
     return user;
   } catch (error) {
@@ -57,20 +62,38 @@ const getUserById = async (userId, token) => {
   }
 }
 
+// const getSupervisors = async (token) => {
+//   const supervisors = await fetch("http://localhost:8080/api/users/supervisors", {
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/json",
+//     },
+//   })
+//     .then((response) => response.json())
+//     .catch((error) => {
+//       console.error("Error fetching data:", error);
+//       throw error;
+//     });
+//   return supervisors;
+// };
 const getSupervisors = async (token) => {
-  const supervisors = await fetch("http://localhost:8080/api/users/supervisors", {
+  console.log("Token being sent:", token); // Debug token
+  const response = await fetch("http://localhost:8080/api/users/supervisors", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-  })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-      throw error;
-    });
-  return supervisors;
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json(); // Get detailed error from backend
+    console.error("Backend error:", errorData);
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return response.json();
 };
 
 const getStudents = async (token) => {
@@ -145,7 +168,7 @@ const downLoadProfileImage = async (userId, token) => {
 // services/userService.js
  const updateUserById = async (token, userId, userData) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+    const response = await fetch(`http://localhost:8080/api/users/update/ ${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

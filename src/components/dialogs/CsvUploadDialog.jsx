@@ -251,24 +251,231 @@
 // };
 
 // export default CsvUploadDialog;
-import React, { useState, useRef } from 'react';
-import { uploadCsvStudent } from '../../services/csvUploadService';
+// import React, { useState, useRef } from 'react';
+// import { uploadCsvStudent } from '../../services/csvUploadService';
 
-const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
+// const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
+//   const [file, setFile] = useState(null);
+//   const [isUploading, setIsUploading] = useState(false);
+//   const [notification, setNotification] = useState({ show: false, message: '', isError: false });
+//   const fileInputRef = useRef(null);
+
+//   const handleFileChange = (e) => {
+//     const selectedFile = e.target.files[0];
+//     setFile(selectedFile);
+//     setNotification({ show: false, message: '', isError: false });
+//   };
+
+//   const handleSubmit = async () => {
+//     if (!file) {
+//       setNotification({ show: true, message: 'No file selected', isError: true });
+//       return;
+//     }
+
+//     setIsUploading(true);
+//     const formData = new FormData();
+//     formData.append('file', file);
+
+//     try {
+//       const token = localStorage.getItem('token');
+//       if (!token) {
+//         throw new Error('Authentication token missing');
+//       }
+
+//       const response = await uploadCsvStudent(token, formData);
+      
+//       setNotification({
+//         show: true,
+//         message: response.message || 'CSV file uploaded successfully',
+//         isError: false
+//       });
+
+//       setFile(null);
+//       if (fileInputRef.current) fileInputRef.current.value = '';
+
+//       if (onUploadSuccess) onUploadSuccess(response);
+//     } catch (error) {
+//       console.error('Error during upload:', error);
+//       setNotification({
+//         show: true,
+//         message: error.message || 'Error uploading the file',
+//         isError: true
+//       });
+//       if (onUploadError) onUploadError(error);
+//     } finally {
+//       setIsUploading(false);
+//     }
+//   };
+
+//   return (
+//     <div style={styles.container}>
+//       <h2 style={styles.title}>Upload a CSV File</h2>
+      
+//       <div style={styles.uploadSection}>
+//         <input
+//           type="file"
+//           ref={fileInputRef}
+//           onChange={handleFileChange}
+//           accept=".csv"
+//           style={{ display: 'none' }}
+//         />
+//         <button
+//           onClick={() => fileInputRef.current.click()}
+//           style={styles.selectButton}
+//         >
+//           Select a CSV File
+//         </button>
+        
+//         {file && (
+//           <div style={styles.fileInfo}>
+//             <span>{file.name}</span>
+//             <button 
+//               onClick={() => setFile(null)}
+//               style={styles.clearButton}
+//             >
+//               ×
+//             </button>
+//           </div>
+//         )}
+//       </div>
+
+//       <button
+//         onClick={handleSubmit}
+//         disabled={!file || isUploading}
+//         style={{
+//           ...styles.uploadButton,
+//           backgroundColor: isUploading ? '#ff9800' : '#4caf50',
+//           cursor: isUploading ? 'wait' : 'pointer'
+//         }}
+//       >
+//         {isUploading ? 'Uploading...' : 'Upload File'}
+//       </button>
+
+//       {notification.show && (
+//         <div style={{
+//           ...styles.notification,
+//           backgroundColor: notification.isError ? '#ffebee' : '#e8f5e9',
+//           color: notification.isError ? '#c62828' : '#2e7d32'
+//         }}>
+//           {notification.message}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// const styles = {
+//   container: {
+//     maxWidth: '500px',
+//     margin: '20px auto',
+//     padding: '20px',
+//     backgroundColor: '#ffffff',
+//     borderRadius: '8px',
+//     boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+//   },
+//   title: {
+//     textAlign: 'center',
+//     color: '#333333',
+//     marginBottom: '20px'
+//   },
+//   uploadSection: {
+//     marginBottom: '20px',
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '10px'
+//   },
+//   selectButton: {
+//     padding: '10px 15px',
+//     backgroundColor: '#1976d2',
+//     color: 'white',
+//     border: 'none',
+//     borderRadius: '4px',
+//     cursor: 'pointer',
+//     fontSize: '14px'
+//   },
+//   fileInfo: {
+//     display: 'flex',
+//     alignItems: 'center',
+//     gap: '10px',
+//     padding: '8px',
+//     backgroundColor: '#f5f5f5',
+//     borderRadius: '4px'
+//   },
+//   clearButton: {
+//     background: 'none',
+//     border: 'none',
+//     color: '#f44336',
+//     cursor: 'pointer',
+//     fontSize: '16px'
+//   },
+//   uploadButton: {
+//     padding: '10px 20px',
+//     color: 'white',
+//     border: 'none',
+//     borderRadius: '4px',
+//     fontSize: '16px',
+//     width: '100%'
+//   },
+//   notification: {
+//     padding: '12px',
+//     borderRadius: '4px',
+//     marginTop: '20px',
+//     borderLeft: '4px solid currentColor'
+//   }
+// };
+
+// export default CsvUploadDialog;
+//255 fou9
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { uploadCsvStudent } from '../../services/csvUploadService';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  Snackbar,
+  Alert,
+  Paper,
+  useTheme
+} from '@mui/material';
+import { Upload as UploadIcon } from '@mui/icons-material';
+
+const CsvUploadDialog = () => {
+  const theme = useTheme();
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [notification, setNotification] = useState({ show: false, message: '', isError: false });
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    setNotification({ show: false, message: '', isError: false });
+    if (selectedFile) {
+      if (!selectedFile.name.endsWith('.csv')) {
+        setNotification({
+          open: true,
+          message: 'Please select a CSV file',
+          severity: 'error'
+        });
+        return;
+      }
+      setFile(selectedFile);
+    }
   };
 
-  const handleSubmit = async () => {
+  const handleUpload = async () => {
     if (!file) {
-      setNotification({ show: true, message: 'No file selected', isError: true });
+      setNotification({
+        open: true,
+        message: 'No file selected',
+        severity: 'error'
+      });
       return;
     }
 
@@ -278,150 +485,111 @@ const CsvUploadDialog = ({ onUploadSuccess, onUploadError }) => {
 
     try {
       const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Authentication token missing');
-      }
+      if (!token) throw new Error('Authentication required');
 
       const response = await uploadCsvStudent(token, formData);
       
       setNotification({
-        show: true,
-        message: response.message || 'CSV file uploaded successfully',
-        isError: false
+        open: true,
+        message: response.message || 'File uploaded successfully',
+        severity: 'success'
       });
 
-      setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      // Reset and redirect after success
+      setTimeout(() => {
+        setFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        navigate('/dashboard'); // Adjust redirect path as needed
+      }, 2000);
 
-      if (onUploadSuccess) onUploadSuccess(response);
     } catch (error) {
-      console.error('Error during upload:', error);
       setNotification({
-        show: true,
-        message: error.message || 'Error uploading the file',
-        isError: true
+        open: true,
+        message: error.message || 'Upload failed',
+        severity: 'error'
       });
-      if (onUploadError) onUploadError(error);
     } finally {
       setIsUploading(false);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Upload a CSV File</h2>
-      
-      <div style={styles.uploadSection}>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept=".csv"
-          style={{ display: 'none' }}
-        />
-        <button
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ mb: 3 }}
+        color={theme.palette.primary.main}>
+          Students list upload
+        </Typography>
+
+        <Box
+          sx={{
+            border: `2px dashed ${theme.palette.primary.main}`,
+            borderRadius: 1,
+            p: 4,
+            textAlign: 'center',
+            mb: 2,
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: theme.palette.action.hover
+            }
+          }}
           onClick={() => fileInputRef.current.click()}
-          style={styles.selectButton}
         >
-          Select a CSV File
-        </button>
-        
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept=".csv"
+            style={{ display: 'none' }}
+          />
+          <UploadIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />
+          <Typography variant="body1">
+            {file ? file.name : 'Click to select CSV file'}
+          </Typography>
+          <Typography variant="caption" color="textSecondary">
+            Only .csv files are accepted
+          </Typography>
+        </Box>
+
         {file && (
-          <div style={styles.fileInfo}>
-            <span>{file.name}</span>
-            <button 
-              onClick={() => setFile(null)}
-              style={styles.clearButton}
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUpload}
+              disabled={isUploading}
+              startIcon={isUploading ? <CircularProgress size={20} /> : null}
             >
-              ×
-            </button>
-          </div>
+              {isUploading ? 'Uploading...' : 'Upload File'}
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => setFile(null)}
+              disabled={isUploading}
+            >
+              Cancel
+            </Button>
+          </Box>
         )}
-      </div>
+      </Paper>
 
-      <button
-        onClick={handleSubmit}
-        disabled={!file || isUploading}
-        style={{
-          ...styles.uploadButton,
-          backgroundColor: isUploading ? '#ff9800' : '#4caf50',
-          cursor: isUploading ? 'wait' : 'pointer'
-        }}
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={() => setNotification(prev => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        {isUploading ? 'Uploading...' : 'Upload File'}
-      </button>
-
-      {notification.show && (
-        <div style={{
-          ...styles.notification,
-          backgroundColor: notification.isError ? '#ffebee' : '#e8f5e9',
-          color: notification.isError ? '#c62828' : '#2e7d32'
-        }}>
+        <Alert 
+          onClose={() => setNotification(prev => ({ ...prev, open: false }))}
+          severity={notification.severity}
+        >
           {notification.message}
-        </div>
-      )}
-    </div>
+        </Alert>
+      </Snackbar>
+    </Container>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: '500px',
-    margin: '20px auto',
-    padding: '20px',
-    backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-  },
-  title: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: '20px'
-  },
-  uploadSection: {
-    marginBottom: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px'
-  },
-  selectButton: {
-    padding: '10px 15px',
-    backgroundColor: '#1976d2',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '14px'
-  },
-  fileInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    padding: '8px',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '4px'
-  },
-  clearButton: {
-    background: 'none',
-    border: 'none',
-    color: '#f44336',
-    cursor: 'pointer',
-    fontSize: '16px'
-  },
-  uploadButton: {
-    padding: '10px 20px',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '16px',
-    width: '100%'
-  },
-  notification: {
-    padding: '12px',
-    borderRadius: '4px',
-    marginTop: '20px',
-    borderLeft: '4px solid currentColor'
-  }
 };
 
 export default CsvUploadDialog;

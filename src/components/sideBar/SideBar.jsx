@@ -446,7 +446,7 @@ import { getAllProjects } from "../../services/projectService";
 import { ExpandCircleDown, PeopleOutline } from "@mui/icons-material";
 import FolderCopyRoundedIcon from "@mui/icons-material/FolderCopyRounded";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import LogoutIcon from '@mui/icons-material/Logout';
+import DescriptionIcon from '@mui/icons-material/Description';import LogoutIcon from '@mui/icons-material/Logout';
 import Logout from "../../pages/authenticate/Logout";
 const studentStuff = [
   { id: 0, text: "BackLog", icon: <SubjectIcon />, path: "/dashboard/project/backlog" },
@@ -475,8 +475,8 @@ const forAll = [
   { id: 9, text: "Presentations", icon: <CoPresentIcon />, path: "/dashboard/presentations" },
   { id: 13, text: "Projects", icon: <FolderCopyIcon />, path: "/dashboard/projects" },
   { 
-    id: 16, text: "Diagram Generator", icon: <AccountTreeIcon />, path: "/dashboard/tools/diagram-generator" },
-       { id: 17, text: "CDC", icon: <AccountTreeIcon />, path: "/dashboard/tools/CDC-generator" },
+    id: 48, text: "Diagram Generator", icon: <AccountTreeIcon />, path: "/dashboard/tools/diagram-generator" },
+       { id: 49, text: "specifications", icon: <DescriptionIcon />, path: "/dashboard/tools/CDC-generator" },
 
     {id :99 ,text: "Logout", icon: <SettingsIcon />, path: "/logout"}
 ];
@@ -777,7 +777,7 @@ const [logoutOpen, setLogoutOpen] = useState(false);
                   </ListItem>
                 ))}
               </List>
-
+              <Divider />
               <List>
                 <ListSubheader sx={{
                   backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
@@ -806,7 +806,9 @@ const [logoutOpen, setLogoutOpen] = useState(false);
             <ListSubheader sx={{
               backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
             }}>GENERAL</ListSubheader>
-            {forAll.map((item) => (
+            {forAll
+            .filter(item => item.id < 40)  // Filtre les éléments avec id < 40
+            .map((item) => (
               <ListItem key={item.id} disablePadding>
                 <ListItemButton
                   sx={{ pl: 4, borderRadius: "4px" }}
@@ -823,6 +825,28 @@ const [logoutOpen, setLogoutOpen] = useState(false);
             ))}
           </List>
                 <Divider  />
+          <List>
+            <ListSubheader sx={{
+              backgroundColor: mode === "light" ? "#f5f6fa" : "#121212",
+            }}>Ai Tools</ListSubheader>
+            {forAll
+            .filter(item => item.id > 40 &&  item.id <50)  // Filtre les éléments avec id < 40
+            .map((item) => (
+              <ListItem key={item.id} disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4, borderRadius: "4px" }}
+                  selected={selectedIndex === item.id}
+                  onClick={(event) => {
+                    handleListItemClick(event, item.id);
+                    navigate(item.path);
+                  }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText sx={{ ml: -1.5 }} primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
       
       {/* <ListItem key={99} disablePadding>
         <ListItemButton
@@ -891,6 +915,9 @@ const [logoutOpen, setLogoutOpen] = useState(false);
   </ListItemButton>
 </ListItem> */}
           {/* ok fou9 */}
+          <Divider/>
+          <Divider/>
+          <Divider/>
                 <ListItem key={99} disablePadding>
         <ListItemButton
           sx={{ 

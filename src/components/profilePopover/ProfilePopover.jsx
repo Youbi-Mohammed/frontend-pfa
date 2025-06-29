@@ -88,7 +88,7 @@ const ProfilePopover = ({ anchorEl, open, onClose, userData, profileImage, setPr
      useEffect(() => {
        const fetchProfileImage = async () => {
          if (localStorage.getItem("userId")){
-           const imageUrl = await downLoadProfileImage(userid, token);
+           const imageUrl = await downLoadProfileImage(localStorage.getItem("userId"), token);
            setProfileImage(imageUrl);
          }
        };
