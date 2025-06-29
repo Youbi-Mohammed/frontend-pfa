@@ -476,12 +476,13 @@ const forAll = [
   { id: 13, text: "Projects", icon: <FolderCopyIcon />, path: "/dashboard/projects" },
   { 
     id: 48, text: "Diagram Generator", icon: <AccountTreeIcon />, path: "/dashboard/tools/diagram-generator" },
-       { id: 49, text: "specifications", icon: <DescriptionIcon />, path: "/dashboard/tools/CDC-generator" },
+       { id: 49, text: "specifications Generator", icon: <DescriptionIcon />, path: "/dashboard/tools/CDC-generator" },
 
     {id :99 ,text: "Logout", icon: <SettingsIcon />, path: "/logout"}
 ];
 // userId = localStorage.getItem("userId");
 // token = localStorage.getItem("token");
+// Dans votre composant parent
 
 const downLoadProfileImage = async (userId, token) => {
   try {
