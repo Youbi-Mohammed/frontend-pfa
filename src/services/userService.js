@@ -112,6 +112,11 @@ const getStudents = async (token) => {
   return students;
 }
 const downLoadProfileImage = async (userId, token) => {
+  // Validate userId first
+  if (!userId || userId <= 0) {
+    console.error("Invalid user ID:", userId);
+    return null;
+  }
   try {
     const response = await fetch(
       `http://localhost:8080/api/users/${userId}/downloadProfileImage`,
