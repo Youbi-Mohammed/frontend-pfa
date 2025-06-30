@@ -17,6 +17,51 @@ export default async function createProject(token, data, setSnackbarOpen, setSna
     return data;
   }
 } 
+
+// export default async function createProject(token, data, setSnackbarOpen, setSnackbarMessage) {
+//   try {
+//     const response = await fetch("http://localhost:8080/api/projects", {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       body: data,
+//     });
+
+//     // Gestion améliorée des erreurs
+//     if (!response.ok) {
+//       let errorMessage = `Erreur HTTP ${response.status}`;
+      
+//       try {
+//         // Essayez de lire le texte de la réponse
+//         const errorText = await response.text();
+//         if (errorText) {
+//           errorMessage += `: ${errorText}`;
+//         }
+//       } catch (e) {
+//         console.warn("Impossible de lire le corps de l'erreur", e);
+//       }
+      
+//       throw new Error(errorMessage);
+//     }
+
+//     // Gestion de la réponse (même vide)
+//     try {
+//       return await response.json();
+//     } catch (e) {
+//       if (response.status === 204 || response.headers.get('content-length') === '0') {
+//         return null; // Accepte les réponses vides pour les statuts 204
+//       }
+//       throw new Error("Réponse serveur invalide");
+//     }
+
+//   } catch (error) {
+//     console.error("Erreur complète:", error);
+//     setSnackbarMessage(error.message || "Erreur lors de la création");
+//     setSnackbarOpen(true);
+//     throw error;
+//   }
+// }
 export const updateProject = async (token, projectId, data, setSnackbarOpen, setSnackbarMessage) => {
   const response = await fetch(`http://localhost:8080/api/projects/${projectId}`, {
     method: "PUT",

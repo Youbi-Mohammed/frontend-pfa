@@ -341,6 +341,52 @@ function CreateProjectDialog({
     await createProject(token, data, setSnackbarOpen, setSnackbarMessage);
     handleModalClose();
   };
+  const handleSubmitReportOnly = async (event) => {
+  event.preventDefault();
+  setLoading(true);
+
+  const data = new FormData();
+  
+  // Champs obligatoires minimaux
+  data.append("title", "Projet avec rapport uniquement");
+  data.append("description", "Projet test pour import de rapport");
+   if (formData.team && formData.team.id !== null) {
+      data.append("team", formData.team.id);
+    } else {
+      data.append("team", null);
+    }
+   data.append(
+      "supervisors",
+      formData.supervisors.map((supervisor) => supervisor.id)
+    );
+  data.append("status", "DRAFT");
+  data.append("branch", formData.branch); // Utilisez la valeur par défaut (1)
+  
+  // Ajoutez le rapport
+  if (formData.report) {
+    data.append("report", formData.report, formData.report.name);
+  }
+   else {
+    setSnackbarMessage("Aucun rapport sélectionné");
+    setSnackbarOpen(true);
+    setLoading(false);
+    return;
+  }
+
+  // Debug
+  for (let [key, value] of data.entries()) {
+    console.log(key, value instanceof File ? value.name : value);
+  }
+
+  try {
+    await createProject(token, data, setSnackbarOpen, setSnackbarMessage);
+    handleModalClose();
+  } catch (error) {
+    console.error("Erreur:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <StyledDialog
@@ -353,6 +399,7 @@ function CreateProjectDialog({
         component: "form",
         onSubmit: (event) => {
           handleSubmit(event);
+           handleSubmitReportOnly(event);
         },
       }}
     >
