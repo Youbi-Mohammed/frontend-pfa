@@ -1,27 +1,27 @@
 "use client"
 
 import { useState } from "react"
-import { styled } from "@mui/material/styles"
+import { styled, useTheme } from "@mui/material/styles"
 import { Box, Typography, TextField, Button, Paper } from "@mui/material"
 import AccountTreeIcon from "@mui/icons-material/AccountTree"
 import AddIcon from "@mui/icons-material/Add"
 import DownloadIcon from "@mui/icons-material/Download"
 
-const DiagramContainer = styled(Box)({
+const DiagramContainer = styled(Box)(({ theme }) => ({
   maxWidth: "800px",
   margin: "0 auto",
   padding: "32px 20px",
   fontFamily: "'Inter', sans-serif",
-  color: "#1a1a1a",
-  backgroundColor: "#fdfefe",
+  color: theme.palette.text.primary,
+  backgroundColor: theme.palette.background.default,
   minHeight: "100vh",
-})
+}))
 
-const MainTitle = styled(Typography)({
+const MainTitle = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "32px",
   fontWeight: 700,
-  color: "#1a1a1a",
+  color: theme.palette.text.primary,
   textAlign: "center",
   marginBottom: "40px",
   letterSpacing: "-0.5px",
@@ -29,104 +29,104 @@ const MainTitle = styled(Typography)({
   alignItems: "center",
   justifyContent: "center",
   gap: "12px",
-})
+}))
 
-const FormSection = styled(Paper)({
-  backgroundColor: "#f8fafa",
+const FormSection = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'light' ? '#f8fafa' : theme.palette.background.paper,
   borderRadius: "12px",
   padding: "24px",
   marginBottom: "24px",
-  border: "1px solid #e6f2f2",
+  border: `1px solid ${theme.palette.divider}`,
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
   fontFamily: "'Inter', sans-serif",
-})
+}))
 
-const SectionTitle = styled(Typography)({
+const SectionTitle = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "20px",
   fontWeight: 600,
-  color: "#2d7a7a",
-  borderBottom: "2px solid #d1e7e7",
+  color: theme.palette.mode === 'light' ? '#2d7a7a' : '#4db3b3',
+  borderBottom: `2px solid ${theme.palette.divider}`,
   paddingBottom: "12px",
   marginTop: "0",
   marginBottom: "20px",
-})
+}))
 
-const FormLabel = styled(Typography)({
+const FormLabel = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "14px",
   fontWeight: 500,
-  color: "#1a1a1a",
+  color: theme.palette.text.primary,
   display: "block",
   marginBottom: "8px",
-})
+}))
 
-const ModernTextField = styled(TextField)({
+const ModernTextField = styled(TextField)(({ theme }) => ({
   width: "100%",
   marginBottom: "16px",
   "& .MuiOutlinedInput-root": {
     borderRadius: "8px",
-    backgroundColor: "#ffffff",
+    backgroundColor: theme.palette.background.paper,
     fontFamily: "'Inter', sans-serif",
     fontSize: "16px",
     "& fieldset": {
-      borderColor: "#d1e7e7",
+      borderColor: theme.palette.divider,
     },
     "&:hover fieldset": {
-      borderColor: "#a3d5d5",
+      borderColor: theme.palette.mode === 'light' ? '#a3d5d5' : '#4db3b3',
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#2d7a7a",
+      borderColor: theme.palette.mode === 'light' ? '#2d7a7a' : '#4db3b3',
       borderWidth: "2px",
     },
   },
   "& .MuiInputLabel-root": {
     fontFamily: "'Inter', sans-serif",
-    color: "#4a4a4a",
+    color: theme.palette.text.secondary,
     fontWeight: 500,
     "&.Mui-focused": {
-      color: "#1e5a5a",
+      color: theme.palette.mode === 'light' ? '#1e5a5a' : '#4db3b3',
     },
   },
   "& .MuiOutlinedInput-input": {
-    color: "#1a1a1a",
+    color: theme.palette.text.primary,
     fontFamily: "'Inter', sans-serif",
     padding: "12px 14px",
   },
   "& .MuiInputBase-multiline": {
     minHeight: "80px",
   },
-})
+}))
 
-const EntityCard = styled(Box)({
-  backgroundColor: "#ffffff",
+const EntityCard = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
   borderRadius: "8px",
   padding: "20px",
   marginBottom: "16px",
-  borderLeft: "4px solid #2d7a7a",
-  border: "1px solid #e6f2f2",
+  borderLeft: `4px solid ${theme.palette.mode === 'light' ? '#2d7a7a' : '#4db3b3'}`,
+  border: `1px solid ${theme.palette.divider}`,
   boxShadow: "0 2px 8px rgba(45, 122, 122, 0.08)",
   transition: "all 0.2s ease-in-out",
   "&:hover": {
-    borderLeftColor: "#1e5a5a",
+    borderLeftColor: theme.palette.mode === 'light' ? '#1e5a5a' : '#5acccc',
     boxShadow: "0 4px 12px rgba(45, 122, 122, 0.15)",
   },
-})
+}))
 
-const HintText = styled(Typography)({
+const HintText = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "13px",
-  color: "#6bb6b6",
+  color: theme.palette.mode === 'light' ? '#6bb6b6' : '#88c8c8',
   marginTop: "-8px",
   marginBottom: "16px",
   lineHeight: 1.4,
-})
+}))
 
-const AddButton = styled(Button)({
+const AddButton = styled(Button)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
-  backgroundColor: "#f8fafa",
-  color: "#4a4a4a",
-  border: "1px solid #d1e7e7",
+  backgroundColor: theme.palette.mode === 'light' ? '#f8fafa' : theme.palette.background.paper,
+  color: theme.palette.text.secondary,
+  border: `1px solid ${theme.palette.divider}`,
   padding: "8px 16px",
   borderRadius: "6px",
   fontSize: "14px",
@@ -134,15 +134,15 @@ const AddButton = styled(Button)({
   textTransform: "none",
   transition: "all 0.2s ease-in-out",
   "&:hover": {
-    backgroundColor: "#fcfefe",
-    borderColor: "#a3d5d5",
-    color: "#1e5a5a",
+    backgroundColor: theme.palette.action.hover,
+    borderColor: theme.palette.mode === 'light' ? '#a3d5d5' : '#4db3b3',
+    color: theme.palette.mode === 'light' ? '#1e5a5a' : '#4db3b3',
   },
-})
+}))
 
-const GenerateButton = styled(Button)({
+const GenerateButton = styled(Button)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
-  backgroundColor: "#2d7a7a",
+  backgroundColor: theme.palette.mode === 'light' ? '#2d7a7a' : '#3a9e9e',
   color: "#ffffff",
   border: "none",
   padding: "16px 32px",
@@ -154,47 +154,47 @@ const GenerateButton = styled(Button)({
   textTransform: "none",
   transition: "all 0.3s ease-in-out",
   "&:hover:not(:disabled)": {
-    backgroundColor: "#1e5a5a",
+    backgroundColor: theme.palette.mode === 'light' ? '#1e5a5a' : '#2a8a8a',
     transform: "translateY(-2px)",
     boxShadow: "0 8px 20px rgba(45, 122, 122, 0.3)",
   },
   "&:disabled": {
-    backgroundColor: "#e6f2f2",
-    color: "#a3d5d5",
+    backgroundColor: theme.palette.action.disabledBackground,
+    color: theme.palette.text.disabled,
     cursor: "not-allowed",
   },
-})
+}))
 
-const ErrorMessage = styled(Typography)({
+const ErrorMessage = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "16px",
   fontWeight: 500,
-  color: "#dc6545",
+  color: theme.palette.error.main,
   textAlign: "center",
   margin: "20px 0",
   padding: "12px",
-  backgroundColor: "#fef7f4",
-  border: "1px solid #f4d4c7",
+  backgroundColor: theme.palette.error.light,
+  border: `1px solid ${theme.palette.error.dark}`,
   borderRadius: "8px",
-})
+}))
 
-const DiagramResult = styled(Paper)({
+const DiagramResult = styled(Paper)(({ theme }) => ({
   marginTop: "40px",
   padding: "24px",
-  backgroundColor: "#ffffff",
+  backgroundColor: theme.palette.background.paper,
   borderRadius: "12px",
-  border: "1px solid #e6f2f2",
+  border: `1px solid ${theme.palette.divider}`,
   boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
-})
+}))
 
-const DiagramResultTitle = styled(Typography)({
+const DiagramResultTitle = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "24px",
   fontWeight: 600,
-  color: "#1a1a1a",
+  color: theme.palette.text.primary,
   textAlign: "center",
   marginBottom: "24px",
-})
+}))
 
 const DiagramHeader = styled(Box)({
   display: "flex",
@@ -205,7 +205,7 @@ const DiagramHeader = styled(Box)({
   gap: "12px",
 })
 
-const DownloadButton = styled(Button)({
+const DownloadButton = styled(Button)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "14px",
   fontWeight: 500,
@@ -216,16 +216,17 @@ const DownloadButton = styled(Button)({
   display: "flex",
   alignItems: "center",
   gap: "6px",
-  backgroundColor: "#2d7a7a",
+  backgroundColor: theme.palette.mode === 'light' ? '#2d7a7a' : '#3a9e9e',
   color: "#ffffff",
   "&:hover": {
-    backgroundColor: "#1e5a5a",
+    backgroundColor: theme.palette.mode === 'light' ? '#1e5a5a' : '#2a8a8a',
     transform: "translateY(-1px)",
     boxShadow: "0 4px 12px rgba(45, 122, 122, 0.3)",
   },
-})
+}))
 
 function DiagramPage() {
+  const theme = useTheme();
   // States for each structured section
   const [systemName, setSystemName] = useState("")
   const [entities, setEntities] = useState([{ name: "", attributes: "", methods: "" }])
@@ -329,7 +330,7 @@ function DiagramPage() {
   return (
     <DiagramContainer>
       <MainTitle>
-        <AccountTreeIcon sx={{ fontSize: "36px", color: "#2d7a7a" }} />
+        <AccountTreeIcon sx={{ fontSize: "36px", color: theme.palette.mode === 'light' ? '#2d7a7a' : '#4db3b3' }} />
         UML Diagram Generator
       </MainTitle>
 
@@ -438,8 +439,8 @@ function DiagramPage() {
           <Box
             sx={{
               minHeight: "300px",
-              backgroundColor: "#f8fafa",
-              border: "1px solid #e6f2f2",
+              backgroundColor: theme.palette.background.default,
+              border: `1px solid ${theme.palette.divider}`,
               borderRadius: "8px",
               padding: "16px",
               "& svg": {
