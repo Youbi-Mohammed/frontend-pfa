@@ -414,59 +414,59 @@
 //     </Box>
 //   );
 // }
-"use client"
+"use client";
 
-import AssignmentIcon from "@mui/icons-material/Assignment"
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import ChevronRightIcon from "@mui/icons-material/ChevronRight"
-import CoPresentIcon from "@mui/icons-material/CoPresent"
-import FolderCopyIcon from "@mui/icons-material/FolderCopy"
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt"
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1"
-import QueryStatsIcon from "@mui/icons-material/QueryStats"
-import SchoolIcon from "@mui/icons-material/School"
-import SettingsIcon from "@mui/icons-material/Settings"
-import SubjectIcon from "@mui/icons-material/Subject"
-import ViewWeekIcon from "@mui/icons-material/ViewWeek"
-import { Collapse, ListItemButton, Typography } from "@mui/material"
-import Box from "@mui/material/Box"
-import CssBaseline from "@mui/material/CssBaseline"
-import IconButton from "@mui/material/IconButton"
-import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import ListItemText from "@mui/material/ListItemText"
-import ListSubheader from "@mui/material/ListSubheader"
-import Tooltip from "@mui/material/Tooltip"
-import { useTheme } from "@mui/material/styles"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { hasRole } from "../../utils/userUtiles"
-import { DrawerHeader, StyledDrawer } from "./sideBar"
-import { getAllProjects } from "../../services/projectService"
-import { ExpandCircleDown } from "@mui/icons-material"
-import FolderCopyRoundedIcon from "@mui/icons-material/FolderCopyRounded"
-import AccountTreeIcon from "@mui/icons-material/AccountTree"
-import DescriptionIcon from "@mui/icons-material/Description"
-import LogoutIcon from "@mui/icons-material/Logout"
-import Logout from "../../pages/authenticate/Logout"
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CoPresentIcon from "@mui/icons-material/CoPresent";
+import FolderCopyIcon from "@mui/icons-material/FolderCopy";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import SchoolIcon from "@mui/icons-material/School";
+import SettingsIcon from "@mui/icons-material/Settings";
+import SubjectIcon from "@mui/icons-material/Subject";
+import ViewWeekIcon from "@mui/icons-material/ViewWeek";
+import { Collapse, ListItemButton, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
+import Tooltip from "@mui/material/Tooltip";
+import { useTheme } from "@mui/material/styles";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { hasRole } from "../../utils/userUtiles";
+import { DrawerHeader, StyledDrawer } from "./sidebar";
+import { getAllProjects } from "../../services/projectService";
+import { ExpandCircleDown } from "@mui/icons-material";
+import FolderCopyRoundedIcon from "@mui/icons-material/FolderCopyRounded";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import DescriptionIcon from "@mui/icons-material/Description";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Logout from "../../pages/authenticate/Logout";
 
 const studentStuff = [
   { id: 0, text: "BackLog", icon: <SubjectIcon />, path: "/dashboard/project/backlog" },
   { id: 1, text: "Board", icon: <ViewWeekIcon />, path: "/dashboard/project/board" },
   { id: 3, text: "Team", icon: <PeopleAltIcon />, path: "/dashboard/project/team" },
   { id: 43, text: "Documents", icon: <FolderCopyRoundedIcon />, path: "/dashboard/project/docs" },
-]
+];
 
 const supervisorStuff = [
   { id: 17, text: "Requirements", icon: <SubjectIcon />, path: "/dashboard/my-projects/backlog" },
-]
+];
 
 const HOBStuff = [
   { id: 10, text: "Create New Account", icon: <PersonAddAlt1Icon />, path: "/dashboard/new/account" },
   { id: 11, text: "Import Students via CSV", icon: <SchoolIcon />, path: "/dashboard/studentslist" },
   { id: 12, text: "Assignments", icon: <AssignmentIcon />, path: "/dashboard/assignments" },
-]
+];
 
 const forAll = [
   {
@@ -480,7 +480,7 @@ const forAll = [
   { id: 48, text: "Diagram Generator", icon: <AccountTreeIcon />, path: "/dashboard/tools/diagram-generator" },
   { id: 49, text: "Specifications Generator", icon: <DescriptionIcon />, path: "/dashboard/tools/CDC-generator" },
   { id: 99, text: "Logout", icon: <SettingsIcon />, path: "/logout" },
-]
+];
 
 const downLoadProfileImage = async (userId, token) => {
   try {
@@ -489,98 +489,120 @@ const downLoadProfileImage = async (userId, token) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
+    });
     if (!response.ok) {
-      return null
+      return null;
     }
-    const image = await response.blob()
-    const url = window.URL.createObjectURL(image)
-    return url
+    const image = await response.blob();
+    const url = window.URL.createObjectURL(image);
+    return url;
   } catch (error) {
-    console.error("Error downloading image:", error)
-    return null
+    console.error("Error downloading image:", error);
+    return null;
   }
-}
+};
 
 export default function SideBar({ mode, open, handleDrawerClose }) {
-  const theme = useTheme()
-  const navigate = useNavigate()
-  const token = localStorage.getItem("token")
-  const user = JSON.parse(localStorage.getItem("user"))
-  const [selectedIndex, setSelectedIndex] = useState(null)
-  const [projects, setProjects] = useState([{}])
-  const [profileImage, setProfileImage] = useState(null)
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [projects, setProjects] = useState([{}]);
+  const [profileImage, setProfileImage] = useState(null);
 
-  const isSupervisor = hasRole("ROLE_SUPERVISOR")
-  const isHOB = hasRole("ROLE_HEAD_OF_BRANCH")
-  const isStudent = hasRole("ROLE_STUDENT")
+  const isSupervisor = hasRole("ROLE_SUPERVISOR");
+  const isHOB = hasRole("ROLE_HEAD_OF_BRANCH");
+  const isStudent = hasRole("ROLE_STUDENT");
 
   const handleListItemClick = (event, index) => {
-    setSelectedIndex(index)
-  }
+    setSelectedIndex(index);
+  };
 
-  const [expandedProjectId, setExpandedProjectId] = useState(null)
+  const [expandedProjectId, setExpandedProjectId] = useState(null);
   const handleProjectClick = (projectId) => {
-    setExpandedProjectId(projectId === expandedProjectId ? null : projectId)
-  }
+    setExpandedProjectId(projectId === expandedProjectId ? null : projectId);
+  };
 
-  const [logoutOpen, setLogoutOpen] = useState(false)
-  const userid = user?.id || localStorage.getItem("userId")
+  const [logoutOpen, setLogoutOpen] = useState(false);
+  const userid = user?.id || localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchProfileImage = async () => {
       if (userid) {
-        const imageUrl = await downLoadProfileImage(userid, token)
-        setProfileImage(imageUrl)
+        const imageUrl = await downLoadProfileImage(userid, token);
+        setProfileImage(imageUrl);
       }
-    }
-    fetchProfileImage()
-  }, [userid, token])
+    };
+    fetchProfileImage();
+  }, [userid, token]);
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const fetchedProjects = await getAllProjects(token)
-      setProjects(fetchedProjects)
-    }
+      const fetchedProjects = await getAllProjects(token);
+      setProjects(fetchedProjects);
+    };
     if (isSupervisor) {
-      fetchProjects()
+      fetchProjects();
     }
-  }, [])
+  }, []);
 
-  // Modern Teal Palette Styles
+  // Définir les couleurs en fonction du mode
+  const colors = {
+    sidebarBg: mode === 'dark' ? '#121212' : '#fdfefe',
+    sidebarBorder: mode === 'dark' ? '#333333' : '#e6f2f2',
+    sidebarItemSelectedBg: mode === 'dark' ? '#1e1e1e' : '#f8fafa',
+    sidebarItemSelectedBorder: mode === 'dark' ? '#333333' : '#d1e7e7',
+    sidebarItemSelectedColor: mode === 'dark' ? '#4db6ac' : '#1e5a5a',
+    sidebarItemColor: mode === 'dark' ? '#b0b0b0' : '#4a4a4a',
+    sidebarSubheaderBg: mode === 'dark' ? '#121212' : '#fdfefe',
+    sidebarSubheaderColor: mode === 'dark' ? '#4db6ac' : '#2d7a7a',
+    sidebarIconColor: mode === 'dark' ? '#b0b0b0' : '#4a9a9a',
+    sidebarIconSelectedColor: mode === 'dark' ? '#4db6ac' : '#2d7a7a',
+    sidebarHoverBg: mode === 'dark' ? '#2a2a2a' : '#fcfefe',
+    sidebarHoverBorder: mode === 'dark' ? '#333333' : '#a3d5d5',
+    scrollbarThumb: mode === 'dark' 
+      ? 'linear-gradient(180deg, #2a4a4a, #1e3d3d)' 
+      : 'linear-gradient(180deg, #a3d5d5, #6bb6b6)',
+    logoutColor: mode === 'dark' ? '#ff8a65' : '#dc6545',
+    logoutHoverBg: mode === 'dark' ? '#332a28' : '#fef7f4',
+    logoutHoverBorder: mode === 'dark' ? '#5d4037' : '#f4d4c7',
+  };
+
+  // Styles avec les couleurs adaptées au mode
   const sidebarItemStyle = (selected) => ({
     pl: open ? 3 : 0,
     pr: open ? 2 : 0,
-    py: 0.8, // Reduced from 1.5 to 0.8
-    borderRadius: "8px", // Reduced from 10px to 8px
-    marginBottom: "2px", // Reduced from 4px to 2px
-    backgroundColor: selected ? "#f8fafa" : "transparent",
-    border: selected ? "1px solid #d1e7e7" : "1px solid transparent",
-    color: selected ? "#1e5a5a" : "#4a4a4a",
+    py: 0.8,
+    borderRadius: "8px",
+    marginBottom: "2px",
+    backgroundColor: selected ? colors.sidebarItemSelectedBg : "transparent",
+    border: selected ? `1px solid ${colors.sidebarItemSelectedBorder}` : "1px solid transparent",
+    color: selected ? colors.sidebarItemSelectedColor : colors.sidebarItemColor,
     justifyContent: open ? "flex-start" : "center",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     "&:hover": {
-      backgroundColor: "#fcfefe",
-      borderColor: "#a3d5d5",
-      color: "#1e5a5a",
+      backgroundColor: colors.sidebarHoverBg,
+      borderColor: colors.sidebarHoverBorder,
+      color: colors.sidebarItemSelectedColor,
       transform: "translateY(-1px)",
       boxShadow: "0 4px 12px rgba(45, 122, 122, 0.15)",
     },
-  })
+  });
 
   const sidebarIconStyle = (selected) => ({
-    color: selected ? "#2d7a7a" : "#4a9a9a",
-    minWidth: open ? "48px" : "24px", // Increased from 40px to 48px when open
+    color: selected ? colors.sidebarIconSelectedColor : colors.sidebarIconColor,
+    minWidth: open ? "48px" : "24px",
     justifyContent: "center",
     transition: "all 0.3s ease",
     "& .MuiSvgIcon-root": {
       fontSize: "20px",
       filter: selected ? "drop-shadow(0 2px 4px rgba(45, 122, 122, 0.3))" : "none",
     },
-  })
+  });
 
   const sidebarTextStyle = {
-    ml: open ? -0.5 : 0, // Changed from -1.5 to -0.5 for better spacing
+    ml: open ? -0.5 : 0,
     display: open ? "block" : "none",
     opacity: open ? 1 : 0,
     transition: "opacity 0.3s ease",
@@ -589,41 +611,41 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
       fontSize: "14px",
       fontWeight: 400,
       color: "inherit",
-      lineHeight: 1.3, // Added line height for better text spacing
+      lineHeight: 1.3,
     },
-  }
+  };
 
   const subheaderStyle = {
     fontFamily: "'Inter', sans-serif",
     fontSize: "11px",
     fontWeight: 500,
-    color: "#2d7a7a",
+    color: colors.sidebarSubheaderColor,
     textTransform: "uppercase",
     letterSpacing: "1px",
-    backgroundColor: "#fdfefe",
+    backgroundColor: colors.sidebarSubheaderBg,
     display: open ? "block" : "none",
-    padding: open ? "8px 16px 6px 16px" : "8px 8px 6px 8px", // Reduced padding
-    marginBottom: "4px", // Reduced from default
-  }
+    padding: open ? "8px 16px 6px 16px" : "8px 8px 6px 8px",
+    marginBottom: "4px",
+  };
 
   const renderMenuItem = (item, isSubItem = false) => {
-    const isSelected = selectedIndex === item.id
+    const isSelected = selectedIndex === item.id;
     const content = (
       <ListItemButton
         sx={{
           ...sidebarItemStyle(isSelected),
-          ml: isSubItem ? (open ? 1.5 : 0) : 0, // Reduced from 2 to 1.5
-          pl: isSubItem ? (open ? 5 : 0) : open ? 3 : 0, // Reduced indentation
+          ml: isSubItem ? (open ? 1.5 : 0) : 0,
+          pl: isSubItem ? (open ? 5 : 0) : open ? 3 : 0,
         }}
         onClick={(event) => {
-          handleListItemClick(event, item.id)
-          navigate(item.path)
+          handleListItemClick(event, item.id);
+          navigate(item.path);
         }}
       >
         <ListItemIcon sx={sidebarIconStyle(isSelected)}>{item.icon}</ListItemIcon>
         <ListItemText sx={sidebarTextStyle} primary={item.text} />
       </ListItemButton>
-    )
+    );
 
     return !open ? (
       <Tooltip
@@ -633,7 +655,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
         componentsProps={{
           tooltip: {
             sx: {
-              backgroundColor: "#1e5a5a",
+              backgroundColor: colors.sidebarSubheaderColor,
               color: "#ffffff",
               fontFamily: "'Inter', sans-serif",
               fontSize: "12px",
@@ -646,21 +668,21 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
       </Tooltip>
     ) : (
       <ListItem disablePadding>{content}</ListItem>
-    )
-  }
+    );
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <StyledDrawer variant="persistent" anchor="left" open={open}>
-        <DrawerHeader>
+      <StyledDrawer variant="persistent" anchor="left" open={open} mode={mode}>
+        <DrawerHeader mode={mode}>
           <Tooltip
             title={open ? "Collapse" : "Expand"}
             placement="right"
             componentsProps={{
               tooltip: {
                 sx: {
-                  backgroundColor: "#1e5a5a",
+                  backgroundColor: colors.sidebarSubheaderColor,
                   color: "#ffffff",
                   fontFamily: "'Inter', sans-serif",
                   fontSize: "12px",
@@ -671,15 +693,15 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
             <IconButton
               onClick={handleDrawerClose}
               sx={{
-                color: "#2d7a7a",
-                backgroundColor: "#f8fafa",
-                border: "1px solid #d1e7e7",
-                borderRadius: "6px", // Reduced from 8px
-                padding: "6px", // Added explicit padding
+                color: colors.sidebarIconSelectedColor,
+                backgroundColor: colors.sidebarItemSelectedBg,
+                border: `1px solid ${colors.sidebarItemSelectedBorder}`,
+                borderRadius: "6px",
+                padding: "6px",
                 "&:hover": {
-                  backgroundColor: "#fcfefe",
-                  borderColor: "#a3d5d5",
-                  transform: "scale(1.02)", // Reduced from 1.05
+                  backgroundColor: colors.sidebarHoverBg,
+                  borderColor: colors.sidebarHoverBorder,
+                  transform: "scale(1.02)",
                 },
               }}
             >
@@ -700,10 +722,12 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
               background: "transparent",
             },
             "&::-webkit-scrollbar-thumb": {
-              background: "linear-gradient(180deg, #a3d5d5, #6bb6b6)",
+              background: colors.scrollbarThumb,
               borderRadius: "3px",
               "&:hover": {
-                background: "linear-gradient(180deg, #6bb6b6, #4a9a9a)",
+                background: mode === 'dark'
+                  ? "linear-gradient(180deg, #1e3d3d, #153030)"
+                  : "linear-gradient(180deg, #6bb6b6, #4a9a9a)",
               },
             },
           }}
@@ -734,7 +758,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                           componentsProps={{
                             tooltip: {
                               sx: {
-                                backgroundColor: "#1e5a5a",
+                                backgroundColor: colors.sidebarSubheaderColor,
                                 color: "#ffffff",
                                 fontFamily: "'Inter', sans-serif",
                                 fontSize: "12px",
@@ -749,7 +773,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                                 sx={{
                                   transition: "transform 0.3s ease-in-out",
                                   transform: expandedProjectId === project.id ? "rotate(0deg)" : "rotate(-90deg)",
-                                  color: "#4a9a9a",
+                                  color: colors.sidebarIconColor,
                                 }}
                               />
                             </ListItemIcon>
@@ -762,7 +786,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                               sx={{
                                 transition: "transform 0.3s ease-in-out",
                                 transform: expandedProjectId === project.id ? "rotate(0deg)" : "rotate(-90deg)",
-                                color: "#4a9a9a",
+                                color: colors.sidebarIconColor,
                               }}
                             />
                           </ListItemIcon>
@@ -825,7 +849,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                 >
                   <Typography
                     sx={{
-                      color: "#4a4a4a",
+                      color: colors.sidebarItemColor,
                       fontFamily: "'Inter', sans-serif",
                       fontSize: "14px",
                       display: open ? "block" : "none",
@@ -836,7 +860,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: "#4a4a4a",
+                      color: colors.sidebarItemColor,
                       fontFamily: "'Inter', sans-serif",
                       fontSize: "12px",
                       display: open ? "block" : "none",
@@ -895,7 +919,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                   componentsProps={{
                     tooltip: {
                       sx: {
-                        backgroundColor: "#dc6545",
+                        backgroundColor: colors.logoutColor,
                         color: "#ffffff",
                         fontFamily: "'Inter', sans-serif",
                         fontSize: "12px",
@@ -906,16 +930,16 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                   <ListItemButton
                     sx={{
                       ...sidebarItemStyle(false),
-                      color: "#dc6545",
+                      color: colors.logoutColor,
                       "&:hover": {
-                        backgroundColor: "#fef7f4",
-                        borderColor: "#f4d4c7",
-                        color: "#dc6545",
+                        backgroundColor: colors.logoutHoverBg,
+                        borderColor: colors.logoutHoverBorder,
+                        color: colors.logoutColor,
                       },
                     }}
                     onClick={() => setLogoutOpen(true)}
                   >
-                    <ListItemIcon sx={{ ...sidebarIconStyle(false), color: "#dc6545" }}>
+                    <ListItemIcon sx={{ ...sidebarIconStyle(false), color: colors.logoutColor }}>
                       <LogoutIcon />
                     </ListItemIcon>
                   </ListItemButton>
@@ -924,22 +948,22 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
                 <ListItemButton
                   sx={{
                     ...sidebarItemStyle(false),
-                    color: "#dc6545",
+                    color: colors.logoutColor,
                     "&:hover": {
-                      backgroundColor: "#fef7f4",
-                      borderColor: "#f4d4c7",
-                      color: "#dc6545",
+                      backgroundColor: colors.logoutHoverBg,
+                      borderColor: colors.logoutHoverBorder,
+                      color: colors.logoutColor,
                     },
                   }}
                   onClick={() => setLogoutOpen(true)}
                 >
-                  <ListItemIcon sx={{ ...sidebarIconStyle(false), color: "#dc6545" }}>
+                  <ListItemIcon sx={{ ...sidebarIconStyle(false), color: colors.logoutColor }}>
                     <LogoutIcon />
                   </ListItemIcon>
                   <ListItemText
                     sx={sidebarTextStyle}
                     primary="Logout"
-                    primaryTypographyProps={{ color: "#dc6545", fontWeight: 500 }}
+                    primaryTypographyProps={{ color: colors.logoutColor, fontWeight: 500 }}
                   />
                 </ListItemButton>
               )}
@@ -950,6 +974,6 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
         </Box>
       </StyledDrawer>
     </Box>
-  )
+  );
 }
 
