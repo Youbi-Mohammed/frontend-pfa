@@ -426,170 +426,365 @@
 
 // export default CsvUploadDialog;
 //255 fou9
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { uploadCsvStudent } from '../../services/csvUploadService';
-import {
-  Container,
-  Box,
-  Typography,
-  Button,
-  CircularProgress,
-  Snackbar,
-  Alert,
-  Paper,
-  useTheme
-} from '@mui/material';
-import { Upload as UploadIcon } from '@mui/icons-material';
+"use client"
+
+import { useState, useRef } from "react"
+import { useNavigate } from "react-router-dom"
+import { uploadCsvStudent } from "../../services/csvUploadService"
+import { Container, Box, Typography, Button, CircularProgress, Snackbar, Alert, Paper, IconButton } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import DescriptionIcon from "@mui/icons-material/Description"
+import GroupAddIcon from "@mui/icons-material/GroupAdd"
+
+const ModernContainer = styled(Container)({
+  marginTop: "32px",
+  fontFamily: "'Inter', sans-serif",
+})
+
+const ModernPaper = styled(Paper)({
+  borderRadius: "12px",
+  padding: "40px",
+  backgroundColor: "#ffffff",
+  border: "1px solid #e6f2f2",
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+  fontFamily: "'Inter', sans-serif",
+})
+
+const ModernTitle = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontSize: "28px",
+  fontWeight: 700,
+  color: "#1a1a1a",
+  letterSpacing: "-0.5px",
+  margin: 0,
+  lineHeight: 1,
+})
+
+const ModernSubtitle = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontSize: "16px",
+  fontWeight: 400,
+  color: "#4a4a4a",
+  textAlign: "center",
+  marginBottom: "32px",
+  lineHeight: 1.6,
+})
+
+const UploadZone = styled(Box)(({ hasFile }) => ({
+  border: hasFile ? "2px solid #2d7a7a" : "2px dashed #d1e7e7",
+  borderRadius: "12px",
+  padding: "48px 32px",
+  textAlign: "center",
+  marginBottom: "24px",
+  cursor: "pointer",
+  backgroundColor: hasFile ? "#f8fafa" : "#ffffff",
+  transition: "all 0.3s ease-in-out",
+  "&:hover": {
+    backgroundColor: "#fcfefe",
+    borderColor: "#2d7a7a",
+    transform: "translateY(-2px)",
+    boxShadow: "0 8px 24px rgba(45, 122, 122, 0.15)",
+  },
+}))
+
+const UploadIcon = styled(CloudUploadIcon)({
+  fontSize: "48px",
+  color: "#2d7a7a",
+  marginBottom: "16px",
+  filter: "drop-shadow(0 2px 4px rgba(45, 122, 122, 0.2))",
+})
+
+const FileInfo = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "12px",
+  padding: "16px 24px",
+  backgroundColor: "#f8fafa",
+  borderRadius: "8px",
+  border: "1px solid #d1e7e7",
+  marginBottom: "24px",
+})
+
+const FileIcon = styled(DescriptionIcon)({
+  color: "#2d7a7a",
+  fontSize: "24px",
+})
+
+const FileName = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontSize: "14px",
+  fontWeight: 500,
+  color: "#1a1a1a",
+  flex: 1,
+})
+
+const FileSize = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontSize: "12px",
+  color: "#4a4a4a",
+})
+
+const ModernButton = styled(Button)(({ variant, color }) => ({
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 600,
+  borderRadius: "8px",
+  textTransform: "none",
+  padding: "12px 24px",
+  fontSize: "14px",
+  transition: "all 0.2s ease-in-out",
+  ...(variant === "contained" && {
+    backgroundColor: "#2d7a7a",
+    color: "#ffffff",
+    "&:hover": {
+      backgroundColor: "#1e5a5a",
+      transform: "translateY(-1px)",
+      boxShadow: "0 6px 16px rgba(45, 122, 122, 0.3)",
+    },
+    "&:disabled": {
+      backgroundColor: "#e6f2f2",
+      color: "#a3d5d5",
+    },
+  }),
+  ...(variant === "outlined" && {
+    borderColor: "#d1e7e7",
+    color: "#4a4a4a",
+    backgroundColor: "#ffffff",
+    "&:hover": {
+      backgroundColor: "#fcfefe",
+      borderColor: "#2d7a7a",
+      color: "#1e5a5a",
+    },
+  }),
+  ...(color === "error" && {
+    color: "#dc6545",
+    borderColor: "#f4d4c7",
+    "&:hover": {
+      backgroundColor: "#fef7f4",
+      borderColor: "#e8b4a0",
+    },
+  }),
+}))
+
+const ButtonContainer = styled(Box)({
+  display: "flex",
+  justifyContent: "center",
+  gap: "16px",
+  marginTop: "24px",
+})
+
+const HiddenInput = styled("input")({
+  display: "none",
+})
+
+const ModernAlert = styled(Alert)({
+  fontFamily: "'Inter', sans-serif",
+  borderRadius: "8px",
+  "& .MuiAlert-message": {
+    fontWeight: 500,
+  },
+})
 
 const CsvUploadDialog = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-  const [file, setFile] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const navigate = useNavigate()
+  const [file, setFile] = useState(null)
+  const [isUploading, setIsUploading] = useState(false)
   const [notification, setNotification] = useState({
     open: false,
-    message: '',
-    severity: 'info'
-  });
-  const fileInputRef = useRef(null);
+    message: "",
+    severity: "info",
+  })
+
+  const fileInputRef = useRef(null)
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
+    const selectedFile = e.target.files[0]
     if (selectedFile) {
-      if (!selectedFile.name.endsWith('.csv')) {
+      if (!selectedFile.name.endsWith(".csv")) {
         setNotification({
           open: true,
-          message: 'Please select a CSV file',
-          severity: 'error'
-        });
-        return;
+          message: "Please select a CSV file",
+          severity: "error",
+        })
+        return
       }
-      setFile(selectedFile);
+      setFile(selectedFile)
     }
-  };
+  }
 
   const handleUpload = async () => {
     if (!file) {
       setNotification({
         open: true,
-        message: 'No file selected',
-        severity: 'error'
-      });
-      return;
+        message: "No file selected",
+        severity: "error",
+      })
+      return
     }
 
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
+    setIsUploading(true)
+    const formData = new FormData()
+    formData.append("file", file)
 
     try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('Authentication required');
+      const token = localStorage.getItem("token")
+      if (!token) throw new Error("Authentication required")
 
-      const response = await uploadCsvStudent(token, formData);
-      
+      const response = await uploadCsvStudent(token, formData)
+
       setNotification({
         open: true,
-        message: response.message || 'File uploaded successfully',
-        severity: 'success'
-      });
+        message: response.message || "Students imported successfully",
+        severity: "success",
+      })
 
       // Reset and redirect after success
       setTimeout(() => {
-        setFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        navigate('/dashboard'); // Adjust redirect path as needed
-      }, 2000);
-
+        setFile(null)
+        if (fileInputRef.current) fileInputRef.current.value = ""
+        navigate("/dashboard")
+      }, 2000)
     } catch (error) {
       setNotification({
         open: true,
-        message: error.message || 'Upload failed',
-        severity: 'error'
-      });
+        message: error.message || "Import failed",
+        severity: "error",
+      })
     } finally {
-      setIsUploading(false);
+      setIsUploading(false)
     }
-  };
+  }
+
+  const handleRemoveFile = () => {
+    setFile(null)
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return "0 Bytes"
+    const k = 1024
+    const sizes = ["Bytes", "KB", "MB", "GB"]
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+  }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ mb: 3 }}
-        color={theme.palette.primary.main}>
-          Students list upload
-        </Typography>
-
+    <ModernContainer maxWidth="md">
+      <ModernPaper elevation={0}>
         <Box
           sx={{
-            border: `2px dashed ${theme.palette.primary.main}`,
-            borderRadius: 1,
-            p: 4,
-            textAlign: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
             mb: 2,
-            cursor: 'pointer',
-            '&:hover': {
-              backgroundColor: theme.palette.action.hover
-            }
           }}
-          onClick={() => fileInputRef.current.click()}
         >
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept=".csv"
-            style={{ display: 'none' }}
-          />
-          <UploadIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />
-          <Typography variant="body1">
-            {file ? file.name : 'Click to select CSV file'}
-          </Typography>
-          <Typography variant="caption" color="textSecondary">
-            Only .csv files are accepted
-          </Typography>
+          <GroupAddIcon sx={{ fontSize: "28px", color: "#2d7a7a" }} />
+          <ModernTitle sx={{ margin: 0 }}>Import Students</ModernTitle>
         </Box>
 
+        <ModernSubtitle>
+          Upload a CSV file containing student information to bulk import accounts into the system.
+        </ModernSubtitle>
+
+        <UploadZone hasFile={!!file} onClick={() => fileInputRef.current?.click()}>
+          <HiddenInput type="file" ref={fileInputRef} onChange={handleFileChange} accept=".csv" />
+
+          <UploadIcon />
+
+          <Typography
+            sx={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "18px",
+              fontWeight: 600,
+              color: "#1a1a1a",
+              marginBottom: "8px",
+            }}
+          >
+            {file ? "File Selected" : "Select CSV File"}
+          </Typography>
+
+          <Typography
+            sx={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "14px",
+              color: "#4a4a4a",
+              marginBottom: "16px",
+            }}
+          >
+            {file ? "Click to change file" : "Click here or drag and drop your CSV file"}
+          </Typography>
+
+          <Typography
+            sx={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "12px",
+              color: "#6bb6b6",
+              fontWeight: 500,
+            }}
+          >
+            Only .csv files are accepted • Max size: 10MB
+          </Typography>
+        </UploadZone>
+
         {file && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
-            <Button
+          <FileInfo>
+            <FileIcon />
+            <Box sx={{ flex: 1 }}>
+              <FileName>{file.name}</FileName>
+              <FileSize>{formatFileSize(file.size)}</FileSize>
+            </Box>
+            <IconButton
+              onClick={handleRemoveFile}
+              disabled={isUploading}
+              sx={{
+                color: "#dc6545",
+                "&:hover": {
+                  backgroundColor: "#fef7f4",
+                },
+              }}
+            >
+              <DeleteOutlineIcon fontSize="small" />
+            </IconButton>
+          </FileInfo>
+        )}
+
+        {file && (
+          <ButtonContainer>
+            <ModernButton
               variant="contained"
-              color="primary"
               onClick={handleUpload}
               disabled={isUploading}
-              startIcon={isUploading ? <CircularProgress size={20} /> : null}
+              startIcon={isUploading ? <CircularProgress size={20} sx={{ color: "#ffffff" }} /> : <CloudUploadIcon />}
             >
-              {isUploading ? 'Uploading...' : 'Upload File'}
-            </Button>
+              {isUploading ? "Importing..." : "Import Students"}
+            </ModernButton>
 
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setFile(null)}
-              disabled={isUploading}
-            >
+            <ModernButton variant="outlined" color="error" onClick={handleRemoveFile} disabled={isUploading}>
               Cancel
-            </Button>
-          </Box>
+            </ModernButton>
+          </ButtonContainer>
         )}
-      </Paper>
+      </ModernPaper>
 
       <Snackbar
         open={notification.open}
         autoHideDuration={6000}
-        onClose={() => setNotification(prev => ({ ...prev, open: false }))}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert 
-          onClose={() => setNotification(prev => ({ ...prev, open: false }))}
+        <ModernAlert
+          onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
           severity={notification.severity}
         >
           {notification.message}
-        </Alert>
+        </ModernAlert>
       </Snackbar>
-    </Container>
-  );
-};
+    </ModernContainer>
+  )
+}
 
-export default CsvUploadDialog;
+export default CsvUploadDialog
