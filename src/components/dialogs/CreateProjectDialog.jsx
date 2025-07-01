@@ -590,7 +590,7 @@ function CreateProjectDialog({
             />
           </Grid>
           {/* Code Link (if project is old) */}
-          {projectType === "old" && (
+          {/* {projectType === "old" && ( */}
             <Grid item xs={12}>
               <TextField
                 id="codeLink"
@@ -603,9 +603,9 @@ function CreateProjectDialog({
                 onChange={handleChange}
               />
             </Grid>
-          )}
-          {projectType === "new" && (
-            <StyledGrid item xs={12}>
+          {/* )} */}
+          {/* {projectType === "new" && ( */}
+            {/* <StyledGrid item xs={12}>
               <div
                 style={{
                   border: `1px solid ${
@@ -731,9 +731,9 @@ function CreateProjectDialog({
                   </div>
                 ))}
               </div>
-            </StyledGrid>
-          )}
-          {projectType === "old" && (
+            </StyledGrid> */}
+          {/* )} */}
+          {/* {projectType === "old" && (*/}
             <StyledGrid item xs={12}>
               <div
                 style={{
@@ -743,6 +743,7 @@ function CreateProjectDialog({
                   width: "100%",
                 }}
               >
+                {projectType === "old" && (
                 <Button
                   component="label"
                   role={undefined}
@@ -763,6 +764,30 @@ function CreateProjectDialog({
                     onChange={handleReportFileChange}
                   />
                 </Button>
+                )}
+                {projectType === "new" && (
+                  <Button
+                  component="label"
+                  role={undefined}
+                  variant="text"
+                  sx={{
+                    color: mode === "dark" ? "lightgray" : "rgba(0,0,0,0.6)",
+                    width: "100%",
+                  }}
+                  tabIndex={-1}
+                  fullWidth={isSmallScreen}
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload Report
+                  <VisuallyHiddenInput
+                    type="file"
+                    name="report"
+                    id="report"
+                    onChange={handleReportFileChange}
+                  />
+                </Button>
+                )}
+              
                 {uploadedReport && (
                   <div
                     style={{
@@ -804,6 +829,7 @@ function CreateProjectDialog({
                   width: "100%",
                 }}
               >
+                
                 <Button
                   component="label"
                   role={undefined}
@@ -861,7 +887,7 @@ function CreateProjectDialog({
                 ))}
               </div>
             </StyledGrid>
-          )}
+       
         </Grid>
       </StyledDialogContent>
       <DialogActions>
