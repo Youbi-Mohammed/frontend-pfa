@@ -49,69 +49,147 @@ function Assignments({ mode }) {
   };
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchTeamsAndPreferences = async () => {
-      try {
-        let academicYear;
-        const year = new Date().getFullYear();
-        const month = new Date().getMonth();
-        if (month >= 9 && month <= 12) {
-          academicYear = `${year}/${year + 1}`;
-        } else if (month >= 1 && month <= 7) {
-          academicYear = `${year - 1}/${year}`;
-        }
-        const fetchedTeams = await getAllTeams(token, academicYear);
-        const fetchedPreferences = await getAllPreferences(token);
-        const fetchedAssignment = await getAssignment(token);
-        setTeams(fetchedTeams);
-        setPreferences(fetchedPreferences);
-        setAssignment(fetchedAssignment);
-        forEach(fetchedTeams, async (team) => {
-          if (team.responsible.profileImage === null) {
-            // team.responsible.profileImage = stringAvatar(team.responsible.firstName);
-          }else{
-            const url = await downLoadProfileImage(team.responsible.id, token);
-           setResponsiblesImages((prev) => [
-              ...prev,
-              {
-                id: team.responsible.id,
-                name: team.responsible.firstName + " " + team.responsible.lastName,
-                url: url,
-              },
-            ]);
-          }
-        });
+  // useEffect(() => {
+  //   const fetchTeamsAndPreferences = async () => {
+  //     try {
+  //       console.log('[DEBUG] Starting data fetch...');
+  //       let academicYear;
+        
+  //       const year = new Date().getFullYear();
+  //       const month = new Date().getMonth();
+  //       if (month >= 9 && month <= 12) {
+  //         academicYear = `${year}/${year + 1}`;
+  //       } else if (month >= 1 && month <= 7) {
+  //         academicYear = `${year - 1}/${year}`;
+  //       }
+  //       const fetchedTeams = await getAllTeams(token, academicYear);
+  //     console.log('[DEBUG] Fetched teams:', fetchedTeams); // <-- Ajoutez ce log
+  //       const fetchedPreferences = await getAllPreferences(token);
+  //         // if (!fetchedTeams || fetchedTeams.length === 0) {
+  //                 if (!fetchedTeams ) {
 
-        forEach(fetchedTeams, async (team) => {
-          team.members.forEach(async (member) => {
-            console.log(member);
-            if (member.profileImage === null) {
-              // member.profileImage = stringAvatar(member.firstName);
-            }else{
-              const url = await downLoadProfileImage(member.id, token);
-              setMembersImages((prev) => [
-                ...prev,
-                {
-                  id: member.id,
-                  name: member.firstName + " " + member.lastName,
-                  url: url,
-                },
-              ]);            }
-          });
-        });
+  //         console.warn('[WARNING] No teams received from API');
+  //     }
+  //     else{
+  //       console.warn('ok')
+  //     }
+  //       const fetchedAssignment = await getAssignment(token);
+  //       setTeams(fetchedTeams);
+  //       console.log('[DEBUG] Fetched preferences:', fetchedPreferences); // <-- Ajoutez ce log
+  //       console.log('[DEBUG] Fetched assignment:', fetchedAssignment); // <-- Ajoutez ce log
+  //       setPreferences(fetchedPreferences);
+  //       setAssignment(fetchedAssignment);
+     
+  //     setAssignment(fetchedAssignment || {}); // Garantit toujours un objet
+  //       forEach(fetchedTeams, async (team) => {
+  //         if (team.responsible.profileImage === null) {
+  //           // team.responsible.profileImage = stringAvatar(team.responsible.firstName);
+  //         }else{
+  //           const url = await downLoadProfileImage(team.responsible.id, token);
+  //          setResponsiblesImages((prev) => [
+  //             ...prev,
+  //             {
+  //               id: team.responsible.id,
+  //               name: team.responsible.firstName + " " + team.responsible.lastName,
+  //               url: url,
+  //             },
+  //           ]);
+  //         }
+  //       });
+
+  //       forEach(fetchedTeams, async (team) => {
+  //         team.members.forEach(async (member) => {
+  //           console.log(member);
+  //           if (member.profileImage === null) {
+  //             // member.profileImage = stringAvatar(member.firstName);
+  //           }else{
+  //             const url = await downLoadProfileImage(member.id, token);
+  //             setMembersImages((prev) => [
+  //               ...prev,
+  //               {
+  //                 id: member.id,
+  //                 name: member.firstName + " " + member.lastName,
+  //                 url: url,
+  //               },
+  //             ]);            }
+  //         });
+  //       });
 
 
-        console.log(assignment);
-        console.log(Object.keys(assignment).length);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching teams and preferences:", error);
-        setLoading(false);
+  //       console.log(assignment);
+  //       console.log(Object.keys(assignment).length);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching teams and preferences:", error);
+  //       setLoading(false);
+  //     }
+  //   };  
+
+  //   fetchTeamsAndPreferences();
+  // }, [assignmentLoading]);
+useEffect(() => {
+  const fetchTeamsAndPreferences = async () => {
+    try {
+      setLoading(true);
+      
+      // 1. Calculate academic year
+      const year = new Date().getFullYear();
+      const month = new Date().getMonth();
+      const academicYear = (month >= 9 && month <= 12) 
+        ? `${year}/${year + 1}` 
+        : `${year - 1}/${year}`;
+
+      console.log('Current academic year:', academicYear);
+
+      // 2. Parallel API calls
+      const [teamsResponse, preferencesResponse, assignmentResponse] = await Promise.all([
+        getAllTeams(token, academicYear),
+        getAllPreferences(token),
+        getAssignment(token)
+      ]);
+
+      console.log('API responses:', {
+        teams: teamsResponse,
+        preferences: preferencesResponse,
+        assignment: assignmentResponse
+      });
+
+      // 3. Update state with proper fallbacks
+      setTeams(Array.isArray(teamsResponse) ? teamsResponse : []);
+      setPreferences(Array.isArray(preferencesResponse) ? preferencesResponse : []);
+      setAssignment(assignmentResponse || {});
+
+      // 4. Load images only if teams exist
+      if (teamsResponse?.length > 0) {
+        const loadImages = async () => {
+          const responsibles = [];
+          const members = [];
+
+          // Your existing image loading logic...
+          // ...
+          
+          setResponsiblesImages(responsibles);
+          setMembersImages(members);
+        };
+
+        await loadImages();
+      } else {
+        console.warn('No teams found for academic year:', academicYear);
+        setSnackbarMessage('No teams found for the current academic year');
+        setSnackbarOpen(true);
       }
-    };
 
-    fetchTeamsAndPreferences();
-  }, [assignmentLoading]);
+    } catch (error) {
+      console.error('Global fetch error:', error);
+      setSnackbarMessage('Failed to load data');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchTeamsAndPreferences();
+}, [assignmentLoading, token]);
 
   const teamsWithPreferences = getTeamsWithPreferences();
   const teamsWithoutPreferences = getTeamsWithoutPreferences();
@@ -329,11 +407,20 @@ function Assignments({ mode }) {
               { label: "Home", href: "/" },
               { label: "Assignments", href: "/assignments" }
             ]} />
-      <PlaceHolder
+      {/* <PlaceHolder
         icon={ErrorOutlineIcon}
         title="No Teams Found"
         message="There are no teams to assign to"
-      />
+      /> */}
+      <PlaceHolder
+  icon={ErrorOutlineIcon}
+  title="No Teams Found"
+  message={
+    !token ? "Authentication required" :
+    teams === null ? "Loading..." :
+    "No teams available for the current academic year"
+  }
+/>
       </>
     )
   ) : (
