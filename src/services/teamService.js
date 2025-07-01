@@ -55,7 +55,7 @@ export const getAllTeams = async (token, academicYear) => {
 };
 // teamService.js
 
-const createTeam = async (teamData, token, setSnackbarOpen, setSnackbarMessage) => {
+export const createTeam = async (teamData, token, setSnackbarOpen, setSnackbarMessage) => {
   console.log(teamData);
     try {
       const response = await fetch("http://localhost:8080/api/teams", {
@@ -97,7 +97,7 @@ const createTeam = async (teamData, token, setSnackbarOpen, setSnackbarMessage) 
 
 
 
-const getTeamById = async (teamId, token) => {
+export const getTeamById = async (teamId, token) => {
   try {
       const response = await fetch(`http://localhost:8080/api/teams/${teamId}`, {
         method: "GET",
