@@ -60,9 +60,16 @@ function Assignments({ mode }) {
         } else if (month >= 1 && month <= 7) {
           academicYear = `${year - 1}/${year}`;
         }
+
         const fetchedTeams = await getAllTeams(token, academicYear);
+        console.log('Fetched teams:', fetchedTeams);
+
         const fetchedPreferences = await getAllPreferences(token);
+              console.log('Fetched preferences:', fetchedPreferences);
+
         const fetchedAssignment = await getAssignment(token);
+              console.log('Fetched assignment:', fetchedAssignment);
+
         setTeams(fetchedTeams);
         setPreferences(fetchedPreferences);
         setAssignment(fetchedAssignment);

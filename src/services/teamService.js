@@ -1,5 +1,5 @@
 
-export const getAllTeams = async (token,academicYear) => {
+const getAllTeams = async (token,academicYear) => {
     const branchId = localStorage.getItem("branchId");
     const studiedBranchId = localStorage.getItem("studiedBranchId");
 
@@ -93,5 +93,5 @@ const getTeamById = async (teamId, token) => {
     
 };
 
-
-export { createTeam , getTeamById};
+//hna makanoch dayrin export l getAllTeams
+export { getAllTeams,createTeam , getTeamById};

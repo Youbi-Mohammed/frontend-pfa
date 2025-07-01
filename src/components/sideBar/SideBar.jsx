@@ -662,7 +662,7 @@ export default function SideBar({ mode, open, handleDrawerClose }) {
               borderRadius: "8px",
             },
           },
-        }}
+        }}  
       >
         <ListItem disablePadding>{content}</ListItem>
       </Tooltip>

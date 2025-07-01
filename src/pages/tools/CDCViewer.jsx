@@ -677,10 +677,10 @@ const CDCViewer = () => {  // Retirez les props open/onClose
   boxShadow: theme.shadows[1]
 }}>
         <Typography variant="h6" fontWeight="medium"
-        color={theme.palette.primary.main}>
+        color="#2D7A7A">
           Specifications Generator
         </Typography>
-        <IconButton onClick={handleClose} sx={{ color: 'common.white' }}>
+        <IconButton onClick={handleClose} sx={{ color:" #2D7A7A" }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -800,21 +800,25 @@ const CDCViewer = () => {  // Retirez les props open/onClose
           Fermer
         </Button>
         <Button
-          onClick={handleExportPDF}
-          disabled={isLoading || !markdown}
-          variant="contained"
-          color="primary"
-          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <DownloadIcon />}
-          sx={{
-            minWidth: 120,
-            '&.Mui-disabled': {
-              backgroundColor: 'action.disabledBackground',
-              color: 'action.disabled'
-            }
-          }}
-        >
-          {isLoading ? 'Generating' : 'Export as PDF'}
-        </Button>
+  onClick={handleExportPDF}
+  disabled={isLoading || !markdown}
+  variant="contained"
+  sx={{
+    minWidth: 120,
+    backgroundColor: '#2D7A7A', // Bleu Material-UI par défaut
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#1565c0', // Bleu plus foncé au survol
+    },
+    '&.Mui-disabled': {
+      backgroundColor: '#e0e0e0',
+      color: '#9e9e9e'
+    }
+  }}
+  startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <DownloadIcon />}
+>
+  {isLoading ? 'Generating' : 'Export as PDF'}
+</Button>
       </DialogActions>
 
       <Snackbar
