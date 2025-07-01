@@ -119,46 +119,69 @@ import {
   DialogActions,
   Button
 } from '@mui/material';
-import { logout } from '../../services/authService'; // Importez la fonction logout
+import { logout } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 
 const Logout = ({ open, onClose }) => {
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    const success = logout(); // Utilisation du service
-    
+    const success = logout();
     if (success) {
-      navigate('/'); // Redirection vers la page d'authentification
-    //   window.location.reload(); // Rafraîchissement pour nettoyer l'état
+      navigate('/');
     } else {
-      // Gérer l'échec de déconnexion si nécessaire
-    //   alert('La déconnexion a échoué');
-    navigate('/'); // Redirection vers la page d'authentification
+      navigate('/');
     }
-    
-    onClose(); // Fermer la modal
+    onClose();
   };
 
   return (
-   <Dialog open={open} onClose={onClose}>
-  <DialogTitle>Confirm Logout</DialogTitle>
-  <DialogContent>
-    <DialogContentText>
-      Are you sure you want to log out?
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={onClose}>Cancel</Button>
-    <Button 
-      onClick={handleConfirm} 
-      color="error"
-      variant="contained"
-    >
-      Log Out
-    </Button>
-  </DialogActions>
-</Dialog>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle
+        sx={{ color: '#1e5a5a', fontWeight: 'bold', fontSize: '1.25rem' }}
+      >
+        Confirm Logout
+      </DialogTitle>
+
+      <DialogContent sx={{ backgroundColor: '#fdfefe' }}>
+        <DialogContentText sx={{ color: '#2d2d2d' }}>
+          Are you sure you want to log out?
+        </DialogContentText>
+      </DialogContent>
+
+      <DialogActions
+        sx={{ padding: '16px', backgroundColor: '#f8fafa', borderTop: '1px solid #e6f2f2' }}
+      >
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          sx={{
+            color: '#2d7a7a',
+            borderColor: '#a3d5d5',
+            '&:hover': {
+              borderColor: '#2d7a7a',
+              backgroundColor: '#d1e7e7',
+            }
+          }}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          onClick={handleConfirm}
+          variant="contained"
+          sx={{
+            backgroundColor: '#2d7a7a',
+            color: '#ffffff',
+            '&:hover': {
+              backgroundColor: '#1e5a5a',
+            }
+          }}
+        >
+          Log Out
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
