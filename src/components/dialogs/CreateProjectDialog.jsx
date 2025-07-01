@@ -778,7 +778,7 @@ function CreateProjectDialog({
                   fullWidth={isSmallScreen}
                   startIcon={<CloudUploadIcon />}
                 >
-                  Upload Report
+                  Upload Specifications Document
                   <VisuallyHiddenInput
                     type="file"
                     name="report"
