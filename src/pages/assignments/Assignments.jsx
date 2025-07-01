@@ -65,6 +65,8 @@ function Assignments({ mode }) {
         const fetchedAssignment = await getAssignment(token);
         setTeams(fetchedTeams);
         setPreferences(fetchedPreferences);
+        // console.log(fetchedTeams);
+        console.log(fetchedPreferences);
         setAssignment(fetchedAssignment);
         forEach(fetchedTeams, async (team) => {
           if (team.responsible.profileImage === null) {
@@ -225,7 +227,7 @@ function Assignments({ mode }) {
         params.row.hasPreferences ? (
           <Button
             variant="outlined"
-            onClick={() => navigate(`/dashboard/teams/${params.row.id}`)}
+            onClick={() => navigate(`/dashboard/teams/${params.row.id}`)}//hna momkin bach nchouf team preferences 
           >
             View
           </Button>

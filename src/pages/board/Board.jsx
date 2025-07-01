@@ -290,7 +290,7 @@ function Board() {
                     const { data } = args;
                     const { developerName } = data;
                     const avatarColor = stringAvatar(developerName).sx.bgcolor;
-                    const lightColor = avatarColor.concat("90");
+                   const lightColor = avatarColor.concat("90");
                     args.element.style.borderLeft = `5px solid ${lightColor}`;
                   }}
                   dragStop={(args) => {
