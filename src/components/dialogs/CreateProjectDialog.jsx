@@ -604,6 +604,135 @@ function CreateProjectDialog({
               />
             </Grid>
           )}
+          {projectType === "new" && (
+            <StyledGrid item xs={12}>
+              <div
+                style={{
+                  border: `1px solid ${
+                    mode === "dark" ? "#d3d3d350" : "rgba(0,0,0,0.3)"
+                  }`,
+                  width: "100%",
+                }}
+              >
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="text"
+                  sx={{
+                    color: mode === "dark" ? "lightgray" : "rgba(0,0,0,0.6)",
+                    width: "100%",
+                  }}
+                  tabIndex={-1}
+                  fullWidth={isSmallScreen}
+                  startIcon={<CloudUploadIcon />}
+                >
+                  hahahahahahahahaha
+                  <VisuallyHiddenInput
+                    type="file"
+                    name="report"
+                    id="report"
+                    onChange={handleReportFileChange}
+                  />
+                </Button>
+                {uploadedReport && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "5px",
+                      width: "100%",
+                      minHeight: "60px",
+                      borderTop: `1px solid ${
+                        mode === "dark" ? "#d3d3d350" : "rgba(0,0,0,0.3)"
+                      }`,
+                      padding: "10px",
+                    }}
+                  >
+                    <div>
+                      <Typography sx={{ fontSize: "13px" }}>
+                        {uploadedReport.name}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: "11px", marginTop: "3px" }}
+                        color="textSecondary"
+                      >
+                        {(uploadedReport.size * 0.000001).toFixed(2)} MB
+                      </Typography>
+                    </div>
+                    <DeleteOutlineIcon
+                      sx={{ cursor: "pointer" }}
+                      onClick={handleRemoveReport}
+                    />
+                  </div>
+                )}
+              </div>
+              <div
+                style={{
+                  border: `1px solid ${
+                    mode === "dark" ? "#d3d3d350" : "rgba(0,0,0,0.3)"
+                  }`,
+                  width: "100%",
+                }}
+              >
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="text"
+                  sx={{
+                    color: mode === "dark" ? "lightgray" : "rgba(0,0,0,0.6)",
+                    width: "100%",
+                  }}
+                  tabIndex={-1}
+                  fullWidth={isSmallScreen}
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload Files
+                  <VisuallyHiddenInput
+                    type="file"
+                    name="files"
+                    id="files"
+                    multiple
+                    onChange={handleFilesChange}
+                  />
+                </Button>
+                {uploadedFiles.map((file, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "5px",
+                      width: "100%",
+                      minHeight: "60px",
+                      borderTop: `1px solid ${
+                        mode === "dark" ? "#d3d3d350" : "rgba(0,0,0,0.3)"
+                      }`,
+                      padding: "10px",
+                    }}
+                  >
+                    <div>
+                      <Typography sx={{ fontSize: "13px" }} key={index}>
+                        {file.name}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: "11px", marginTop: "3px" }}
+                        color="textSecondary"
+                        key={index}
+                      >
+                        {(file.size * 0.000001).toFixed(2)} MB
+                      </Typography>
+                    </div>
+                    <DeleteOutlineIcon
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => handleRemoveFileFromFiles(index)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </StyledGrid>
+          )}
           {projectType === "old" && (
             <StyledGrid item xs={12}>
               <div

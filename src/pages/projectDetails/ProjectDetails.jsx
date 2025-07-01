@@ -119,12 +119,12 @@ function ProjectDetails() {
           console.log(fetchedProject.status === "old");
 
         // Récupération des documents du projet s'il est ancien
-        if (fetchedProject.status === "old") {
+       if (fetchedProject.status === "old") {
 
           console.log("in here");
           setDocuments(fetchedProject.folders.filter((folder) => folder.type === "DOCUMENTS")[0].documents);
           setReport(fetchedProject.folders.filter((folder) => folder.type === "REPORT")[0].documents[0]);
-        }
+       }
 
       } catch (error) {
         console.error("Error fetching project details:", error);
