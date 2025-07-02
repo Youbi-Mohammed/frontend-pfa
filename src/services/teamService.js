@@ -1,34 +1,61 @@
 
-const getAllTeams = async (token,academicYear) => {
-    const branchId = localStorage.getItem("branchId");
-    const studiedBranchId = localStorage.getItem("studiedBranchId");
+// export const getAllTeams = async (token,academicYear) => {
+//     const branchId = localStorage.getItem("branchId");
+//     const studiedBranchId = localStorage.getItem("studiedBranchId");
 
-    const selectedBranchId = branchId !== "null" ? branchId : studiedBranchId === "null" ? 1 : studiedBranchId;
+//     const selectedBranchId = branchId !== "null" ? branchId : studiedBranchId === "null" ? 1 : studiedBranchId;
 
-    const allTeams = await fetch("http://localhost:8080/api/teams?academicYear="+academicYear, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },  
-    })
-        .then((response) => response.json())
-        .catch((error) => {
-            console.error("Error fetching data:", error);
-            throw error;
+//     const allTeams = await fetch("http://localhost:8080/api/teams?academicYear="+academicYear, {
+//         method: "GET",
+//         headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//         },  
+//     })
+//         .then((response) => response.json())
+//         .catch((error) => {
+//             console.error("Error fetching data:", error);
+//             throw error;
+//         });
+//         console.log(allTeams);
+//         console.log(selectedBranchId);
+//     const teams = allTeams.filter(
+//       (team) => team.responsible.studiedBranchId === parseInt(selectedBranchId)
+//     );
+//     console.log(teams);
+//     return teams;
+// }
+export const getAllTeams = async (token, academicYear) => {
+    try {
+        // Récupérer uniquement branchId depuis le localStorage
+        const branchId = localStorage.getItem("branchId") || 1; // 1 comme valeur par défaut
+
+        console.log("Using Branch ID:", branchId);
+
+        const response = await fetch(`http://localhost:8080/api/teams?academicYear=${academicYear}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
         });
-        console.log(allTeams);
-        console.log(selectedBranchId);
-    const teams = allTeams.filter(
-      (team) => team.responsible.studiedBranchId === parseInt(selectedBranchId)
-    );
-    console.log(teams);
-    return teams;
-}
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const teams = await response.json();
+        console.log("Teams from API:", teams);
+        
+        return teams;
+    } catch (error) {
+        console.error("Error in getAllTeams:", error);
+        throw error;
+    }
+};
 // teamService.js
 
-const createTeam = async (teamData, token, setSnackbarOpen, setSnackbarMessage) => {
+export const createTeam = async (teamData, token, setSnackbarOpen, setSnackbarMessage) => {
   console.log(teamData);
     try {
       const response = await fetch("http://localhost:8080/api/teams", {
@@ -70,7 +97,7 @@ const createTeam = async (teamData, token, setSnackbarOpen, setSnackbarMessage) 
 
 
 
-const getTeamById = async (teamId, token) => {
+export const getTeamById = async (teamId, token) => {
   try {
       const response = await fetch(`http://localhost:8080/api/teams/${teamId}`, {
         method: "GET",
@@ -92,6 +119,3 @@ const getTeamById = async (teamId, token) => {
     }
     
 };
-
-//hna makanoch dayrin export l getAllTeams
-export { getAllTeams,createTeam , getTeamById};

@@ -60,18 +60,13 @@ function Assignments({ mode }) {
         } else if (month >= 1 && month <= 7) {
           academicYear = `${year - 1}/${year}`;
         }
-
         const fetchedTeams = await getAllTeams(token, academicYear);
-        console.log('Fetched teams:', fetchedTeams);
-
         const fetchedPreferences = await getAllPreferences(token);
-              console.log('Fetched preferences:', fetchedPreferences);
-
         const fetchedAssignment = await getAssignment(token);
-              console.log('Fetched assignment:', fetchedAssignment);
-
         setTeams(fetchedTeams);
         setPreferences(fetchedPreferences);
+        // console.log(fetchedTeams);
+        console.log(fetchedPreferences);
         setAssignment(fetchedAssignment);
         forEach(fetchedTeams, async (team) => {
           if (team.responsible.profileImage === null) {
@@ -232,7 +227,7 @@ function Assignments({ mode }) {
         params.row.hasPreferences ? (
           <Button
             variant="outlined"
-            onClick={() => navigate(`/dashboard/teams/${params.row.id}`)}
+            onClick={() => navigate(`/dashboard/teams/${params.row.id}`)}//hna momkin bach nchouf team preferences 
           >
             View
           </Button>
