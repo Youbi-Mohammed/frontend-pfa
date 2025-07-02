@@ -1,24 +1,29 @@
 import { LoadingButton } from "@mui/lab";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Link,
+  Snackbar,
+  Step,
+  StepLabel,
+  Stepper,
+  TextField,
+  Typography,
+} from "@mui/material";
+import LockResetIcon from "@mui/icons-material/LockReset";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { Button } from "@mui/material";
-import { forgotPassword, resetPassword, validateToken } from "../../services/authService";
+import {
+  forgotPassword,
+  resetPassword,
+  validateToken,
+} from "../../services/authService";
 
-const steps = ['Enter Email', 'Enter Security Token', 'Set New Password'];
+const steps = ["Enter Email", "Enter Security Token", "Set New Password"];
 
 function Copyright(props) {
   return (
@@ -41,185 +46,257 @@ function ForgotPassword() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [activeStep, setActiveStep] = useState(0);
-  const [email, setEmail] = useState('');
-  const [token, setToken] = useState('');
+  const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
   const confirmPasswordRef = useRef(null);
-  const [newPassword, setNewPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-// pour gerer le changement d'etape vers suivante
+
   const handleNext = async (event) => {
     event.preventDefault();
     setLoading(true);
     if (activeStep === 0) {
-      // Handle sending email
-      console.log('Email:', email);
-      const response = await forgotPassword(email,setSnackbarOpen,setSnackbarMessage,setLoading,setActiveStep);
+      await forgotPassword(
+        email,
+        setSnackbarOpen,
+        setSnackbarMessage,
+        setLoading,
+        setActiveStep
+      );
     } else if (activeStep === 1) {
-      // Handle verifying token
-      console.log('Token:', token);
-
-      const response = await validateToken(email,token,setSnackbarOpen,setSnackbarMessage,setLoading,setActiveStep);
+      await validateToken(
+        email,
+        token,
+        setSnackbarOpen,
+        setSnackbarMessage,
+        setLoading,
+        setActiveStep
+      );
     } else if (activeStep === 2) {
-      // Handle setting new password
-      console.log('New Password:', newPassword);
       if (newPassword !== confirmPasswordRef.current.value) {
         setSnackbarOpen(true);
         setSnackbarMessage("Passwords do not match");
         setLoading(false);
-      }else{
-        const response = await resetPassword(token,newPassword,setSnackbarOpen,setSnackbarMessage,setLoading);
-      if (response) {
-        // Stocker l'email dans le localStorage
-        localStorage.setItem("email", email);
-        // tdi l Authentification  b3d 2 secondes //bdltha rditha seconde w ns ; lw9T min dahab ; in lam takon di2ban bima tchtahi sofn ,tala3A badro 3layana 
-        setSnackbarOpen(true);
-        setSnackbarMessage("Password reset successfully");
-        setTimeout(() => {
-          navigate('/auth/authenticate');
-        }, 1500);
-      }
+      } else {
+        const response = await resetPassword(
+          token,
+          newPassword,
+          setSnackbarOpen,
+          setSnackbarMessage,
+          setLoading
+        );
+        if (response) {
+          localStorage.setItem("email", email);
+          setSnackbarOpen(true);
+          setSnackbarMessage("Password reset successfully");
+          setTimeout(() => {
+            navigate("/auth/authenticate");
+          }, 1500);
+        }
       }
     }
   };
-// pour gerer le retour en arriere
+
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{ bgcolor: "#f5fafa", minHeight: "100vh", py: 5 }}
+    >
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          mt: 0,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          p: 4,
+          borderRadius: 3,
+          boxShadow: "0px 0px 18px rgba(45, 122, 122, 0.2)",
+          bgcolor: "#ffffff",
         }}
       >
         <Avatar
-          src="/src/assets/auth_logo.png"
-          sx={{ m: 1, bgcolor: "secondary.main" }}
-        />
-        <Typography component="h1" variant="h5">
+          sx={{
+            m: 1,
+            bgcolor: "#2d7a7a",
+            width: 64,
+            height: 64,
+            boxShadow: "0 0 8px #6bb6b6",
+          }}
+        >
+          <LockResetIcon sx={{ color: "#ffffff", fontSize: "32px" }} />
+        </Avatar>
+        <Typography component="h1" variant="h5" sx={{ fontWeight: 600, color: "#1a1a1a" }}>
           Forgot Password
         </Typography>
-        <Box sx={{ width: "100%", mt: 3 }}>
-          <Stepper activeStep={activeStep}>
-            {steps.map((label, index) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <Box component="form" onSubmit={handleNext} sx={{ mt: 1 }}>
-            {activeStep === 0 && (
-              <>
-                <Alert severity="info">
-                  Enter the account email: you will get a security token that
-                  you should put in the box.
-                </Alert>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </>
-            )}
-            {activeStep === 1 && (
-              <>
-                <Alert severity="info">
-                  Check your email for the security token and enter it below.
-                </Alert>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="token"
-                  label="Security Token"
-                  name="token"
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                />
-              </>
-            )}
-            {activeStep === 2 && (
-              <>
-                <Alert severity="info">Set your new password below.</Alert>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="newPassword"
-                  label="New Password"
-                  type="password"
-                  id="newPassword"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-                <TextField
-                  required
-                  fullWidth
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirmPassword"
-                  autoComplete="new-password"
-                  inputRef={confirmPasswordRef}
-                  //   value={data.confirmPassword}
-                  //   onChange={handleChange}
-                  //   error={data.password !== data.confirmPassword}
-                />
-              </>
-            )}
-            <Box
-              sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
+        <Stepper
+          activeStep={activeStep}
+          sx={{
+            width: "100%",
+            mt: 3,
+            mb: 2,
+            "& .MuiStepIcon-root.Mui-completed": { color: "#6bb6b6" },
+            "& .MuiStepIcon-root.Mui-active": { color: "#2d7a7a" },
+            "& .MuiStepLabel-label": { fontWeight: 500, color: "#2d2d2d" },
+          }}
+        >
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        <Box
+          component="form"
+          onSubmit={handleNext}
+          sx={{
+            mt: 1,
+            width: "100%",
+            // Style global des inputs pour enlever le bleu MUI par défaut
+            "& label": { color: "#2d7a7a" },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: "#a3d5d5" },
+              "&:hover fieldset": { borderColor: "#2d7a7a" },
+              "&.Mui-focused fieldset": { borderColor: "#1e5a5a" },
+              color: "#1a1a1a",
+              bgcolor: "#fdfefe",
+            },
+            "& .MuiInputBase-input": { color: "#1a1a1a" },
+            "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#1e5a5a !important",
+            },
+          }}
+        >
+          {activeStep === 0 && (
+            <>
+              <Alert severity="info" sx={{ mb: 2, bgcolor: "#e6f2f2", color: "#1e5a5a" }}>
+                Enter your account email to receive a security token.
+              </Alert>
+              <TextField
+                required
+                fullWidth
+                label="Email Address"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </>
+          )}
+
+          {activeStep === 1 && (
+            <>
+              <Alert severity="info" sx={{ mb: 2, bgcolor: "#e6f2f2", color: "#1e5a5a" }}>
+                Check your email and enter the security token.
+              </Alert>
+              <TextField
+                required
+                fullWidth
+                label="Security Token"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+              />
+            </>
+          )}
+
+          {activeStep === 2 && (
+            <>
+              <Alert severity="info" sx={{ mb: 2, bgcolor: "#e6f2f2", color: "#1e5a5a" }}>
+                Set your new password.
+              </Alert>
+              <TextField
+                required
+                fullWidth
+                label="New Password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                required
+                fullWidth
+                label="Confirm Password"
+                type="password"
+                inputRef={confirmPasswordRef}
+              />
+            </>
+          )}
+
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
+            <Link
+              href="/auth/authenticate"
+              variant="body2"
+              sx={{
+                color: "#2d7a7a",
+                fontWeight: 600,
+                textDecoration: "none",
+                "&:hover": { textDecoration: "underline", color: "#6bb6b6" },
+              }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                }}
-              >
-                <Link href="/auth/authenticate" variant="body2">
-                  Login
-                </Link>
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mr: 1 }}>
-                    Back
-                  </Button>
-                )}
-                {activeStep === steps.length - 1 ? (
-                  <LoadingButton
-                    type="submit"
-                    loading={loading}
-                    loadingIndicator="Loading…"
-                    variant="outlined"
-                  >
-                    reset
-                  </LoadingButton>
-                ) : (
-                  <Button variant="outlined" onClick={handleNext}>
-                    Next
-                  </Button>
-                )}
-              </Box>
+              Login
+            </Link>
+
+            <Box>
+              {activeStep !== 0 && (
+                <Button
+                  onClick={handleBack}
+                  sx={{
+                    mr: 1,
+                    color: "#2d7a7a",
+                    textTransform: "none",
+                    "&:hover": { backgroundColor: "#e6f2f2" },
+                  }}
+                >
+                  Back
+                </Button>
+              )}
+              {activeStep === steps.length - 1 ? (
+                <LoadingButton
+                  type="submit"
+                  loading={loading}
+                  loadingIndicator="Loading…"
+                  variant="contained"
+                  sx={{
+                    bgcolor: "#2d7a7a",
+                    textTransform: "none",
+                    "&:hover": { bgcolor: "#1e5a5a" },
+                  }}
+                >
+                  Reset
+                </LoadingButton>
+              ) : (
+                <Button
+                  variant="outlined"
+                  onClick={handleNext}
+                  sx={{
+                    color: "#2d7a7a",
+                    borderColor: "#2d7a7a",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#6bb6b6",
+                      color: "white",
+                      borderColor: "#6bb6b6",
+                    },
+                  }}
+                >
+                  Next
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>
       </Box>
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
@@ -240,7 +317,8 @@ function ForgotPassword() {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      <Copyright sx={{ mt: 4, mb: 4 }} />
+
+      <Copyright sx={{ mt: 4, mb: 4, color: "#2d2d2d" }} />
     </Container>
   );
 }
