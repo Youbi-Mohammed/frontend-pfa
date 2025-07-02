@@ -54,87 +54,175 @@ function ProjectDetails() {
   const isSupervisor = hasRole("ROLE_SUPERVISOR")
   console.log(isSupervisor);
   const isHOB = hasRole("ROLE_HEAD_OF_BRANCH")
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const fetchedUser = await getUserById(userId, token);
-        let fetchedTeam
-        if (fetchedUser.teamId !== null) {
-          fetchedTeam = await getTeamById(fetchedUser.teamId, token);
-        }
-        const fetchedProject = await getProjectById(id, token);
-        const supervisorPromises = fetchedProject.supervisorIds.map((supervisorId) =>
-          getUserById(supervisorId, token)
-        );
-        const fetchedSupervisors = await Promise.all(supervisorPromises);
-                forEach(fetchedSupervisors, async (supervisor) => {
-                  const response = await downLoadProfileImage(
-                    supervisor.id,
-                    token
-                  );
-                  setSupervisorsImages((prev) => [
-                    ...prev,
-                    {
-                      id: supervisor.id,
-                      name: supervisor.firstName + " " + supervisor.lastName,
-                      url: response,
-                    },
-                  ]);
-                });
-        console.log(fetchedSupervisors);
-        setSupervisors(fetchedSupervisors);
-        console.log(fetchedProject);
-        setProject(fetchedProject);
-        setUser(fetchedUser);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const fetchedUser = await getUserById(userId, token);
+  //       let fetchedTeam
+  //       if (fetchedUser.teamId !== null) {
+  //         fetchedTeam = await getTeamById(fetchedUser.teamId, token);
+  //       }
+  //       const fetchedProject = await getProjectById(id, token);
+  //       const supervisorPromises = fetchedProject.supervisorIds.map((supervisorId) =>
+  //         getUserById(supervisorId, token)
+  //       );
+  //       const fetchedSupervisors = await Promise.all(supervisorPromises);
+  //               forEach(fetchedSupervisors, async (supervisor) => {
+  //                 const response = await downLoadProfileImage(
+  //                   supervisor.id,
+  //                   token
+  //                 );
+  //                 setSupervisorsImages((prev) => [
+  //                   ...prev,
+  //                   {
+  //                     id: supervisor.id,
+  //                     name: supervisor.firstName + " " + supervisor.lastName,
+  //                     url: response,
+  //                   },
+  //                 ]);
+  //               });
+  //       console.log(fetchedSupervisors);
+  //       setSupervisors(fetchedSupervisors);
+  //       console.log(fetchedProject);
+  //       setProject(fetchedProject);
+  //       setUser(fetchedUser);
         
 
-          console.log(fetchedTeam);
-          setTeam(fetchedTeam);
+  //         console.log(fetchedTeam);
+  //         setTeam(fetchedTeam);
           
-          if (fetchedProject.teamId !== null) {
+  //         if (fetchedProject.teamId !== null) {
             
-            const fetchedProjectTeam = await getTeamById(fetchedProject.teamId, token);
-            if (fetchedProjectTeam !== null) {
-              forEach(fetchedProjectTeam.members, async (member) => {
-                const response = await downLoadProfileImage(
-                  member.id,
-                  token
-                );
-                setMembersImages((prev) => [
-                  ...prev,
-                  {
-                    id: member.id,
-                    name:
-                      member.firstName +
-                      " " +
-                      member.lastName,
-                    url: response,
-                  },
-                ]);
-              });
-            }
-            setProjectTeam(fetchedProjectTeam);
-          }
+  //           const fetchedProjectTeam = await getTeamById(fetchedProject.teamId, token);
+  //           if (fetchedProjectTeam !== null) {
+  //             forEach(fetchedProjectTeam.members, async (member) => {
+  //               const response = await downLoadProfileImage(
+  //                 member.id,
+  //                 token
+  //               );
+  //               setMembersImages((prev) => [
+  //                 ...prev,
+  //                 {
+  //                   id: member.id,
+  //                   name:
+  //                     member.firstName +
+  //                     " " +
+  //                     member.lastName,
+  //                   url: response,
+  //                 },
+  //               ]);
+  //             });
+  //           }
+  //           setProjectTeam(fetchedProjectTeam);
+  //         }
     
-          console.log(fetchedProject.status === "old");
+  //         console.log(fetchedProject.status === "old" ? "old" : "new");
 
-        // Récupération des documents du projet s'il est ancien
-        if (fetchedProject.status === "old") {
+  //       // Récupération des documents du projet s'il est ancien
+  //      if (fetchedProject.status === "old") {
 
-          console.log("in here");
-          setDocuments(fetchedProject.folders.filter((folder) => folder.type === "DOCUMENTS")[0].documents);
-          setReport(fetchedProject.folders.filter((folder) => folder.type === "REPORT")[0].documents[0]);
-        }
+  //         console.log("in here");
+  //         setDocuments(fetchedProject.folders.filter((folder) => folder.type === "DOCUMENTS")[0].documents);
+  //         setReport(fetchedProject.folders.filter((folder) => folder.type === "REPORT")[0].documents[0]);
+  //      }
 
-      } catch (error) {
-        console.error("Error fetching project details:", error);
-      } finally {
-        setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching project details:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [id, token,render]);
+  useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      
+      // Récupération des données de base
+      const [fetchedUser, fetchedProject] = await Promise.all([
+        getUserById(userId, token),
+        getProjectById(id, token)
+      ]);
+
+      // Récupération de l'équipe de l'utilisateur si elle existe
+      let fetchedTeam = null;
+      if (fetchedUser.teamId !== null) {
+        fetchedTeam = await getTeamById(fetchedUser.teamId, token);
       }
-    };
 
-    fetchData();
-  }, [id, token,render]);
+      // Récupération des superviseurs
+      const fetchedSupervisors = await Promise.all(
+        fetchedProject.supervisorIds.map(supervisorId => 
+          getUserById(supervisorId, token)
+      ));
+
+      // Récupération de l'équipe du projet si elle existe
+      let fetchedProjectTeam = null;
+      if (fetchedProject.teamId !== null) {
+        fetchedProjectTeam = await getTeamById(fetchedProject.teamId, token);
+      }
+
+      // Chargement des images (optimisé avec Promise.all)
+      const loadImages = async (items) => {
+        return Promise.all(
+          items.map(async item => {
+            try {
+              const url = await downLoadProfileImage(item.id, token);
+              return {
+                id: item.id,
+                name: `${item.firstName} ${item.lastName}`,
+                url
+              };
+            } catch (error) {
+              console.error(`Error loading image for user ${item.id}:`, error);
+              return {
+                id: item.id,
+                name: `${item.firstName} ${item.lastName}`,
+                url: null
+              };
+            }
+          })
+        );
+      };
+
+      // Mise à jour des états
+      setProject(fetchedProject);
+      setUser(fetchedUser);
+      setTeam(fetchedTeam);
+      setProjectTeam(fetchedProjectTeam);
+      setSupervisors(fetchedSupervisors);
+
+      // Chargement des images en parallèle
+      const [supervisorImages, memberImages] = await Promise.all([
+        loadImages(fetchedSupervisors),
+        fetchedProjectTeam ? loadImages(fetchedProjectTeam.members) : Promise.resolve([])
+      ]);
+      
+      setSupervisorsImages(supervisorImages);
+      setMembersImages(memberImages);
+
+      // Récupération des documents (pour tous les projets, pas seulement 'old')
+      if (fetchedProject.folders) {
+        const documentsFolder = fetchedProject.folders.find(f => f.type === "DOCUMENTS");
+        const reportFolder = fetchedProject.folders.find(f => f.type === "REPORT");
+
+        setDocuments(documentsFolder?.documents || []);
+        setReport(reportFolder?.documents?.[0] || null);
+      }
+
+    } catch (error) {
+      console.error("Error fetching project details:", error);
+      setSnackbarMessage("Failed to load project details");
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [id, token, render]);
   console.log(project);
   console.log(documents);
   console.log(report);
@@ -151,13 +239,12 @@ function ProjectDetails() {
     Object.keys(projectTeam).length > 0 &&
     projectTeam.members.some((member) => member.id === parseInt(userId));
   const isOldProject = project.status === "old";
-  const canViewDocuments =
-    isOldProject &&
-    Object.keys(project).length > 0 &&
-    ((hasRole("ROLE_SUPERVISOR") &&
-      project.supervisorIds.some((id) => (id === parseInt(userId)))) ||
-      hasRole("ROLE_HEAD_OF_BRANCH") ||
-      (hasRole("ROLE_STUDENT") && isTeamMember));
+const canViewDocuments = 
+  Object.keys(project).length > 0 &&
+  ((hasRole("ROLE_SUPERVISOR") && 
+    project.supervisorIds.some(id => id === parseInt(userId))) ||
+   hasRole("ROLE_HEAD_OF_BRANCH") ||
+   (hasRole("ROLE_STUDENT") && isTeamMember));
       
     console.log(projectTeam);
     console.log(canViewDocuments)
@@ -286,7 +373,7 @@ function ProjectDetails() {
               </Typography>
             </Paper>
           </div>
-          {isOldProject && hasReport && (
+          {  hasReport && (
             <div
               style={{
                 marginBottom: "20px",
