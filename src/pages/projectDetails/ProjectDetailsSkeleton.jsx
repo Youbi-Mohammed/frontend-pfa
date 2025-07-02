@@ -224,4 +224,4 @@ function ProjectDetailsSkeleton() {
   );
 }
 
-export default ProjectDetailsSkeleton
+export default ProjectDetailsSkeleton;

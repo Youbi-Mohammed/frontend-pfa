@@ -419,6 +419,21 @@ import { changeInitialPassword } from '../../services/authService';
 export default function ChangeInitialPassword() {
   const location = useLocation();
   const navigate = useNavigate();
+  const mode = localStorage.getItem('mode') || 'light';
+  
+  // Palette teal/turquoise
+  const colors = {
+    primary: '#2d7a7a',
+    primaryDark: '#1e5a5a',
+    primaryLight: '#6bb6b6',
+    primaryPastel: '#d1e7e7',
+    background: mode === 'dark' ? '#121212' : '#fdfefe',
+    paper: mode === 'dark' ? '#1e1e1e' : '#ffffff',
+    textPrimary: mode === 'dark' ? '#fdfefe' : '#1a1a1a',
+    textSecondary: mode === 'dark' ? '#d1e7e7' : '#4a4a4a',
+    border: mode === 'dark' ? '#2d7a7a' : '#e6f2f2',
+    error: '#dc6545'
+  };
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -470,18 +485,33 @@ export default function ChangeInitialPassword() {
 
   if (!temporaryToken) {
     return (
-      <Container component="main" maxWidth="xs">
+      <Container 
+        component="main" 
+        maxWidth="xs"
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          backgroundColor: colors.background,
+          color: colors.textPrimary
+        }}
+      >
         <CssBaseline />
-        <Box sx={{ mt: 8, textAlign: 'center' }}>
-          <Typography variant="h5" gutterBottom>
+        <Box sx={{ textAlign: 'center', p: 3, backgroundColor: colors.paper, borderRadius: 2 }}>
+          <Typography variant="h5" gutterBottom sx={{ color: colors.primary }}>
             Error
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ color: colors.textSecondary, mb: 2 }}>
             Missing token. Please log in again.
           </Typography>
           <Button
             variant="contained"
-            sx={{ mt: 2 }}
+            sx={{ 
+              mt: 2,
+              backgroundColor: colors.primary,
+              '&:hover': { backgroundColor: colors.primaryDark }
+            }}
             onClick={() => navigate('/auth/authenticate')}
           >
             Back to login
@@ -492,33 +522,67 @@ export default function ChangeInitialPassword() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container 
+      component="main" 
+      maxWidth="xs"
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        backgroundColor: colors.background,
+        color: colors.textPrimary
+      }}
+    >
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          p: 4,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
+          backgroundColor: colors.paper,
+          borderRadius: 2,
+          boxShadow: mode === 'dark' ? '0px 4px 20px rgba(0, 0, 0, 0.5)' : '0px 4px 20px rgba(45, 122, 122, 0.1)',
+          border: `1px solid ${colors.border}`
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <Avatar sx={{ 
+          m: 1, 
+          bgcolor: colors.primary,
+          color: colors.background
+        }}>
           <LockResetIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" sx={{ color: colors.primary, fontWeight: 'bold' }}>
           Initial Password Update Required
         </Typography>
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
+        <Typography 
+          variant="body2" 
+          align="center" 
+          sx={{ 
+            mt: 1, 
+            color: colors.textSecondary,
+            maxWidth: '80%'
+          }}
+        >
           For your first login, you need to change your password.
         </Typography>
 
         {error && (
-          <Alert severity="error" sx={{ mt: 2, width: '100%' }}>
+          <Alert 
+            severity="error" 
+            sx={{ 
+              mt: 2, 
+              width: '100%',
+              backgroundColor: mode === 'dark' ? 'rgba(220, 101, 69, 0.2)' : '#fdeded'
+            }}
+          >
             {error}
           </Alert>
         )}
 
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
           <TextField
             margin="normal"
             required
@@ -527,6 +591,12 @@ export default function ChangeInitialPassword() {
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
+            sx={{
+              '& label.Mui-focused': { color: colors.primary },
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': { borderColor: colors.primary }
+              }
+            }}
           />
           <TextField
             margin="normal"
@@ -536,12 +606,24 @@ export default function ChangeInitialPassword() {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            sx={{
+              '& label.Mui-focused': { color: colors.primary },
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': { borderColor: colors.primary }
+              }
+            }}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ 
+              mt: 3, 
+              mb: 2,
+              py: 1.5,
+              backgroundColor: colors.primary,
+              '&:hover': { backgroundColor: colors.primaryDark }
+            }}
           >
             Change Password
           </Button>
@@ -557,7 +639,11 @@ export default function ChangeInitialPassword() {
         <Alert
           onClose={handleSnackbarClose}
           severity="success"
-          sx={{ width: '100%' }}
+          sx={{ 
+            width: '100%',
+            backgroundColor: mode === 'dark' ? 'rgba(45, 122, 122, 0.3)' : '#d1e7e7',
+            color: colors.textPrimary
+          }}
         >
           {snackbarMessage}
         </Alert>

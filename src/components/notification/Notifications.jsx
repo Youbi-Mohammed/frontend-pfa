@@ -11,9 +11,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
-import { stringAvatar } from "../../utils/generalUtils";
-import "./notifications.scss";
-import { has } from "lodash";
 import { hasRole } from "../../utils/userUtiles";
 
 function Notifications({
@@ -25,399 +22,458 @@ function Notifications({
   elapsedTime,
   mode,
   teamNotifications,
-  sendersImages
+  sendersImages,
 }) {
   const [value, setValue] = useState("1");
   const isSupervisor = hasRole("ROLE_SUPERVISOR");
-  const isStudent =  hasRole("ROLE_STUDENT")
-  const isHOB = hasRole("ROLE_HEAD_OF_BRANCH")
-  
-console.log(sendersImages);
+  const isStudent = hasRole("ROLE_STUDENT");
+
   const handleNotsViewChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const borderColor = mode === "dark" ? "#4a9a9a33" : "#a3d5d533"; // teal pastel transparent
+  const backgroundColor = mode === "dark" ? "#121212" : "#f5f5f5";
+  const textSecondaryColor = mode === "dark" ? "#a3d5d5" : "#4a4a4a";
+  const primaryTeal = "#2d7a7a";
+  const hoverTeal = "#1e5a5a";
+  const errorCoral = "#dc6545";
+  const errorHoverCoral = "#ff866f";
+
   return (
     <Popover
       open={isNotificationPopoverOpen}
       anchorEl={notificationAnchorEl}
       onClose={handleCloseNotsView}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
       sx={{
         "& .MuiPopover-paper": {
-          borderRadius: "15px",
-          width: window.innerWidth > 550 ? "380px" : "100svw",
+          borderRadius: 2,
+          width: window.innerWidth > 550 ? 380 : "100svw",
           height: window.innerWidth > 550 ? "65svh" : "100svh",
           minHeight: "65svh",
-          backgroundColor: mode === "dark" ? "#121212" : "#f5f5f5",
+          bgcolor: backgroundColor,
           position: "relative",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
+          overflowY: "auto",
+          "&::-webkit-scrollbar": { display: "none" },
+          boxShadow:
+            mode === "dark"
+              ? "0 4px 20px rgba(57,193,232,0.5)"
+              : "0 4px 20px rgba(45,122,122,0.3)",
         },
       }}
     >
       <Box
         sx={{
-          borderRadius: "15px 15px 0 0 ",
-          padding: "15px",
+          borderRadius: "15px 15px 0 0",
+          p: 2,
           display: "flex",
-          width: window.innerWidth > 550 ? "380px" : "calc(100svw - 32px)",
+          width: window.innerWidth > 550 ? 380 : "calc(100svw - 32px)",
           alignItems: "center",
           justifyContent: "space-between",
           position: "fixed",
-          zIndex: "1",
-          backgroundColor: mode === "dark" ? "#121212" : "#f5f5f5",
+          zIndex: 1,
+          bgcolor: backgroundColor,
           backgroundImage:
             "linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))",
+          boxShadow:
+            mode === "dark"
+              ? "inset 0 -1px 0 #39c1e833"
+              : "inset 0 -1px 0 #4a9a9a33",
         }}
       >
-        <Typography>Notifications</Typography>
-        <IconButton onClick={handleCloseNotsView}>
-          <CloseIcon sx={{ cursor: "pointer" }} />
+        <Typography
+          sx={{
+            fontWeight: 600,
+            color: mode === "dark" ? "#39c1e8" : primaryTeal,
+            fontSize: "1.1rem",
+          }}
+        >
+          Notifications
+        </Typography>
+        <IconButton
+          onClick={handleCloseNotsView}
+          size="small"
+          sx={{
+            color: textSecondaryColor,
+            "&:hover": { bgcolor: hoverTeal + "22" },
+            "&:focus": { outline: "none", bgcolor: hoverTeal + "22" },
+            "&:active": { bgcolor: hoverTeal + "33" },
+          }}
+          aria-label="close notifications"
+        >
+          <CloseIcon />
         </IconButton>
       </Box>
+
       <Box
         sx={{
           width: "100%",
           typography: "body1",
-          paddingTop: "54px",
-          backgroundColor: mode === "dark" ? "#121212" : "#f5f5f5",
+          pt: "54px",
+          bgcolor: backgroundColor,
           backgroundImage:
             "linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))",
+          minHeight: "calc(65svh - 64px)",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": { display: "none" },
         }}
       >
         <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Box sx={{ borderBottom: 1, borderColor: borderColor }}>
             <TabList
               onChange={handleNotsViewChange}
-              aria-label="lab API tabs example"
+              aria-label="notifications tabs"
               sx={{
                 position: "fixed",
-                width: window.innerWidth > 550 ? "380px" : "calc(100% - 32px)",
-                backgroundColor: mode === "dark" ? "#121212" : "#f5f5f5",
-                zIndex: "1",
+                width: window.innerWidth > 550 ? 380 : "calc(100% - 32px)",
+                bgcolor: backgroundColor,
+                zIndex: 1,
                 backgroundImage:
                   "linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))",
+                borderBottom: `1px solid ${borderColor}`,
+
+                // Retirer toutes les couleurs bleues par défaut (focus, hover, selected)
+                "& .MuiTab-root": {
+                  color: textSecondaryColor,
+                  textTransform: "none",
+                  fontWeight: 500,
+                  "&:hover": {
+                    color: hoverTeal,
+                    bgcolor: hoverTeal + "11",
+                  },
+                  "&.Mui-selected": {
+                    color: primaryTeal,
+                    bgcolor: "transparent",
+                    fontWeight: 700,
+                  },
+                  "&.Mui-focusVisible": {
+                    bgcolor: "transparent",
+                    outline: "none",
+                  },
+                  "&:focus": {
+                    bgcolor: "transparent",
+                    outline: "none",
+                  },
+                },
+
+                // Pour l'indicateur de tab (underline)
+                "& .MuiTabs-indicator": {
+                  backgroundColor: primaryTeal,
+                },
               }}
+              textColor="inherit"
+              indicatorColor="primary"
             >
               <Tab label="General" value="1" />
               {isStudent && <Tab label="Team" value="2" />}
               {(isSupervisor || isStudent) && <Tab label="Project" value="3" />}
             </TabList>
           </Box>
-          <TabPanel value="1" sx={{ padding: "48px 0 0 0" }}>
+
+          {/* Panels - mêmes styles mais sans bleu */}
+          <TabPanel value="1" sx={{ pt: "48px", px: 0 }}>
             {notifications && notifications.length > 0 ? (
               notifications.map((notification) => (
                 <Box
                   key={notification.id}
                   sx={{
                     display: "flex",
-                    padding: "8px",
+                    p: 1,
                     alignItems: "center",
-                    borderBottom: `1px solid ${
-                      mode === "dark" ? "#e0e0e070" : "#e0e0e0"
-                    }`,
+                    borderBottom: `1px solid ${borderColor}`,
+                    gap: 1,
                   }}
                 >
+                  <Avatar
+                    variant="rounded"
+                    src={
+                      sendersImages.find(
+                        (sender) => sender.id === notification.idOfSender
+                      )?.url
+                    }
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 2,
+                      boxShadow:
+                        mode === "dark"
+                          ? "0 0 8px #39c1e8aa"
+                          : "0 0 8px #2d7a7aaa",
+                    }}
+                  />
+
                   <Box
                     sx={{
+                      flexGrow: 1,
                       display: "flex",
-                      gap: "8px",
-                      width: "100%",
-                      alignItems: "start",
-                      minHeight: "70px",
+                      flexDirection: "column",
+                      justifyContent: "center",
                     }}
                   >
-                    <div style={{ margin: "10px 0 0 0" }}>
-                      {console.log(notification.idOfSender)}
-                      <Avatar
-                        variant="square"
-                        src={
-                          sendersImages.find(
-                            (sender) => sender.id === notification.idOfSender
-                          )?.url
-                        }
-                        height={35}
-                        width={35}
-                        sx={{ borderRadius: "10px" }}
-                      />
-                    </div>
-
-                    <Box
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: 14, color: textSecondaryColor }}
+                    >
+                      {notification.description}
+                    </Typography>
+                    <Typography
                       sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        width: "100%",
-                        Height: "inherit",
-                        minHeight: "inherit",
+                        fontSize: 10,
+                        textAlign: "right",
+                        color: textSecondaryColor,
+                        mt: 0.5,
                       }}
                     >
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{ fontSize: "13px" }}
-                      >
-                        {notification.description}
-                      </Typography>
-                      <Typography
-                        color="textSecondary"
-                        sx={{
-                          textAlign: "end",
-                          fontSize: "10px",
-                        }}
-                      >
-                        {elapsedTime[notification.id]}
-                      </Typography>
-                    </Box>
+                      {elapsedTime[notification.id]}
+                    </Typography>
                   </Box>
+
                   <IconButton
+                    edge="end"
                     onClick={() => handleDeleteNotification(notification.id)}
+                    size="small"
+                    sx={{
+                      color: errorCoral,
+                      "&:hover": { color: errorHoverCoral, bgcolor: "transparent" },
+                      "&:focus": { outline: "none", bgcolor: "transparent" },
+                      "&:active": { bgcolor: "transparent" },
+                    }}
+                    aria-label="delete notification"
                   >
                     <DeleteOutline />
                   </IconButton>
                 </Box>
               ))
             ) : (
-              <div
-                style={{
+              <Box
+                sx={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  paddingTop: "50px",
+                  pt: 6,
+                  color: textSecondaryColor,
                 }}
               >
                 <img
                   src="/src/assets/notification.png"
+                  alt="No notifications"
                   height={150}
                   width={150}
+                  style={{ opacity: 0.3 }}
                 />
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  alignText="center"
-                >
+                <Typography variant="body1" sx={{ mt: 2 }}>
                   No notifications to show
                 </Typography>
-              </div>
+              </Box>
             )}
           </TabPanel>
+
           {isStudent && (
-            <TabPanel value="2" sx={{ padding: "48px 0 0 0" }}>
+            <TabPanel value="2" sx={{ pt: "48px", px: 0 }}>
               {teamNotifications && teamNotifications.length > 0 ? (
                 teamNotifications.map((teamNotification) => (
                   <Box
                     key={teamNotification.id}
                     sx={{
                       display: "flex",
-                      padding: "8px",
+                      p: 1,
                       alignItems: "center",
-                      borderBottom: `1px solid ${
-                        mode === "dark" ? "#e0e0e070" : "#e0e0e0"
-                      }`,
+                      borderBottom: `1px solid ${borderColor}`,
+                      gap: 1,
                     }}
                   >
+                    <Avatar
+                      variant="rounded"
+                      src={
+                        sendersImages.find(
+                          (sender) => sender.id === teamNotification.idOfSender
+                        )?.url
+                      }
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 2,
+                        boxShadow:
+                          mode === "dark"
+                            ? "0 0 8px #39c1e8aa"
+                            : "0 0 8px #2d7a7aaa",
+                      }}
+                    />
                     <Box
                       sx={{
+                        flexGrow: 1,
                         display: "flex",
-                        gap: "8px",
-                        width: "100%",
-                        alignItems: "start",
-                        minHeight: "70px",
+                        flexDirection: "column",
+                        justifyContent: "center",
                       }}
                     >
-                      <div style={{ margin: "10px 0 0 0" }}>
-                        <Avatar
-                          variant="square"
-                          src={
-                            sendersImages.find(
-                              (sender) =>
-                                sender.id === teamNotification.idOfSender
-                            )?.url
-                          }
-                          height={35}
-                          width={35}
-                          sx={{ borderRadius: "10px" }}
-                        />
-                      </div>
-
-                      <Box
+                      <Typography
+                        variant="body2"
+                        sx={{ fontSize: 14, color: textSecondaryColor }}
+                      >
+                        {teamNotification.description}
+                      </Typography>
+                      <Typography
                         sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          Height: "inherit",
-                          minHeight: "inherit",
+                          fontSize: 10,
+                          textAlign: "right",
+                          color: textSecondaryColor,
+                          mt: 0.5,
                         }}
                       >
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          sx={{ fontSize: "13px" }}
-                        >
-                          {teamNotification.description}
-                        </Typography>
-                        <Typography
-                          color="textSecondary"
-                          sx={{
-                            textAlign: "end",
-                            fontSize: "10px",
-                          }}
-                        >
-                          {elapsedTime[teamNotification.id]}
-                        </Typography>
-                      </Box>
+                        {elapsedTime[teamNotification.id]}
+                      </Typography>
                     </Box>
                     <IconButton
+                      edge="end"
                       onClick={() =>
                         handleDeleteNotification(
                           teamNotification.id,
                           teamNotification.type
                         )
                       }
+                      size="small"
+                      sx={{
+                        color: errorCoral,
+                        "&:hover": { color: errorHoverCoral, bgcolor: "transparent" },
+                        "&:focus": { outline: "none", bgcolor: "transparent" },
+                        "&:active": { bgcolor: "transparent" },
+                      }}
+                      aria-label="delete team notification"
                     >
                       <DeleteOutline />
                     </IconButton>
                   </Box>
                 ))
               ) : (
-                <div
-                  style={{
+                <Box
+                  sx={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    paddingTop: "50px",
+                    pt: 6,
+                    color: textSecondaryColor,
                   }}
                 >
                   <img
                     src="/src/assets/notification.png"
+                    alt="No team notifications"
                     height={150}
                     width={150}
+                    style={{ opacity: 0.3 }}
                   />
-                  <Typography
-                    variant="body1"
-                    color="textSecondary"
-                    alignText="center"
-                  >
+                  <Typography variant="body1" sx={{ mt: 2 }}>
                     No team notifications to show
                   </Typography>
-                </div>
+                </Box>
               )}
             </TabPanel>
           )}
+
           {(isStudent || isSupervisor) && (
-            <TabPanel value="3" sx={{ padding: "48px 0 0 0" }}>
+            <TabPanel value="3" sx={{ pt: "48px", px: 0 }}>
               {teamNotifications && teamNotifications.length > 0 ? (
                 teamNotifications.map((teamNotification) => (
                   <Box
                     key={teamNotification.id}
                     sx={{
                       display: "flex",
-                      padding: "8px",
+                      p: 1,
                       alignItems: "center",
-                      borderBottom: `1px solid ${
-                        mode === "dark" ? "#e0e0e070" : "#e0e0e0"
-                      }`,
+                      borderBottom: `1px solid ${borderColor}`,
+                      gap: 1,
                     }}
                   >
+                    <Avatar
+                      variant="rounded"
+                      src={
+                        sendersImages.find(
+                          (sender) => sender.id === teamNotification.idOfSender
+                        )?.url
+                      }
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 2,
+                        boxShadow:
+                          mode === "dark"
+                            ? "0 0 8px #39c1e8aa"
+                            : "0 0 8px #2d7a7aaa",
+                      }}
+                    />
                     <Box
                       sx={{
+                        flexGrow: 1,
                         display: "flex",
-                        gap: "8px",
-                        width: "100%",
-                        alignItems: "start",
-                        minHeight: "70px",
+                        flexDirection: "column",
+                        justifyContent: "center",
                       }}
                     >
-                      <div style={{ margin: "10px 0 0 0" }}>
-                        <Avatar
-                          variant="square"
-                          src={
-                            sendersImages.find(
-                              (sender) =>
-                                sender.id === teamNotification.idOfSender
-                            )?.url
-                          }
-                          height={35}
-                          width={35}
-                          sx={{ borderRadius: "10px" }}
-                        />
-                      </div>
-
-                      <Box
+                      <Typography
+                        variant="body2"
+                        sx={{ fontSize: 14, color: textSecondaryColor }}
+                      >
+                        {teamNotification.description}
+                      </Typography>
+                      <Typography
                         sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          Height: "inherit",
-                          minHeight: "inherit",
+                          fontSize: 10,
+                          textAlign: "right",
+                          color: textSecondaryColor,
+                          mt: 0.5,
                         }}
                       >
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          sx={{ fontSize: "13px" }}
-                        >
-                          {teamNotification.description}
-                        </Typography>
-                        <Typography
-                          color="textSecondary"
-                          sx={{
-                            textAlign: "end",
-                            fontSize: "10px",
-                          }}
-                        >
-                          {elapsedTime[teamNotification.id]}
-                        </Typography>
-                      </Box>
+                        {elapsedTime[teamNotification.id]}
+                      </Typography>
                     </Box>
                     <IconButton
+                      edge="end"
                       onClick={() =>
                         handleDeleteNotification(
                           teamNotification.id,
                           teamNotification.type
                         )
                       }
+                      size="small"
+                      sx={{
+                        color: errorCoral,
+                        "&:hover": { color: errorHoverCoral, bgcolor: "transparent" },
+                        "&:focus": { outline: "none", bgcolor: "transparent" },
+                        "&:active": { bgcolor: "transparent" },
+                      }}
+                      aria-label="delete project notification"
                     >
                       <DeleteOutline />
                     </IconButton>
                   </Box>
                 ))
               ) : (
-                <div
-                  style={{
+                <Box
+                  sx={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    paddingTop: "50px",
+                    pt: 6,
+                    color: textSecondaryColor,
                   }}
                 >
                   <img
                     src="/src/assets/notification.png"
+                    alt="No project notifications"
                     height={150}
                     width={150}
+                    style={{ opacity: 0.3 }}
                   />
-                  <Typography
-                    variant="body1"
-                    color="textSecondary"
-                    alignText="center"
-                  >
+                  <Typography variant="body1" sx={{ mt: 2 }}>
                     No project notifications to show
                   </Typography>
-                </div>
+                </Box>
               )}
             </TabPanel>
           )}
-          {isSupervisor}
         </TabContext>
       </Box>
     </Popover>
