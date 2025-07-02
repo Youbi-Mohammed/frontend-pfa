@@ -111,33 +111,63 @@ const getStudents = async (token) => {
     });
   return students;
 }
+// const downLoadProfileImage = async (userId, token) => {
+//   // Validate userId first
+//   // if (!userId || userId < 0) {
+//   //   console.error("Invalid user ID:", userId);
+//   //   return null;
+//   // }
+//   try {
+//     const response = await fetch(
+//       `http://localhost:8080/api/users/${userId}/downloadProfileImage`,
+//       {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+//     if (!response.ok) {
+//       return null;
+//     }
+//     const image = await response.blob();
+//      const url = window.URL.createObjectURL(image);
+//      console.log(url);
+//     return url;
+//   } catch (error) {
+//     console.error("Error downloading image:", error);
+//   }
+// }
 const downLoadProfileImage = async (userId, token) => {
-  // Validate userId first
-  if (!userId || userId <= 0) {
-    console.error("Invalid user ID:", userId);
+  if (!userId || userId < 1) {
+    //console.error("Invalid user ID");
+    console.log ("invalid user id"+userId)
     return null;
   }
+
   try {
     const response = await fetch(
       `http://localhost:8080/api/users/${userId}/downloadProfileImage`,
       {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
-    if (!response.ok) {
-      return null;
+
+    if (response.status === 404) {
+      console.log("No image found for user:", userId);
+      return null; // Handle missing image
     }
-    const image = await response.blob();
-     const url = window.URL.createObjectURL(image);
-     console.log(url);
-    return url;
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    return URL.createObjectURL(await response.blob());
   } catch (error) {
-    console.error("Error downloading image:", error);
+    console.error("Download failed:", error.message);
+    return null;
   }
-}
+};
 // const updateUserById = async (
 //   token,
 //   userId,
