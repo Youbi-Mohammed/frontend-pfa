@@ -311,6 +311,431 @@
 // export default StudentRegistrationForm;
 
 /////////////////ca marche v
+// "use client"
+
+// import { useState } from "react"
+// import { useNavigate } from "react-router-dom"
+// import { registerViaHoB } from "../../services/registerViaHoBService"
+// import {
+//   Container,
+//   Paper,
+//   Typography,
+//   TextField,
+//   Button,
+//   MenuItem,
+//   FormControl,
+//   InputLabel,
+//   Select,
+//   CircularProgress,
+//   Snackbar,
+//   IconButton,
+//   Box,
+//   Alert,
+// } from "@mui/material"
+// import { styled } from "@mui/material/styles"
+// import CloseIcon from "@mui/icons-material/Close"
+// import PersonAddIcon from "@mui/icons-material/PersonAdd"
+// import SchoolIcon from "@mui/icons-material/School"
+// import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount"
+
+// const ModernContainer = styled(Container)({
+//   marginTop: "32px",
+//   marginBottom: "32px",
+//   fontFamily: "'Inter', sans-serif",
+// })
+
+// const ModernPaper = styled(Paper)({
+//   borderRadius: "12px",
+//   padding: "40px",
+//   backgroundColor: "#ffffff",
+//   border: "1px solid #e6f2f2",
+//   boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
+//   fontFamily: "'Inter', sans-serif",
+// })
+
+// const ModernTitle = styled(Typography)({
+//   fontFamily: "'Inter', sans-serif",
+//   fontSize: "28px",
+//   fontWeight: 700,
+//   color: "#1a1a1a",
+//   textAlign: "center",
+//   marginBottom: "32px",
+//   letterSpacing: "-0.5px",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   gap: "12px",
+// })
+
+// const ModernTextField = styled(TextField)({
+//   marginBottom: "20px",
+//   "& .MuiOutlinedInput-root": {
+//     borderRadius: "8px",
+//     backgroundColor: "#ffffff",
+//     fontFamily: "'Inter', sans-serif",
+//     "& fieldset": {
+//       borderColor: "#d1e7e7",
+//     },
+//     "&:hover fieldset": {
+//       borderColor: "#a3d5d5",
+//     },
+//     "&.Mui-focused fieldset": {
+//       borderColor: "#2d7a7a",
+//       borderWidth: "2px",
+//     },
+//     "&.Mui-disabled": {
+//       backgroundColor: "#f8fafa",
+//       "& fieldset": {
+//         borderColor: "#e6f2f2",
+//       },
+//     },
+//   },
+//   "& .MuiInputLabel-root": {
+//     fontFamily: "'Inter', sans-serif",
+//     color: "#4a4a4a",
+//     fontWeight: 500,
+//     "&.Mui-focused": {
+//       color: "#1e5a5a",
+//     },
+//     "&.Mui-disabled": {
+//       color: "#6bb6b6",
+//     },
+//   },
+//   "& .MuiOutlinedInput-input": {
+//     color: "#1a1a1a",
+//     fontFamily: "'Inter', sans-serif",
+//     "&.Mui-disabled": {
+//       color: "#6bb6b6",
+//     },
+//   },
+// })
+
+// const ModernFormControl = styled(FormControl)({
+//   marginBottom: "20px",
+//   "& .MuiOutlinedInput-root": {
+//     borderRadius: "8px",
+//     backgroundColor: "#ffffff",
+//     fontFamily: "'Inter', sans-serif",
+//     "& fieldset": {
+//       borderColor: "#d1e7e7",
+//     },
+//     "&:hover fieldset": {
+//       borderColor: "#a3d5d5",
+//     },
+//     "&.Mui-focused fieldset": {
+//       borderColor: "#2d7a7a",
+//       borderWidth: "2px",
+//     },
+//   },
+//   "& .MuiInputLabel-root": {
+//     fontFamily: "'Inter', sans-serif",
+//     color: "#4a4a4a",
+//     fontWeight: 500,
+//     "&.Mui-focused": {
+//       color: "#1e5a5a",
+//     },
+//   },
+//   "& .MuiSelect-select": {
+//     fontFamily: "'Inter', sans-serif",
+//     color: "#1a1a1a",
+//   },
+// })
+
+// const ModernSelect = styled(Select)({
+//   "& .MuiMenuItem-root": {
+//     fontFamily: "'Inter', sans-serif",
+//     fontSize: "14px",
+//     color: "#1a1a1a",
+//     "&:hover": {
+//       backgroundColor: "#f8fafa",
+//     },
+//     "&.Mui-selected": {
+//       backgroundColor: "#fcfefe",
+//       color: "#1e5a5a",
+//       "&:hover": {
+//         backgroundColor: "#f8fafa",
+//       },
+//     },
+//   },
+// })
+
+// const ModernButton = styled(Button)(({ variant, disabled }) => ({
+//   fontFamily: "'Inter', sans-serif",
+//   fontWeight: 600,
+//   borderRadius: "8px",
+//   textTransform: "none",
+//   padding: "12px 24px",
+//   fontSize: "14px",
+//   transition: "all 0.2s ease-in-out",
+//   ...(variant === "contained" && {
+//     backgroundColor: disabled ? "#e6f2f2" : "#2d7a7a",
+//     color: disabled ? "#a3d5d5" : "#ffffff",
+//     "&:hover": !disabled && {
+//       backgroundColor: "#1e5a5a",
+//       transform: "translateY(-1px)",
+//       boxShadow: "0 6px 16px rgba(45, 122, 122, 0.3)",
+//     },
+//   }),
+// }))
+
+// const ButtonContainer = styled(Box)({
+//   display: "flex",
+//   justifyContent: "flex-end",
+//   marginTop: "32px",
+//   gap: "16px",
+// })
+
+// const FormContainer = styled(Box)({
+//   marginTop: "24px",
+// })
+
+// const ModernSnackbar = styled(Snackbar)({
+//   "& .MuiSnackbarContent-root": {
+//     borderRadius: "8px",
+//     fontFamily: "'Inter', sans-serif",
+//   },
+// })
+
+// const ModernAlert = styled(Alert)({
+//   fontFamily: "'Inter', sans-serif",
+//   borderRadius: "8px",
+//   "& .MuiAlert-message": {
+//     fontWeight: 500,
+//   },
+// })
+
+// const InfoBox = styled(Box)({
+//   backgroundColor: "#f8fafa",
+//   border: "1px solid #d1e7e7",
+//   borderRadius: "8px",
+//   padding: "16px",
+//   marginBottom: "24px",
+// })
+
+// const InfoText = styled(Typography)({
+//   fontFamily: "'Inter', sans-serif",
+//   fontSize: "14px",
+//   color: "#4a4a4a",
+//   lineHeight: 1.5,
+// })
+
+// const RegisterViaHoBDialog = () => {
+//   const navigate = useNavigate()
+//   const [formData, setFormData] = useState({
+//     firstName: "",
+//     lastName: "",
+//     branch: 1,
+//     cin: "",
+//     inscriptionNumber: "",
+//     email: "",
+//     role: "ROLE_STUDENT",
+//   })
+
+//   const [loading, setLoading] = useState(false)
+//   const [error, setError] = useState(null)
+//   const [success, setSuccess] = useState(null)
+
+//   // Handle normal field changes
+//   const handleChange = (e) => {
+//     const { name, value } = e.target
+//     setFormData((prev) => ({ ...prev, [name]: value }))
+//   }
+
+//   // Auto-generate CIN and inscription number from names
+//   const handleNameChange = (e) => {
+//     const { name, value } = e.target
+//     setFormData((prev) => {
+//       const updatedData = { ...prev, [name]: value }
+
+//       // Auto-generate CIN from first name
+//       if (name === "firstName" && value) {
+//         updatedData.cin = `CIN-${value.toUpperCase().replace(/\s+/g, "")}-${Math.floor(1000 + Math.random() * 9000)}`
+//       }
+
+//       // Auto-generate inscription number from last name
+//       if (name === "lastName" && value) {
+//         updatedData.inscriptionNumber = `INS-${value.toUpperCase().replace(/\s+/g, "")}-${Math.floor(
+//           1000 + Math.random() * 9000,
+//         )}`
+//       }
+
+//       return updatedData
+//     })
+//   }
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault()
+//     setLoading(true)
+//     setError(null)
+
+//     try {
+//       const token = localStorage.getItem("token")
+//       if (!token) throw new Error("Authentication required")
+
+//       if (!formData.firstName || !formData.lastName) {
+//         throw new Error("Please fill all required fields")
+//       }
+
+//       await registerViaHoB(token, formData)
+//       setSuccess("Account created successfully!")
+//       setFormData({
+//         firstName: "",
+//         lastName: "",
+//         branch: 1,
+//         cin: "",
+//         inscriptionNumber: "",
+//         email: "",
+//         role: "ROLE_STUDENT",
+//       })
+
+//       setTimeout(() => navigate("/dashboard"), 2000)
+//     } catch (err) {
+//       setError(err.message || "Account creation failed")
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   return (
+//     <ModernContainer maxWidth="md">
+//       <ModernPaper elevation={0}>
+//         <ModernTitle>
+//           <PersonAddIcon sx={{ fontSize: "32px", color: "#2d7a7a" }} />
+//           Create New Account
+//         </ModernTitle>
+
+//         <InfoBox>
+//           <InfoText>
+//             <strong>Auto-Generation:</strong> CIN and inscription numbers will be automatically generated based on the
+//             first and last names you enter. Simply fill in the required fields below.
+//           </InfoText>
+//         </InfoBox>
+
+//         <FormContainer component="form" onSubmit={handleSubmit}>
+//           <ModernTextField
+//             fullWidth
+//             label="First Name *"
+//             name="firstName"
+//             value={formData.firstName}
+//             onChange={handleNameChange}
+//             required
+//             placeholder="Enter first name"
+//           />
+
+//           <ModernTextField
+//             fullWidth
+//             label="Last Name *"
+//             name="lastName"
+//             value={formData.lastName}
+//             onChange={handleNameChange}
+//             required
+//             placeholder="Enter last name"
+//           />
+
+//           <ModernTextField
+//             fullWidth
+//             label="CIN (Auto-generated)"
+//             name="cin"
+//             value={formData.cin}
+//             disabled
+//             placeholder="Will be generated automatically"
+//           />
+
+//           <ModernTextField
+//             fullWidth
+//             label="Email Address *"
+//             name="email"
+//             type="email"
+//             value={formData.email}
+//             onChange={handleChange}
+//             required
+//             placeholder="Enter email address"
+//           />
+
+//           <ModernTextField
+//             fullWidth
+//             label="Inscription Number (Auto-generated)"
+//             name="inscriptionNumber"
+//             value={formData.inscriptionNumber}
+//             disabled
+//             placeholder="Will be generated automatically"
+//           />
+
+//           <ModernFormControl fullWidth>
+//             <InputLabel>Account Type *</InputLabel>
+//             <ModernSelect name="role" value={formData.role} onChange={handleChange} label="Account Type *" required>
+//               <MenuItem value="ROLE_STUDENT">
+//                 <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+//                   <SchoolIcon sx={{ fontSize: "18px", color: "#2d7a7a" }} />
+//                   Student
+//                 </Box>
+//               </MenuItem>
+//               <MenuItem value="ROLE_SUPERVISOR">
+//                 <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+//                   <SupervisorAccountIcon sx={{ fontSize: "18px", color: "#2d7a7a" }} />
+//                   Supervisor
+//                 </Box>
+//               </MenuItem>
+//             </ModernSelect>
+//           </ModernFormControl>
+
+//           <ButtonContainer>
+//             <ModernButton
+//               type="submit"
+//               variant="contained"
+//               disabled={loading}
+//               startIcon={loading ? <CircularProgress size={20} sx={{ color: "#ffffff" }} /> : <PersonAddIcon />}
+//             >
+//               {loading ? "Creating Account..." : "Create Account"}
+//             </ModernButton>
+//           </ButtonContainer>
+//         </FormContainer>
+//       </ModernPaper>
+
+//       {/* Error Notification */}
+//       <ModernSnackbar
+//         open={!!error}
+//         autoHideDuration={6000}
+//         onClose={() => setError(null)}
+//         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+//       >
+//         <ModernAlert
+//           onClose={() => setError(null)}
+//           severity="error"
+//           action={
+//             <IconButton size="small" color="inherit" onClick={() => setError(null)}>
+//               <CloseIcon fontSize="small" />
+//             </IconButton>
+//           }
+//         >
+//           {error}
+//         </ModernAlert>
+//       </ModernSnackbar>
+
+//       {/* Success Notification */}
+//       <ModernSnackbar
+//         open={!!success}
+//         autoHideDuration={6000}
+//         onClose={() => setSuccess(null)}
+//         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+//       >
+//         <ModernAlert
+//           onClose={() => setSuccess(null)}
+//           severity="success"
+//           action={
+//             <IconButton size="small" color="inherit" onClick={() => setSuccess(null)}>
+//               <CloseIcon fontSize="small" />
+//             </IconButton>
+//           }
+//         >
+//           {success}
+//         </ModernAlert>
+//       </ModernSnackbar>
+//     </ModernContainer>
+//   )
+// }
+
+// export default RegisterViaHoBDialog
 "use client"
 
 import { useState } from "react"
@@ -331,6 +756,7 @@ import {
   IconButton,
   Box,
   Alert,
+  useTheme,
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import CloseIcon from "@mui/icons-material/Close"
@@ -344,20 +770,20 @@ const ModernContainer = styled(Container)({
   fontFamily: "'Inter', sans-serif",
 })
 
-const ModernPaper = styled(Paper)({
+const ModernPaper = styled(Paper)(({ theme }) => ({
   borderRadius: "12px",
   padding: "40px",
-  backgroundColor: "#ffffff",
-  border: "1px solid #e6f2f2",
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
   boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
   fontFamily: "'Inter', sans-serif",
-})
+}))
 
-const ModernTitle = styled(Typography)({
+const ModernTitle = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "28px",
   fontWeight: 700,
-  color: "#1a1a1a",
+  color: theme.palette.text.primary,
   textAlign: "center",
   marginBottom: "32px",
   letterSpacing: "-0.5px",
@@ -365,62 +791,62 @@ const ModernTitle = styled(Typography)({
   alignItems: "center",
   justifyContent: "center",
   gap: "12px",
-})
+}))
 
-const ModernTextField = styled(TextField)({
+const ModernTextField = styled(TextField)(({ theme }) => ({
   marginBottom: "20px",
   "& .MuiOutlinedInput-root": {
     borderRadius: "8px",
-    backgroundColor: "#ffffff",
+    backgroundColor: theme.palette.mode === "light" ? "#ffffff" : theme.palette.background.default,
     fontFamily: "'Inter', sans-serif",
     "& fieldset": {
-      borderColor: "#d1e7e7",
+      borderColor: theme.palette.divider,
     },
     "&:hover fieldset": {
-      borderColor: "#a3d5d5",
+      borderColor: theme.palette.mode === "light" ? "#a3d5d5" : theme.palette.primary.light,
     },
     "&.Mui-focused fieldset": {
       borderColor: "#2d7a7a",
       borderWidth: "2px",
     },
     "&.Mui-disabled": {
-      backgroundColor: "#f8fafa",
+      backgroundColor: theme.palette.action.disabledBackground,
       "& fieldset": {
-        borderColor: "#e6f2f2",
+        borderColor: theme.palette.action.disabled,
       },
     },
   },
   "& .MuiInputLabel-root": {
     fontFamily: "'Inter', sans-serif",
-    color: "#4a4a4a",
+    color: theme.palette.text.secondary,
     fontWeight: 500,
     "&.Mui-focused": {
       color: "#1e5a5a",
     },
     "&.Mui-disabled": {
-      color: "#6bb6b6",
+      color: theme.palette.text.disabled,
     },
   },
   "& .MuiOutlinedInput-input": {
-    color: "#1a1a1a",
+    color: theme.palette.text.primary,
     fontFamily: "'Inter', sans-serif",
     "&.Mui-disabled": {
-      color: "#6bb6b6",
+      color: theme.palette.text.disabled,
     },
   },
-})
+}))
 
-const ModernFormControl = styled(FormControl)({
+const ModernFormControl = styled(FormControl)(({ theme }) => ({
   marginBottom: "20px",
   "& .MuiOutlinedInput-root": {
     borderRadius: "8px",
-    backgroundColor: "#ffffff",
+    backgroundColor: theme.palette.mode === "light" ? "#ffffff" : theme.palette.background.default,
     fontFamily: "'Inter', sans-serif",
     "& fieldset": {
-      borderColor: "#d1e7e7",
+      borderColor: theme.palette.divider,
     },
     "&:hover fieldset": {
-      borderColor: "#a3d5d5",
+      borderColor: theme.palette.mode === "light" ? "#a3d5d5" : theme.palette.primary.light,
     },
     "&.Mui-focused fieldset": {
       borderColor: "#2d7a7a",
@@ -429,7 +855,7 @@ const ModernFormControl = styled(FormControl)({
   },
   "& .MuiInputLabel-root": {
     fontFamily: "'Inter', sans-serif",
-    color: "#4a4a4a",
+    color: theme.palette.text.secondary,
     fontWeight: 500,
     "&.Mui-focused": {
       color: "#1e5a5a",
@@ -437,27 +863,27 @@ const ModernFormControl = styled(FormControl)({
   },
   "& .MuiSelect-select": {
     fontFamily: "'Inter', sans-serif",
-    color: "#1a1a1a",
+    color: theme.palette.text.primary,
   },
-})
+}))
 
-const ModernSelect = styled(Select)({
+const ModernSelect = styled(Select)(({ theme }) => ({
   "& .MuiMenuItem-root": {
     fontFamily: "'Inter', sans-serif",
     fontSize: "14px",
-    color: "#1a1a1a",
+    color: theme.palette.text.primary,
     "&:hover": {
-      backgroundColor: "#f8fafa",
+      backgroundColor: theme.palette.action.hover,
     },
     "&.Mui-selected": {
-      backgroundColor: "#fcfefe",
+      backgroundColor: theme.palette.mode === "light" ? "#fcfefe" : theme.palette.action.selected,
       color: "#1e5a5a",
       "&:hover": {
-        backgroundColor: "#f8fafa",
+        backgroundColor: theme.palette.action.hover,
       },
     },
   },
-})
+}))
 
 const ModernButton = styled(Button)(({ variant, disabled }) => ({
   fontFamily: "'Inter', sans-serif",
@@ -496,31 +922,33 @@ const ModernSnackbar = styled(Snackbar)({
   },
 })
 
-const ModernAlert = styled(Alert)({
+const ModernAlert = styled(Alert)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   borderRadius: "8px",
+  color: theme.palette.text.primary,
   "& .MuiAlert-message": {
     fontWeight: 500,
   },
-})
+}))
 
-const InfoBox = styled(Box)({
-  backgroundColor: "#f8fafa",
-  border: "1px solid #d1e7e7",
+const InfoBox = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.action.hover,
+  border: `1px solid ${theme.palette.divider}`,
   borderRadius: "8px",
   padding: "16px",
   marginBottom: "24px",
-})
+}))
 
-const InfoText = styled(Typography)({
+const InfoText = styled(Typography)(({ theme }) => ({
   fontFamily: "'Inter', sans-serif",
   fontSize: "14px",
-  color: "#4a4a4a",
+  color: theme.palette.text.secondary,
   lineHeight: 1.5,
-})
+}))
 
 const RegisterViaHoBDialog = () => {
   const navigate = useNavigate()
+  const theme = useTheme()
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -535,30 +963,23 @@ const RegisterViaHoBDialog = () => {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
 
-  // Handle normal field changes
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  // Auto-generate CIN and inscription number from names
   const handleNameChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value }
-
-      // Auto-generate CIN from first name
       if (name === "firstName" && value) {
         updatedData.cin = `CIN-${value.toUpperCase().replace(/\s+/g, "")}-${Math.floor(1000 + Math.random() * 9000)}`
       }
-
-      // Auto-generate inscription number from last name
       if (name === "lastName" && value) {
         updatedData.inscriptionNumber = `INS-${value.toUpperCase().replace(/\s+/g, "")}-${Math.floor(
           1000 + Math.random() * 9000,
         )}`
       }
-
       return updatedData
     })
   }
@@ -692,7 +1113,6 @@ const RegisterViaHoBDialog = () => {
         </FormContainer>
       </ModernPaper>
 
-      {/* Error Notification */}
       <ModernSnackbar
         open={!!error}
         autoHideDuration={6000}
@@ -712,7 +1132,6 @@ const RegisterViaHoBDialog = () => {
         </ModernAlert>
       </ModernSnackbar>
 
-      {/* Success Notification */}
       <ModernSnackbar
         open={!!success}
         autoHideDuration={6000}
@@ -736,6 +1155,7 @@ const RegisterViaHoBDialog = () => {
 }
 
 export default RegisterViaHoBDialog
+
 
 // import React, { useState, useEffect } from 'react';
 // import { registerViaHoB } from '../../services/registerViaHoBService';
