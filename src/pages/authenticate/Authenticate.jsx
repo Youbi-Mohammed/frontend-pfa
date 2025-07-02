@@ -1,19 +1,21 @@
 import { LoadingButton } from "@mui/lab";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { Link as RouterLink } from "react-router-dom";
+import {
+  Avatar,
+  Box,
+  Checkbox,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Alert,
+  Snackbar,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { authenticate } from "../../services/authService";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function Copyright(props) {
@@ -35,56 +37,45 @@ function Copyright(props) {
 }
 
 export default function Authenticate() {
+  const theme = useTheme();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-      const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-      };
-    const [error, setError] = useState({
-      code: null,
-      message: "",
-    });
-  function handleClick() {
-    setLoading(true);
-  }
-
-  
   const handleSubmit = async (event) => {
-  event.preventDefault();
-  setLoading(true);
+    event.preventDefault();
+    setLoading(true);
 
-  try {
-    const formData = new FormData(event.currentTarget);
-    const result = await authenticate(
-      formData.get("email"),
-      formData.get("password"),
-     localStorage.setItem("mode","light"), // Assurez-vous que le mode est défini sur "light" lors de la connexion
-      setSnackbarOpen,
-      setSnackbarMessage,
-      setLoading
-    );
+    try {
+      const formData = new FormData(event.currentTarget);
+      const result = await authenticate(
+        formData.get("email"),
+        formData.get("password"),
+        localStorage.setItem("mode", "light"),
+        setSnackbarOpen,
+        setSnackbarMessage,
+        setLoading
+      );
 
-    if (result?.requiresPasswordChange) {
-      // Redirection vers la page de changement de mot de passe
-      navigate('/change-password', {
-        state: {
-          temporaryToken: result.temporaryToken,
-          oldPassword: result.oldPassword
-        }
-      });
-    } else if (result?.success) {
-      // Redirection normale
-      navigate('/');
+      if (result?.requiresPasswordChange) {
+        navigate("/change-password", {
+          state: {
+            temporaryToken: result.temporaryToken,
+            oldPassword: result.oldPassword,
+          },
+        });
+      } else if (result?.success) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
     }
-
-  } catch (error) {
-    console.error("Erreur de connexion:", error);
-  }
-};
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -92,36 +83,70 @@ export default function Authenticate() {
       <Box
         sx={{
           marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          padding: 4,
+          borderRadius: 3,
+          backgroundColor:
+            theme.palette.mode === "light" ? "#fcfefe" : "#1a1a1a",
+          boxShadow: theme.palette.mode === "light" ? 3 : 0,
         }}
       >
-        <Avatar
-          src="/src/assets/auth_logo.png"
-          sx={{ m: 1, bgcolor: "secondary.main" }}
-        />
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Avatar
+            alt="Logo"
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            sx={{
+              width: 64,
+              height: 64,
+              bgcolor: theme.palette.mode === "light" ? "#2d7a7a" : "#4a9a9a",
+            }}
+          />
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              color:
+                theme.palette.mode === "light" ? "#1a1a1a" : "#d1e7e7",
+            }}
+          >
+            Sign in to your account
+          </Typography>
+        </Box>
+
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <TextField
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email address"
             name="email"
             autoComplete="email"
             autoFocus
-            //value={localStorage.getItem("email") || ""} pour que je m'apprendre hhhh mais jai raté 
             defaultValue={localStorage.getItem("email") || ""}
-             onChange={(e) => {
-              // Optionnel: Mettre à jour le localStorage si besoin
-              // localStorage.setItem("email", e.target.value);
-              //khlaha hasni , c'est pas la peine t3zouha ; ila drto fiha cher w halala la la 
-  }}
+            InputProps={{
+              style: {
+                backgroundColor:
+                  theme.palette.mode === "light" ? "#ffffff" : "#2a2a2a",
+                color:
+                  theme.palette.mode === "light" ? "#1a1a1a" : "#f1f1f1",
+              },
+            }}
+            InputLabelProps={{
+              style: {
+                color:
+                  theme.palette.mode === "light" ? "#4a4a4a" : "#a3d5d5",
+              },
+            }}
           />
+
           <TextField
             margin="normal"
             required
@@ -131,35 +156,77 @@ export default function Authenticate() {
             type="password"
             id="password"
             autoComplete="current-password"
+            InputProps={{
+              style: {
+                backgroundColor:
+                  theme.palette.mode === "light" ? "#ffffff" : "#2a2a2a",
+                color:
+                  theme.palette.mode === "light" ? "#1a1a1a" : "#f1f1f1",
+              },
+            }}
+            InputLabelProps={{
+              style: {
+                color:
+                  theme.palette.mode === "light" ? "#4a4a4a" : "#a3d5d5",
+              },
+            }}
           />
+
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
+            sx={{
+              mt: 1,
+              color:
+                theme.palette.mode === "light" ? "#2d2d2d" : "#a3d5d5",
+            }}
           />
+
           <LoadingButton
             type="submit"
             loading={loading}
-            loadingIndicator="Loading…"
+            loadingIndicator="Loading..."
             fullWidth
-            sx={{ mt: 3, mb: 2 }}
             variant="contained"
+            sx={{
+              mt: 3,
+              mb: 2,
+              bgcolor: "#2d7a7a",
+              color: "#fff",
+              "&:hover": {
+                bgcolor: "#1e5a5a",
+              },
+            }}
           >
-            <span>Sign In</span>
+            Sign In
           </LoadingButton>
-          <Grid container>
-            <Grid item xs>
-              <Link href="/auth/reset-password" variant="body2">
+
+          <Grid container justifyContent="space-between">
+            <Grid item>
+              <Link
+                href="/auth/reset-password"
+                variant="body2"
+                sx={{
+                  color:
+                    theme.palette.mode === "light"
+                      ? "#2d7a7a"
+                      : "#6bb6b6",
+                }}
+              >
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              {/* <Link href="/auth/register" variant="body2">
-                D'ont have an account? Sign Up
-              </Link> */}
+              {/* Uncomment if needed
+              <Link href="/auth/register" variant="body2" sx={{ color: '#2d7a7a' }}>
+                {"Don't have an account? Sign Up"}
+              </Link> 
+              */}
             </Grid>
           </Grid>
         </Box>
       </Box>
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
@@ -178,10 +245,13 @@ export default function Authenticate() {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
 }
+
+
 // import { LoadingButton } from "@mui/lab";
 // import Avatar from "@mui/material/Avatar";
 // import Box from "@mui/material/Box";
