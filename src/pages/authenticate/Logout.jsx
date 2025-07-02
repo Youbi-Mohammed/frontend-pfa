@@ -110,58 +110,152 @@
 // export default Logout;
 // Fou9 howa hadak 
 
-import React from 'react';
+// import React from 'react';
+// import {
+//   Dialog,
+//   DialogTitle,
+//   DialogContent,
+//   DialogContentText,
+//   DialogActions,
+//   Button
+// } from '@mui/material';
+// import { logout } from '../../services/authService';
+// import { useNavigate } from 'react-router-dom';
+
+// const Logout = ({ open, onClose }) => {
+//   const navigate = useNavigate();
+
+//   const handleConfirm = () => {
+//     const success = logout();
+//     if (success) {
+//       navigate('/');
+//     } else {
+//       navigate('/');
+//     }
+//     onClose();
+//   };
+
+//   return (
+//     <Dialog open={open} onClose={onClose}>
+//       <DialogTitle
+//         sx={{ color: '#1e5a5a', fontWeight: 'bold', fontSize: '1.25rem' }}
+//       >
+//         Confirm Logout
+//       </DialogTitle>
+
+//       <DialogContent sx={{ backgroundColor: '#fdfefe' }}>
+//         <DialogContentText sx={{ color: '#2d2d2d' }}>
+//           Are you sure you want to log out?
+//         </DialogContentText>
+//       </DialogContent>
+
+//       <DialogActions
+//         sx={{ padding: '16px', backgroundColor: '#f8fafa', borderTop: '1px solid #e6f2f2' }}
+//       >
+//         <Button
+//           onClick={onClose}
+//           variant="outlined"
+//           sx={{
+//             color: '#2d7a7a',
+//             borderColor: '#a3d5d5',
+//             '&:hover': {
+//               borderColor: '#2d7a7a',
+//               backgroundColor: '#d1e7e7',
+//             }
+//           }}
+//         >
+//           Cancel
+//         </Button>
+
+//         <Button
+//           onClick={handleConfirm}
+//           variant="contained"
+//           sx={{
+//             backgroundColor: '#2d7a7a',
+//             color: '#ffffff',
+//             '&:hover': {
+//               backgroundColor: '#1e5a5a',
+//             }
+//           }}
+//         >
+//           Log Out
+//         </Button>
+//       </DialogActions>
+//     </Dialog>
+//   );
+// };
+
+// export default Logout;
+import React from "react"
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button
-} from '@mui/material';
-import { logout } from '../../services/authService';
-import { useNavigate } from 'react-router-dom';
+  Button,
+  useTheme,
+} from "@mui/material"
+import { logout } from "../../services/authService"
+import { useNavigate } from "react-router-dom"
 
 const Logout = ({ open, onClose }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const theme = useTheme()
+
+  const PRIMARY_COLOR = "#2D7A7A"
+  const PRIMARY_DARK = "#1E5A5A"
 
   const handleConfirm = () => {
-    const success = logout();
-    if (success) {
-      navigate('/');
-    } else {
-      navigate('/');
-    }
-    onClose();
-  };
+    const success = logout()
+    // Ici tu rediriges dans les deux cas vers "/"
+    navigate("/")
+    onClose()
+  }
 
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle
-        sx={{ color: '#1e5a5a', fontWeight: 'bold', fontSize: '1.25rem' }}
+        sx={{
+          color: PRIMARY_DARK,
+          fontWeight: "bold",
+          fontSize: "1.25rem",
+        }}
       >
         Confirm Logout
       </DialogTitle>
 
-      <DialogContent sx={{ backgroundColor: '#fdfefe' }}>
-        <DialogContentText sx={{ color: '#2d2d2d' }}>
+      <DialogContent
+        sx={{
+          backgroundColor: theme.palette.background.paper,
+        }}
+      >
+        <DialogContentText
+          sx={{
+            color: theme.palette.text.primary,
+          }}
+        >
           Are you sure you want to log out?
         </DialogContentText>
       </DialogContent>
 
       <DialogActions
-        sx={{ padding: '16px', backgroundColor: '#f8fafa', borderTop: '1px solid #e6f2f2' }}
+        sx={{
+          padding: "16px",
+          backgroundColor: theme.palette.background.default,
+          borderTop: `1px solid ${theme.palette.divider}`,
+        }}
       >
         <Button
           onClick={onClose}
           variant="outlined"
           sx={{
-            color: '#2d7a7a',
-            borderColor: '#a3d5d5',
-            '&:hover': {
-              borderColor: '#2d7a7a',
-              backgroundColor: '#d1e7e7',
-            }
+            color: PRIMARY_COLOR,
+            borderColor: theme.palette.divider,
+            "&:hover": {
+              borderColor: PRIMARY_COLOR,
+              backgroundColor: theme.palette.action.hover,
+            },
           }}
         >
           Cancel
@@ -171,18 +265,18 @@ const Logout = ({ open, onClose }) => {
           onClick={handleConfirm}
           variant="contained"
           sx={{
-            backgroundColor: '#2d7a7a',
-            color: '#ffffff',
-            '&:hover': {
-              backgroundColor: '#1e5a5a',
-            }
+            backgroundColor: PRIMARY_COLOR,
+            color: "#ffffff",
+            "&:hover": {
+              backgroundColor: PRIMARY_DARK,
+            },
           }}
         >
           Log Out
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default Logout;
+export default Logout
