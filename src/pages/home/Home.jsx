@@ -73,9 +73,9 @@ function Home() {
           </Grid>
         </Grid>
 
-        <Grid container spacing={4} sx={{ mt: 4 }}>
+        {/* <Grid container spacing={4} sx={{ mt: 4 }}>
           {/* Quick Links */}
-          <Grid item xs={12}>
+         {/* <Grid item xs={12}>
             <Card>
               <CardContent>
                 <Typography variant="h5" component="div" gutterBottom>
@@ -135,7 +135,7 @@ function Home() {
               </CardContent>
             </Card>
           </Grid>
-        </Grid>
+        </Grid> */}
 
         {/* About Section */}
         <Grid container spacing={4} sx={{ mt: 4 }}>

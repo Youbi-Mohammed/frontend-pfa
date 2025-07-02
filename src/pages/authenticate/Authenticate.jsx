@@ -70,7 +70,7 @@ export default function Authenticate() {
           },
         });
       } else if (result?.success) {
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);

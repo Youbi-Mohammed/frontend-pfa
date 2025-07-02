@@ -67,6 +67,10 @@ const theme = createTheme({
           path="/dashboard"
           element={<MainLayout mode={mode} setMode={setMode} />}
           >
+           {/* <Route
+          path="/dashboard"
+          element={<DashBoard/>}
+          > */}
 <Route path="tools/diagram-generator" element={<DiagramPage />} />
 <Route path="tools/CDC-generator" element={<CDCViewer />} />
 

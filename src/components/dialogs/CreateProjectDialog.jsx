@@ -507,7 +507,7 @@ function CreateProjectDialog({ projectDialogOpen, handleModalClose, setSnackbarO
         component: "form",
         onSubmit: (event) => {
           handleSubmit(event);
-          handleSubmitReportOnly(event);
+          // handleSubmitReportOnly(event);
         },
       }}
     >
