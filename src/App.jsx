@@ -41,6 +41,7 @@ import ProfileImageUploader from "./pages/authenticate/UploadProfileImage";
 import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 import Logout from "./pages/authenticate/Logout";
 import CDCViewer from "./pages/tools/CDCViewer";
+import GeneratePresentationsDialog from "./pages/defense/GeneratePresentationsDialog";
 function App() {
   const [mode , setMode] = useState(localStorage.getItem("mode") || "light");
 
@@ -61,6 +62,7 @@ const theme = createTheme({
           <Route path="/" element={<GeneralLayout />}>
         <Route path="/change-password" element={<ChangeInitialPassword />} />
         <Route path="/upload-photo" element={<ProfileImageUploader />} />
+        <Route path="/generate-presentations" element={<GeneratePresentationsDialog />} />
         <Route path="/logout" element={<Logout />} />
             <Route index element={<Home />} />
           <Route

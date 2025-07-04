@@ -198,6 +198,46 @@ const addPresentationsPlan = async (token,setRender,initialRender) => {
     return capitalizedEvent;
   };
 
+export const generatePresentations = async (startDate, roomNumber, token) => {
+  const params = new URLSearchParams();
+  if (startDate) params.append('startDate', startDate);
+  if (roomNumber) params.append('roomNumber', roomNumber);
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/presentations/generate-presentations?${params}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const responseText = await response.text(); // D'abord lire comme texte
+    
+    if (!response.ok) {
+      // Essayer de parser comme JSON, sinon utiliser le texte brut
+      let errorMessage = responseText;
+      try {
+        const errorData = JSON.parse(responseText);
+        errorMessage = errorData.message || responseText;
+      } catch (e) {
+        console.warn("La réponse d'erreur n'est pas du JSON valide");
+      }
+      throw new Error(errorMessage);
+    }
+
+    // Parser la réponse en JSON seulement si ce n'est pas vide
+    return responseText ? JSON.parse(responseText) : null;
+    
+  } catch (err) {
+    console.error("Erreur lors de l'appel API:", err);
+    throw new Error(`Erreur réseau: ${err.message}`);
+  }
+};
 
 
 export { getAllPresentations, deletePresentation, updatePresentation ,updatePresentationOnDrag, createPresentation , getPresentationsPlan, validatePresentationsPlan,addPresentationsPlan};

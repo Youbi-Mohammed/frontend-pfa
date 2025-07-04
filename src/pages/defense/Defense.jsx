@@ -20,7 +20,7 @@ import { Button, Typography } from "@mui/material";
 import { hasRole } from "../../utils/userUtiles";
 import DefenseSkeleton from "./DefenseSkeleton";
 import ConfirmationDialog from "../../components/dialogs/ConfirmationDialog";
-
+import GeneratePresentationsDialog from "./GeneratePresentationsDialog";
 const token = localStorage.getItem("token");
 function Defense() {
   const isSupervisor = hasRole("ROLE_SUPERVISOR");
@@ -36,10 +36,25 @@ function Defense() {
 
   const [confirmationOpenDialog, setConfirmationOpenDialog] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-
+  const [dialogOpen, setDialogOpen] = useState(false);
   const initialRender = useRef(true);
+const [openDialog, setOpenDialog] = useState(false);
+  const [startDate, setStartDate] = useState("");
+const handleConfirmDate = (date) => {
+    setLoading(true);
+    // Simuler un traitement
+    setTimeout(() => {
+      setStartDate(date);
+      setLoading(false);
+      setOpenDialog(false);
+      console.log("✅ Date fixée :", date);
+    }, 1000);
+  };
+
+  
 
   const [presentationsPlan, setPresentationsPlan] = useState({});
+  const [fetchedPresentations1, setFetchedPresentations1] = useState([]);
   useEffect(() => {
     const fetchEvents = async () => {
       if (initialRender.current) {
@@ -53,6 +68,12 @@ function Defense() {
         );
         console.log(teamsWithNoPresentation);
         const fetchedPresentations = await getAllPresentations(token);
+        console.log("get all presetntion for testing if it is null or not");
+        console.log(fetchedPresentations);
+        setFetchedPresentations1(fetchedPresentations);
+        console.log("fetched presentatipns was up");
+   
+
         console.log(supervisors);
         setSupervisors(fetchedSupervisors);
         setTeams(teamsWithNoPresentation);
@@ -350,84 +371,234 @@ console.log(presentationsPlan);
           </div>
         );
       }else{
+        // return (
+        //   <div
+        //     style={{
+        //       display: "flex",
+        //       flexDirection: "column",
+        //       gap: "20px",
+        //     }}
+        //     className={mode === "dark" ? "schedule-component" : ""}
+        //   >
+        //     <div
+        //       style={{
+        //         display: "flex",
+        //         alignItems: "center",
+        //         justifyContent: "space-between",
+        //       }}
+        //     >
+        //       <BreadCrumb
+        //         items={[
+        //           { label: "Home", path: "/" },
+        //           { label: "dashboard", path: "" },
+        //           { label: "Presentations", path: "" },
+        //         ]}
+        //       />
+        //       {isHOB && presentationsPlan &&
+        //       Object.keys(presentationsPlan).length > 0 
+        //       && presentationsPlan.completed 
+        //        ? (
+        //         fetchedPresentations1 && fetchedPresentations1.length > 0 ? 
+        //         (console.log("fetched presentations",fetchedPresentations1)): 
+        //         (console.log("fetched presentations is empty"))
+        //       ) : (
+        //         fetchedPresentations1 && Object.keys(fetchedPresentations1).length > 0 ? 
+        //        (<Button onClick={() => setConfirmationOpenDialog(true)}>
+        //           validate plan
+        //         </Button>)
+        //         : 
+               
+  
+        //               <Button variant="contained" onClick={() => setDialogOpen(true)}>
+        //                   Générer Présentations
+        //                 <GeneratePresentationsDialog
+        //               open={dialogOpen}
+        //                onClose={() => setDialogOpen(false)}
+        //                 />
+        //                </Button>
+
+      
+    
+               
+                
+        //       )}
+              
+
+        //     </div>
+        //     <ScheduleComponent
+        //       eventSettings={{
+        //         dataSource: events,
+        //       }}
+        //       allowDragAndDrop={true}
+        //       height="calc(100vh - 140px)"
+        //       style={{ borderRadius: "5px" }}
+        //       readonly={isStudent || isSupervisor? true : false}
+        //       dragStop={(args) => {
+        //         console.log("dragStop", args);
+        //         const data = args.data;
+        //         handleDragStop(data);
+        //       }}
+        //       actionComplete={(args) => {
+        //         console.log(args);
+        //         if (args.requestType === "eventCreated") {
+        //           handleCreatePresentation(args.data);
+        //         }
+        //         if (args.requestType === "eventRemoved") {
+        //           handleDeletePresentation(args.data);
+        //         }
+        //         if (args.requestType === "eventChanged") {
+        //           handleEditPresentation(args.data);
+        //         }
+        //       }}
+        //       cellClick={(args) => {
+        //         args.cancel = true;
+        //       }}
+        //       popupOpen={onPopupOpen}
+        //       // popupClose={onPopupClose}
+        //       // editorTemplate={editorTemplate}
+        //     >
+        //       <Inject services={[Day, Week, WorkWeek, Month, DragAndDrop]} />
+        //     </ScheduleComponent>
+        //     <ConfirmationDialog
+        //       message={"Are you sure you want to validate presentations plan?"}
+        //       openDialog={confirmationOpenDialog}
+        //       setOpenDialog={setConfirmationOpenDialog}
+        //       handleConfirmClick={() => validatePresentationsPlan(token)}
+        //       setLoading={setConfirmLoading}
+        //       loading={confirmLoading}
+        //       setRender={setRender}
+        //     />
+        //   </div>
+        // );
         return (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-            }}
-            className={mode === "dark" ? "schedule-component" : ""}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <BreadCrumb
-                items={[
-                  { label: "Home", path: "/" },
-                  { label: "dashboard", path: "" },
-                  { label: "Presentations", path: "" },
-                ]}
-              />
-              {isHOB && presentationsPlan &&
-              Object.keys(presentationsPlan).length > 0 &&
-              presentationsPlan.completed ? (
-                <></>
-              ) : (
-                <Button onClick={() => setConfirmationOpenDialog(true)}>
-                  validate plan
-                </Button>
-              )}
-            </div>
-            <ScheduleComponent
-              eventSettings={{
-                dataSource: events,
-              }}
-              allowDragAndDrop={true}
-              height="calc(100vh - 140px)"
-              style={{ borderRadius: "5px" }}
-              readonly={isStudent || isSupervisor? true : false}
-              dragStop={(args) => {
-                console.log("dragStop", args);
-                const data = args.data;
-                handleDragStop(data);
-              }}
-              actionComplete={(args) => {
-                console.log(args);
-                if (args.requestType === "eventCreated") {
-                  handleCreatePresentation(args.data);
-                }
-                if (args.requestType === "eventRemoved") {
-                  handleDeletePresentation(args.data);
-                }
-                if (args.requestType === "eventChanged") {
-                  handleEditPresentation(args.data);
-                }
-              }}
-              cellClick={(args) => {
-                args.cancel = true;
-              }}
-              popupOpen={onPopupOpen}
-              // popupClose={onPopupClose}
-              // editorTemplate={editorTemplate}
-            >
-              <Inject services={[Day, Week, WorkWeek, Month, DragAndDrop]} />
-            </ScheduleComponent>
-            <ConfirmationDialog
-              message={"Are you sure you want to validate presentations plan?"}
-              openDialog={confirmationOpenDialog}
-              setOpenDialog={setConfirmationOpenDialog}
-              handleConfirmClick={() => validatePresentationsPlan(token)}
-              setLoading={setConfirmLoading}
-              loading={confirmLoading}
-              setRender={setRender}
-            />
-          </div>
-        );
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+    }}
+    className={mode === "dark" ? "schedule-component" : ""}
+  >
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <BreadCrumb
+        items={[
+          { label: "Home", path: "/" },
+          { label: "dashboard", path: "" },
+          { label: "Presentations", path: "" },
+        ]}
+      />
+      {/* {isHOB && presentationsPlan &&
+      Object.keys(presentationsPlan).length > 0 
+      && presentationsPlan.completed 
+       ? (
+        fetchedPresentations1 && fetchedPresentations1.length > 0 ? 
+        (console.log("fetched presentations",fetchedPresentations1)): 
+        (console.log("fetched presentations is empty"))
+      ) : (
+        fetchedPresentations1 && Object.keys(fetchedPresentations1).length > 0 ? 
+       (<Button onClick={() => setConfirmationOpenDialog(true)}>
+          validate plan
+        </Button>)
+        : 
+        <Button  onClick={() => setDialogOpen(true)}>
+          Generate Presentations Plan
+        </Button>
+      )} */}
+      {isHOB && presentationsPlan &&
+  Object.keys(presentationsPlan).length > 0 
+  && presentationsPlan.completed 
+   ? (
+    fetchedPresentations1 && fetchedPresentations1.length > 0 ? 
+    (console.log("fetched presentations", fetchedPresentations1)) : 
+    (console.log("fetched presentations is empty"))
+  ) : (
+    fetchedPresentations1 && Object.keys(fetchedPresentations1).length > 0 ? 
+    (
+      <Button 
+        onClick={() => setConfirmationOpenDialog(true)}
+        sx={{
+          backgroundColor: '#ebfafa',
+          color: '#2D7A7A',
+          '&:hover': {
+            backgroundColor: '#1E5F5F',
+          }
+        }}
+      >
+        validate plan
+      </Button>
+    ) : (
+      <Button 
+        onClick={() => setDialogOpen(true)}
+        sx={{
+          backgroundColor: '#ebfafa',
+          color: '#2D7A7A',
+          '&:hover': {
+            backgroundColor: '#1E5F5F',
+          }
+        }}
+      >
+        Generate Presentations Plan
+      </Button>
+    )
+)}
+    </div>
+
+    {/* Le dialogue doit être placé ici, au même niveau que les autres éléments */}
+    <GeneratePresentationsDialog
+      open={dialogOpen}
+      onClose={() => setDialogOpen(false)}
+    />
+
+    <ScheduleComponent
+      eventSettings={{
+        dataSource: events,
+      }}
+      allowDragAndDrop={true}
+      height="calc(100vh - 140px)"
+      style={{ borderRadius: "5px" }}
+      readonly={isStudent || isSupervisor? true : false}
+      dragStop={(args) => {
+        console.log("dragStop", args);
+        const data = args.data;
+        handleDragStop(data);
+      }}
+      actionComplete={(args) => {
+        console.log(args);
+        if (args.requestType === "eventCreated") {
+          handleCreatePresentation(args.data);
+        }
+        if (args.requestType === "eventRemoved") {
+          handleDeletePresentation(args.data);
+        }
+        if (args.requestType === "eventChanged") {
+          handleEditPresentation(args.data);
+        }
+      }}
+      cellClick={(args) => {
+        args.cancel = true;
+      }}
+      popupOpen={onPopupOpen}
+    >
+      <Inject services={[Day, Week, WorkWeek, Month, DragAndDrop]} />
+    </ScheduleComponent>
+    
+    <ConfirmationDialog
+      message={"Are you sure you want to validate presentations plan?"}
+      openDialog={confirmationOpenDialog}
+      setOpenDialog={setConfirmationOpenDialog}
+      handleConfirmClick={() => validatePresentationsPlan(token)}
+      setLoading={setConfirmLoading}
+      loading={confirmLoading}
+      setRender={setRender}
+    />
+  </div>
+);
       }
     }
   }else{
