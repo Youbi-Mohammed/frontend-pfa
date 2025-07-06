@@ -42,6 +42,8 @@ import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 import Logout from "./pages/authenticate/Logout";
 import CDCViewer from "./pages/tools/CDCViewer";
 import GeneratePresentationsDialog from "./pages/defense/GeneratePresentationsDialog";
+import TeamsPreferences from "./pages/projects/TeamsPreferences";
+import AllTeamsPreferences from "./pages/team/AllTeamsPreferences";
 function App() {
   const [mode , setMode] = useState(localStorage.getItem("mode") || "light");
 
@@ -63,6 +65,8 @@ const theme = createTheme({
         <Route path="/change-password" element={<ChangeInitialPassword />} />
         <Route path="/upload-photo" element={<ProfileImageUploader />} />
         <Route path="/generate-presentations" element={<GeneratePresentationsDialog />} />
+        {/* <Route path="/teams-preferences" element={<AllTeamsPreferences />} /> */}
+        <Route path="/settings" element={<Settings />} />
         <Route path="/logout" element={<Logout />} />
             <Route index element={<Home />} />
           <Route
@@ -86,6 +90,7 @@ const theme = createTheme({
     <Route path="reports" element={<Reports />} />
     <Route path="team" element={<Team />} />
     <Route path="docs" element={<Docs />} />
+    
     {/* <Route path="accounts" element={<StudentRegistrationForm />} /> {/* Chemin relatif corrigé */}
     {/* <Route path="studentslist" element={<CsvUploadDialog/>}/> */}  
   </Route>
@@ -106,12 +111,14 @@ const theme = createTheme({
               {/* end */}
               {/* for every one */}
               <Route path="assignments" element={<Assignments mode={mode} />} />
+              
               <Route
                 path="assignments/result"
                 element={<AssignmentsResult mode={mode} />}
               />
               <Route path="teams" element={<Teams />} />
               <Route path="branch" element={<Branch />} />
+              <Route path="assignements/teams-preferences" element={<AllTeamsPreferences />} />
               {/* end */}
               {/* for the head of branch */}
               <Route path="requests" element={<Requests />} />

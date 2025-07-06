@@ -232,7 +232,9 @@ function Assignments({ mode }) {
         params.row.hasPreferences ? (
           <Button
             variant="outlined"
-            onClick={() => navigate(`/dashboard/teams/${params.row.id}`)}
+            // onClick={() => navigate(`/dashboard/teams/${params.row.id}`)} //homa kano ynavigiw l not page found
+            onClick={() => navigate(`/dashboard/assignements/teams-preferences`)}//hna drtha tdi l page  dyal prefrerneces dyal ga3 teams 
+
           >
             View
           </Button>
