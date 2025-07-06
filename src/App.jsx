@@ -42,7 +42,6 @@ import ChangeInitialPassword from "./pages/authenticate/ChangeInitialPassword";
 import Logout from "./pages/authenticate/Logout";
 import CDCViewer from "./pages/tools/CDCViewer";
 import GeneratePresentationsDialog from "./pages/defense/GeneratePresentationsDialog";
-import TeamsPreferences from "./pages/projects/TeamsPreferences";
 import AllTeamsPreferences from "./pages/team/AllTeamsPreferences";
 function App() {
   const [mode , setMode] = useState(localStorage.getItem("mode") || "light");
